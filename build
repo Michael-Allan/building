@@ -1,0 +1,23 @@
+#!/bin/bash
+# ━━━━━
+# build - Build a project’s software
+# ━━━━━
+#
+#      build [PROJECT/] [ARG…]
+#
+#   This is a convenience wrapper for project builds.  It delegates to the build command `./builder/build`,
+#   first changing to a project directory (`PROJECT/`) if one is given.  In the latter case, the terminal
+#   slash `/` is required in order to distinguish the project directory from a build argument (`ARG`).
+#
+#   To install it, either put a copy of the present file on your command-search path, or link to it
+#   from there.
+
+
+    if [[ $1 =~ /$ ]] ; then
+        cd $1
+        shift
+        fi
+    builder/build $@
+
+
+# Copyright © 2020, Michael Allan and contributors.  Licence MIT.
