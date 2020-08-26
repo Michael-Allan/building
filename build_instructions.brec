@@ -49,7 +49,10 @@ Building a project’s software
         / Always the working directory must be `*PROJECTS*/`.
             : see `^^working directory for software builds$`
               @ http://reluk.ca/project/building/action_plan.brec
-        >+ build *PROJECT*/
+        >+ build *PROJECT*/ [*target*]…
+            / Target names are case insensitive, characters ‘-’ and ‘_’ equivalent.
+            - The project’s source code will include a file, typically called `Target.java`,
+              that enumerates the possible build targets.
 
 
 
