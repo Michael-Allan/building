@@ -17,7 +17,7 @@ Building a project’s software
             + Confirm it reports a `javac` version of 14, or later.
                 >+ ${JDK_HOME}/bin/javac --version
         5+ Test the build command.
-            >+ cd PROJECTS/
+            >+ cd *PROJECTS*/
                 : re `PROJECTS` see `^^\`PROJECTS\`$` @ lexicon.brec
             >+ ./building/build building/ null
         6+ Define a more convenient alias for the build command.
@@ -36,20 +36,20 @@ Building a project’s software
     ────────────────────
         + Ensure the software project is installed according to its instructions.
         + Test the installation by building the project’s null target.
-            >+ cd PROJECTS/
-            >+ build PROJECT/ null
+            >+ cd *PROJECTS*/
+            >+ build *PROJECT*/ null
                 / Here `PROJECT` is a placeholder for the specific project-installation directory.  E.g.
-                  for the present project, given `PROJECTS/` as a working directory, it is `building/`.
+                  for the present project, given `*PROJECTS*/` as a working directory, it is `building/`.
 
 
 
     ━━━━━━━━━━━━━
      Routine use
     ─────────────
-        / Always the working directory must be `PROJECTS/`.
+        / Always the working directory must be `*PROJECTS*/`.
             : see `^^working directory for software builds$`
               @ http://reluk.ca/project/building/action_plan.brec
-        >+ build PROJECT/
+        >+ build *PROJECT*/
 
 
 
