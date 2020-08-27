@@ -27,14 +27,16 @@ Installation instructions for the building project
                     - Expect a version of 14, or later.
         3+ Test your access to the building commands.
             >+ cd *PROJECTS*/
-            >+ ./building/bin/build building/ null
+            >+ ./building/bin/build
+                / ⇒  Usage: build <PROJECT>/ <target>...
         4+ Get convenient access to all building commands.
             + Append this project’s command directory to the shell’s search path.
                 >+ PATH=$PATH:*PROJECTS*/building/bin
             + Test it.
                 >+ which build
                     / ⇒  *PROJECTS*/building/bin/build
-                >+ build building/ null
+                >+ build
+                    / ⇒  Usage: build <PROJECT>/ <target>...
             + Make it permanent by adding the same to your login initializer:
 
                   PATH=$PATH:*PROJECTS*/building/bin

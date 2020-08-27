@@ -1,6 +1,8 @@
 #!/usr/bin/env --split-string=${JDK_HOME}/bin/java @building/java_arguments \c [SS]
 package building; // [AFN]
 
+// Usage from working directory `<PROJECTS>/`:  build <PROJECT>/ <target>…
+
 
 /** A shell command to build the software of a given project.  It summons the project’s dedicated
   * software builder to compile the project code and prepare it for use.
@@ -19,8 +21,11 @@ public final class BuildCommand { // [AFN]
       *     @see http://reluk.ca/project/building/build_instructions.brec
       */
     public static void main( final String[] arguments ) {
-        throw new UnsupportedOperationException( "Yet to be implemented" );
-        }}
+        if( arguments.length < 2 ){
+            System.err.println( "Usage: build <PROJECT>/ <target>..." );
+            return; }
+
+        throw new UnsupportedOperationException( "Yet to be implemented" ); }}
 
 
 
