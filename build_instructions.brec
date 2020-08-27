@@ -1,51 +1,13 @@
 Building a project’s software
 
-
-    ━━━━━━━━━━━━━━━━
-     Initial set-up
-    ────────────────
-        1+ Ensure you are running Linux.
-            : see `^^operating system$` @ http://reluk.ca/project/building/action_plan.brec
-        2+ Ensure the latest JDK is installed.
-            : see https://jdk.java.net/
-        3+ Ensure the path to its installation directory is recorded in environment variable `JDK_HOME`,
-           which is exported.
-            : re `exported` see https://man7.org/linux/man-pages/man1/export.1p.html
-            : re `exported` see `^^export$` @
-              https://man7.org/linux/man-pages/man1/bash.1.html#SHELL_BUILTIN_COMMANDS
-        4+ Test the JDK installation from the command line.
-            + Confirm it reports a `javac` version of 14, or later.
-                >+ ${JDK_HOME}/bin/javac --version
-        5+ Test the build command.
-            >+ cd *PROJECTS*/
-                : re `PROJECTS` see `^^\`PROJECTS\`$` @ lexicon.brec
-            >+ ./building/build building/ null
-        6+ Define a more convenient alias for the build command.
-            / An alias of `build` is assumed in the command examples that follow.
-            >+ alias build='./building/build'
-                + Add this to your `~/.bashrc` initialization file in order to make it permanent.
-        7+ Test the alias.
-            >+ build building/ null
-        working example
-            : see http://reluk.ca/.bashrc
-
-
-
-    ━━━━━━━━━━━━━━━━━━━━
-     Set-up per project
-    ────────────────────
+    set-up per project
         + Ensure the software project is installed according to its instructions.
         + Test the installation by building the project’s null target.
             >+ cd *PROJECTS*/
             >+ build *PROJECT*/ null
                 / Here `PROJECT` is a placeholder for the specific project-installation directory.  E.g.
                   for the present project, given `*PROJECTS*/` as a working directory, it is `building/`.
-
-
-
-    ━━━━━━━━━━━━━
-     Routine use
-    ─────────────
+    routine use
         / Always the working directory must be `*PROJECTS*/`.
             : see `^^working directory for software builds$`
               @ http://reluk.ca/project/building/action_plan.brec
@@ -53,7 +15,6 @@ Building a project’s software
             / Target names are case insensitive, characters ‘-’ and ‘_’ equivalent.
             - The project’s source code will include a file, typically called `Target.java`,
               that enumerates the possible build targets.
-
 
 
                                         \ Copyright © 2020, Michael Allan and contributors.  Licence MIT.
