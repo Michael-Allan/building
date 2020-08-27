@@ -1,6 +1,6 @@
-# `java` arguments for the `build` command  | -*- coding: us-ascii; mode: conf-javaprop; -*-
+# `java` arguments for this project's shell commands  | -*- coding: us-ascii; mode: conf-javaprop; -*-
 #
-# This is a `java` command-line argument file.  It is a referent of `./build`.  For syntax and so forth:
+# This is a `java` command-line argument file; a referent of the files under `./bin/`.  For syntax:
 # `https://docs.oracle.com/en/java/javase/14/docs/specs/man/java.html#java-command-line-argument-files`.
 
     -enableassertions:building...

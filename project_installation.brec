@@ -20,13 +20,16 @@ Installation instructions for the building project
                 >+ ${JDK_HOME}/bin/javac --version
         5+ Test the build command.
             >+ cd *PROJECTS*/
-            >+ ./building/build building/ null
-        6+ Define a more convenient alias for the build command.
-            / An alias of `build` is assumed in the command examples that follow.
-            >+ alias build='./building/build'
-                + Add this to your `~/.bashrc` initialization file in order to make it permanent.
-        7+ Test the alias.
-            >+ build building/ null
+            >+ ./building/bin/build building/ null
+        6+ Enable convenient access to all building commands.
+            + Append this project’s command directory to the shell’s search path.
+                >+ export PATH=$PATH:*PROJECTS*/building/bin
+            + Test it.
+                >+ which build
+                    / ⇒  *PROJECTS*/building/bin/build
+                >+ build building/ null
+            + Make it permanent by adding the following to your `~/.bashrc` initialization file:
+                  PATH=$PATH:*PROJECTS*/building/bin
         working example
             : see http://reluk.ca/.bashrc
 

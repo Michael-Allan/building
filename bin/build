@@ -1,13 +1,11 @@
 #!/usr/bin/env --split-string=${JDK_HOME}/bin/java @building/java_arguments \c [SS]
-package building;
-
-// This is the build command.  For usage instructions, see `./build_instructions.brec`.
+package building; // [AFN]
 
 
 /** A shell command to build the software of a given project.  It summons the project’s dedicated
   * software builder to compile the project code and prepare it for use.
   */
-public final class BuildCommand {
+public final class BuildCommand { // [AFN]
 
 
 
@@ -26,8 +24,14 @@ public final class BuildCommand {
 
 
 
-// NOTE
-// ────
+// NOTES
+// ─────
+//   AFN  Atypical file naming is allowed here.  ‘The compiler does not enforce the optional restriction
+//        defined at the end of JLS §7.6, that a type in a named package should exist in a file whose
+//        name is composed from the type name followed by the .java extension.’
+//        http://openjdk.java.net/jeps/330
+//        https://docs.oracle.com/javase/specs/jls/se14/html/jls-7.html#jls-7.6
+//
 //   SS · Here the long form `--split-string` (as opposed to `-S`) enables Emacs tp recognize this file
 //        as Java source code.  See the note entitled ‘source-launch files encoded with a shebang’ at
 //        `http://reluk.ca/project/Java/Emacs/user_instructions.brec`.
