@@ -23,7 +23,7 @@ Installation instructions for the building project
             >+ ./building/bin/build building/ null
         6+ Enable convenient access to all building commands.
             + Append this project’s command directory to the shell’s search path.
-                >+ export PATH=$PATH:*PROJECTS*/building/bin
+                >+ PATH=$PATH:*PROJECTS*/building/bin
             + Test it.
                 >+ which build
                     / ⇒  *PROJECTS*/building/bin/build
