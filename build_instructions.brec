@@ -2,10 +2,10 @@ Building a project’s software
 
     set-up per project
         + Ensure the software project is installed according to its instructions.
-        + Test the installation by building the project’s null target.
+        + Test the installation by building the project’s minimal target, the builder itself.
             >+ cd *PROJECTS*/
                 : re `PROJECTS` see @ lexicon.brec
-            >+ build *PROJECT*/ null
+            >+ build *PROJECT*/ builder
                 / Here *PROJECT* is a placeholder for the specific project-installation directory.  E.g.
                   for the present project, given `*PROJECTS*/` as a working directory, it is `building`.
     routine use
