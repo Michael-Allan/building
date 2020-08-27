@@ -9,10 +9,10 @@ Definition of terms for the building project
     general project-installation directory
         - The common, base directory into which compatible software projects are installed.
         : see `^^+ Install the files of this project into` @ project_installation.brec
-    `PROJECT`
+    *PROJECT*
         - Placeholder for a file path to a specific project-installation directory.
         : see `^^>\+ build PROJECT/ null$` @ build_instructions.brec
-    `PROJECTS`
+    *PROJECTS*
         - Placeholder for the absolute file path to the general project-installation directory.
         : see `^^+ Install the files of this project into` @ project_installation.brec
           \ The definition of this term is repeated in the installation instructions of each

@@ -1,7 +1,7 @@
 Installation instructions for the building project
 
     + Install the files of this project into `*PROJECTS*/building/`.
-        / Here `PROJECTS` is a placeholder for the general project-installation directory, into which
+        / Here *PROJECTS* is a placeholder for the general project-installation directory, into which
           compatible software projects are installed.  The present file, for example, would properly
           be installed at `*PROJECTS*/building/project_installation.brec`.
 
@@ -20,7 +20,6 @@ Installation instructions for the building project
                 >+ ${JDK_HOME}/bin/javac --version
         5+ Test the build command.
             >+ cd *PROJECTS*/
-                : re `PROJECTS` see `^^\`PROJECTS\`$` @ lexicon.brec
             >+ ./building/build building/ null
         6+ Define a more convenient alias for the build command.
             / An alias of `build` is assumed in the command examples that follow.
