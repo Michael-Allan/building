@@ -10,13 +10,19 @@ Installation instructions for the building project
             : see `^^operating system$` @ http://reluk.ca/project/building/action_plan.brec
         2+ Ensure the latest JDK is installed and accessible.
             : see https://jdk.java.net/
-            + Ensure the path to its installation directory is recorded
-              in environment variable `JDK_HOME`, which is exported.
-                : re `exported` see https://man7.org/linux/man-pages/man1/export.1p.html
-                : re `exported` see `^^export$` @
-                  https://man7.org/linux/man-pages/man1/bash.1.html#SHELL_BUILTIN_COMMANDS
+            + Ensure the path to its installation directory is exported as
+              environment variable `JDK_HOME`.
+                >+ echo $JDK_HOME
+                    / ⇒  /opt/jdk-14.0.2
+                if( necessary )
+                    + Add the equivalent of following to your login initializer,
+                      e.g. `~/.profile`, `~/.bash_profile` or what have you.
+
+                          JDK_HOME=/var/unbak/opt/jdk-14.0.2
+                          export JDK_HOME
+
             + Confirm the JDK commands are accessible.
-                >+ ${JDK_HOME}/bin/javac --version
+                >+ $JDK_HOME/bin/javac --version
                         / ⇒  javac 14.0.2
                     - Expect a version of 14, or later.
         3+ Test your access to the building commands.
@@ -29,10 +35,12 @@ Installation instructions for the building project
                 >+ which build
                     / ⇒  *PROJECTS*/building/bin/build
                 >+ build building/ null
-            + Make it permanent by adding the same to your `~/.bashrc` initialization file:
+            + Make it permanent by adding the same to your login initializer:
+
                   PATH=$PATH:*PROJECTS*/building/bin
+
         working example
-            : see http://reluk.ca/.bashrc
+            : see http://reluk.ca/.profile
 
     Web publication
         • Breccian files
