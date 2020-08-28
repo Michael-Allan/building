@@ -4,8 +4,8 @@ package building; // [AFN]
 // Usage from working directory `<PROJECTS>/`:  build <PROJECT>/ <target>…
 
 
-/** A shell command to build the software of a given project.  It summons the project’s dedicated
-  * software builder to compile the project code and prepare it for use.
+/** A shell command to build the software of a given project,
+  * compiling the code and preparing it for use.
   */
 public final class BuildCommand { // [AFN]
 
@@ -15,17 +15,21 @@ public final class BuildCommand { // [AFN]
 
 
 
-    /** Builds the software of a given project according to the arguments, as described
-      * in the build instructions.
-      *
-      *     @see http://reluk.ca/project/building/build_instructions.brec
+    /** Executes the command.
+      */
+    private void execute() {
+        throw new UnsupportedOperationException( "Yet to be implemented" ); }
+
+
+
+    /** Executes the command as given by the shell.
       */
     public static void main( final String[] arguments ) {
         if( arguments.length < 2 ){
             System.err.println( "Usage: build <PROJECT>/ <target>..." );
             return; }
 
-        throw new UnsupportedOperationException( "Yet to be implemented" ); }}
+        new BuildCommand().execute(); }}
 
 
 
@@ -37,7 +41,7 @@ public final class BuildCommand { // [AFN]
 //        http://openjdk.java.net/jeps/330
 //        https://docs.oracle.com/javase/specs/jls/se14/html/jls-7.html#jls-7.6
 //
-//   SS · Here the long form `--split-string` (as opposed to `-S`) enables Emacs tp recognize this file
+//   SS · Here the long form `--split-string` (as opposed to `-S`) enables Emacs to recognize this file
 //        as Java source code.  See the note entitled ‘source-launch files encoded with a shebang’ at
 //        `http://reluk.ca/project/Java/Emacs/user_instructions.brec`.
 
