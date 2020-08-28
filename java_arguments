@@ -4,6 +4,10 @@
 # `https://docs.oracle.com/en/java/javase/14/docs/specs/man/java.html#java-command-line-argument-files`.
 
     -enableassertions:building...
+   --enable-preview
+       # This allows for the use of text blocks.  https://openjdk.java.net/jeps/368
+       # Any actual use will result in a compiler warning that cannot (in most cases) be suppressed.
+       # https://openjdk.java.net/jeps/12
    --source 14 # Requesting source launch of a file (`build`) that lacks a `.java` extension.
        # https://docs.oracle.com/en/java/javase/14/docs/specs/man/java.html#using-source-file-mode-to-launch-single-file-source-code-programs
     -XX:+ShowCodeDetailsInExceptionMessages # https://openjdk.java.net/jeps/358
