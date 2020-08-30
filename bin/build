@@ -15,13 +15,6 @@ public final class BuildCommand { // [AFN]
 
 
 
-    /** Executes the command.
-      */
-    private void execute() {
-        throw new UnsupportedOperationException( "Yet to be implemented" ); }
-
-
-
     /** Executes the command as given by the shell.
       */
     public static void main( final String[] arguments ) {
@@ -29,7 +22,17 @@ public final class BuildCommand { // [AFN]
             System.err.println( "Usage: build <PROJECT>/ <target>..." );
             return; }
 
-        new BuildCommand().execute(); }}
+        new BuildCommand().execute(); }
+
+
+
+////  P r i v a t e  ////////////////////////////////////////////////////////////////////////////////////
+
+
+    /** Executes the command.
+      */
+    private void execute() {
+        throw new UnsupportedOperationException( "Yet to be implemented" ); }}
 
 
 
