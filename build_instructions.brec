@@ -13,7 +13,7 @@ Building a project’s software
             : see `^^working directory for software builds$`
               @ http://reluk.ca/project/building/action_plan.brec
         >+ build *PROJECT*/ *target*…
-            / Target names are case insensitive, and in them the characters ‘-’ and ‘_’ equivalent.
+            / Characters ‘-’ and ‘_’ are equivalent in target names.
             - The project’s source code will include a file, typically called `Target.java`,
               that enumerates the possible build targets.
 
