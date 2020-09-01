@@ -1,14 +1,14 @@
-# `java` arguments for this project's shell commands  | -*- coding: us-ascii; mode: conf-javaprop; -*-
+# Arguments for the `java` launch of shell commands  | -*- coding: us-ascii; mode: conf-javaprop; -*-
 #
 # This is a `java` command-line argument file; a referent of the files under `./bin/`.  For syntax:
 # `https://docs.oracle.com/en/java/javase/14/docs/specs/man/java.html#java-command-line-argument-files`.
 
     -enableassertions:building...
-   --enable-preview
-       # This allows for the use of text blocks.  https://openjdk.java.net/jeps/378
-       # Any actual use will result in a compiler warning that cannot (in most cases) be suppressed.
-       # https://openjdk.java.net/jeps/12
-   --source 14 # Requesting source launch of a file (`build`) that lacks a `.java` extension.
+ # --enable-preview # (given instead in `./javac_arguments`)
+       # Any actual use of a preview feature will result in a compiler warning visible to the user
+       # that (in most cases) cannot be suppressed.  https://openjdk.java.net/jeps/12
+ # --source 14 # (given instead in `./javac_arguments`)
+       # Requesting source launch of a file that lacks a `.java` extension.
        # https://docs.oracle.com/en/java/javase/14/docs/specs/man/java.html#using-source-file-mode-to-launch-single-file-source-code-programs
     -XX:+ShowCodeDetailsInExceptionMessages # https://openjdk.java.net/jeps/358
 

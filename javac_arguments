@@ -1,0 +1,21 @@
+# Arguments for the `javac` compiler  | -*- coding: us-ascii; mode: conf-javaprop; -*- [ACE]
+#
+# This is both a `javac` and `java` command-line argument file.  The two are largely syntax compatible:
+# `https://docs.oracle.com/en/java/javase/14/docs/specs/man/javac.html#command-line-argument-files` and
+# `https://docs.oracle.com/en/java/javase/14/docs/specs/man/java.html#java-command-line-argument-files`.
+#
+# This file is a referent both of `javac` commands issued at runtime by software builders, and of `java`
+# commands written into the source-launch files under `./bin/`.  Not all arguments are allowed, as per
+# `https://docs.oracle.com/en/java/javase/14/docs/specs/man/java.html#using-source-file-mode-to-launch-single-file-source-code-programs`.
+
+   --class-path /tmp/building/
+   --enable-preview # To allow for the use of text blocks.  https://openjdk.java.net/jeps/378
+   --source 14 # Allowing for `--enable-preview` above.
+
+# NOTE
+# ----
+#   ACE  ASCII character encoding: this being (also) a `java` command-line argument file, it is required.
+#        https://docs.oracle.com/en/java/javase/14/docs/specs/man/java.html#java-command-line-argument-files
+
+
+                                          # Copyright 2020, Michael Allan and contributors.  Licence MIT.

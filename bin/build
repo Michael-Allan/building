@@ -1,7 +1,9 @@
-#!/usr/bin/env --split-string=${JDK_HOME}/bin/java @building/java_arguments \c [SS]
+#!/usr/bin/env --split-string=${JDK_HOME}/bin/java @building/javac_arguments @building/java_arguments \c [SS]
 package building; // [AFN]
 
 // Usage from working directory `<PROJECTS>/`:  build <PROJECT>/ <target>…
+
+import java.io.*;
 
 
 /** A shell command to build the software of a given project,
@@ -17,7 +19,7 @@ public final class BuildCommand { // [AFN]
 
     /** Executes the command as given by the shell.
       */
-    public static void main( final String[] arguments ) {
+    public static void main( final String[] arguments ) throws IOException {
         if( arguments.length < 2 ){
             System.err.println( "Usage: build <PROJECT>/ <target>..." );
             return; }
@@ -31,8 +33,20 @@ public final class BuildCommand { // [AFN]
 
     /** Executes the command.
       */
-    private void execute() {
-        throw new UnsupportedOperationException( "Yet to be implemented" ); }}
+    private void execute() throws IOException {
+        // Already the working directory is `*PROJECTS*/`.  `../build_instructions.brec`
+        final ProcessBuilder pB = new ProcessBuilder(
+          System.getProperty("java.home") + "/bin/javac", /* The Java installation at `java.home` is
+               known to include `javac` because it is a JDK, as assured by the `JDK_HOME` at top. */
+            "@building/javac_arguments", "@building/javac_arguments_addendum",
+            "building/Autobuilder.java" );
+        try {
+            final int exitValue =  pB.start().waitFor();
+            if( exitValue != 0 ) { throw new IOException( "Exit value of " + exitValue
+              + " from process: " + pB.command() ); }}
+        catch( InterruptedException x ) { throw new IOException( x ); }
+
+        final Autobuilder autobuilder = new Autobuilder(); }}
 
 
 
