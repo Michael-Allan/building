@@ -20,7 +20,7 @@ public final class BuildCommand { // [AFN]
 
     /** Executes the command as given by the shell.
       */
-    public static void main( final String[] arguments ) throws BootstrappingException {
+    public static void main( final String[] arguments ) throws BootstrappingFailure {
         if( arguments.length < 2 ){
             System.err.println( "Usage: build <PROJECT>/ <target>..." );
             return; }
@@ -34,7 +34,7 @@ public final class BuildCommand { // [AFN]
 
     /** Executes the command.
       */
-    private void execute() throws BootstrappingException {
+    private void execute() throws BootstrappingFailure {
         final boolean wasClean = !( new File( System.getProperty("java.io.tmpdir") + "/building" )
           .isDirectory() );
 
@@ -48,9 +48,9 @@ public final class BuildCommand { // [AFN]
             "building/Autobuilder.java" );
         try {
             final int exitValue =  pB.start().waitFor();
-            if( exitValue != 0 ) { throw new BootstrappingException( "Exit value of " + exitValue
+            if( exitValue != 0 ) { throw new BootstrappingFailure( "Exit value of " + exitValue
               + " from process: " + pB.command() ); }}
-        catch( InterruptedException|IOException x ) { throw new BootstrappingException( x ); }
+        catch( InterruptedException|IOException x ) { throw new BootstrappingFailure( x ); }
         try {
 
           // Load the autobuilder code
@@ -62,25 +62,25 @@ public final class BuildCommand { // [AFN]
                     final ClassLoader cL;
                     try {
                         cL = new URLClassLoader( new URL[] { new URL( "file:///tmp/building/" )}); }
-                    catch( MalformedURLException x ) { throw new BootstrappingException( x ); }
+                    catch( MalformedURLException x ) { throw new BootstrappingFailure( x ); }
                     cA = cL.loadClass( "building.Autobuilder" ); }
                 else cA = Class.forName( "building.Autobuilder" );
 
           // Make an autobuilder
           // ───────────────────
             final Object autobuilder = cA.getDeclaredConstructor().newInstance(); }
-        catch( ReflectiveOperationException x ) { throw new BootstrappingException( x ); }}
+        catch( ReflectiveOperationException x ) { throw new BootstrappingFailure( x ); }}
 
 
 
    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 
-    private final class BootstrappingException extends Exception {
+    private final class BootstrappingFailure extends Exception {
 
-        public BootstrappingException( Exception cause ) { super( cause ); }
+        public BootstrappingFailure( Exception cause ) { super( cause ); }
 
-        public BootstrappingException( String message ) { super( message ); }}}
+        public BootstrappingFailure( String message ) { super( message ); }}}
 
 
 
