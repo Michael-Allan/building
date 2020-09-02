@@ -4,6 +4,7 @@ package building; // [AFN]
 // Usage from working directory `<PROJECTS>/`:  build <PROJECT>/ <target>…
 
 import java.io.*;
+import java.net.*;
 
 
 /** A shell command to build the software of a given project,
@@ -19,7 +20,7 @@ public final class BuildCommand { // [AFN]
 
     /** Executes the command as given by the shell.
       */
-    public static void main( final String[] arguments ) throws IOException {
+    public static void main( final String[] arguments ) throws BootstrappingException {
         if( arguments.length < 2 ){
             System.err.println( "Usage: build <PROJECT>/ <target>..." );
             return; }
@@ -33,7 +34,12 @@ public final class BuildCommand { // [AFN]
 
     /** Executes the command.
       */
-    private void execute() throws IOException {
+    private void execute() throws BootstrappingException {
+        final boolean wasClean = !( new File( System.getProperty("java.io.tmpdir") + "/building" )
+          .isDirectory() );
+
+      // Compile the autobuilder code
+      // ────────────────────────────
         // Already the working directory is `*PROJECTS*/`.  `../build_instructions.brec`
         final ProcessBuilder pB = new ProcessBuilder(
           System.getProperty("java.home") + "/bin/javac", /* The Java installation at `java.home` is
@@ -42,11 +48,39 @@ public final class BuildCommand { // [AFN]
             "building/Autobuilder.java" );
         try {
             final int exitValue =  pB.start().waitFor();
-            if( exitValue != 0 ) { throw new IOException( "Exit value of " + exitValue
+            if( exitValue != 0 ) { throw new BootstrappingException( "Exit value of " + exitValue
               + " from process: " + pB.command() ); }}
-        catch( InterruptedException x ) { throw new IOException( x ); }
+        catch( InterruptedException|IOException x ) { throw new BootstrappingException( x ); }
+        try {
 
-        final Autobuilder autobuilder = new Autobuilder(); }}
+          // Load the autobuilder code
+          // ─────────────────────────
+            final Class<?> cA;
+                if( wasClean ) { /* Then the directory of the class path (the output directory) did not exist
+                      before the present runtime.  It exists now, but still the class loader will not look
+                      there for its class files (JDK 14.0.2).  Therefore make a new class loader: */
+                    final ClassLoader cL;
+                    try {
+                        cL = new URLClassLoader( new URL[] { new URL( "file:///tmp/building/" )}); }
+                    catch( MalformedURLException x ) { throw new BootstrappingException( x ); }
+                    cA = cL.loadClass( "building.Autobuilder" ); }
+                else cA = Class.forName( "building.Autobuilder" );
+
+          // Make an autobuilder
+          // ───────────────────
+            final Object autobuilder = cA.getDeclaredConstructor().newInstance(); }
+        catch( ReflectiveOperationException x ) { throw new BootstrappingException( x ); }}
+
+
+
+   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+    private final class BootstrappingException extends Exception {
+
+        public BootstrappingException( Exception cause ) { super( cause ); }
+
+        public BootstrappingException( String message ) { super( message ); }}}
 
 
 
