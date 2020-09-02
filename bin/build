@@ -7,10 +7,9 @@ import java.io.*;
 import java.net.*;
 
 
-/** A shell command to build the software of a given project,
-  * compiling the code and preparing it for use.
+/** A shell command to build the software of a given project: to compile the code and prepare it for use.
   */
-public final class BuildCommand { // [AFN]
+final class BuildCommand { // [AFN]
 
 
 
@@ -78,9 +77,9 @@ public final class BuildCommand { // [AFN]
 
     private final class BootstrappingFailure extends Exception {
 
-        public BootstrappingFailure( Exception cause ) { super( cause ); }
+        private BootstrappingFailure( Exception cause ) { super( cause ); }
 
-        public BootstrappingFailure( String message ) { super( message ); }}}
+        private BootstrappingFailure( String message ) { super( message ); }}}
 
 
 
