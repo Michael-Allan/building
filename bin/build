@@ -7,7 +7,7 @@ import java.io.*;
 import java.net.*;
 
 
-/** A shell command to build the software of a given project: to compile the code and prepare it for use.
+/** A shell command to compile the code of a given project and prepare it for use.
   */
 final class BuildCommand { // [AFN]
 
@@ -17,7 +17,7 @@ final class BuildCommand { // [AFN]
 
 
 
-    /** Executes the command as given by the shell.
+    /** Execute the command as given by the shell.
       */
     public static void main( final String[] arguments ) throws BootstrappingFailure {
         if( arguments.length < 2 ){
@@ -31,7 +31,7 @@ final class BuildCommand { // [AFN]
 ////  P r i v a t e  ////////////////////////////////////////////////////////////////////////////////////
 
 
-    /** Executes the command.
+    /** Execute the command.
       */
     private void execute() throws BootstrappingFailure {
         final boolean wasClean = !( new File( System.getProperty("java.io.tmpdir") + "/building" )

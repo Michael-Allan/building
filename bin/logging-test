@@ -20,7 +20,7 @@ public final class LoggingTestCommand { // [AFN]
 
 
 
-    /** Executes the command as given by the shell.
+    /** Execute the command as given by the shell.
       */
     public static void main( final String[] arguments ) {
         if( arguments.length != 0 ){
@@ -34,7 +34,7 @@ public final class LoggingTestCommand { // [AFN]
 ////  P r i v a t e  ////////////////////////////////////////////////////////////////////////////////////
 
 
-    /** Executes the command.
+    /** Execute the command.
       */
     private void execute() {
         logger.log( OFF, """
@@ -57,7 +57,7 @@ public final class LoggingTestCommand { // [AFN]
 
 
 
-    /** Logs a test message at the given level.
+    /** Log a test message at the given level.
       */
     private void test( final Level level ) {
         logger.log( level, "Testing at level " + level.toString() ); }}
