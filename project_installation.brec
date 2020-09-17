@@ -13,18 +13,18 @@ Installation instructions for the building project
             + Ensure the path to its installation directory is exported as
               environment variable `JDK_HOME`.
                 >+ echo $JDK_HOME
-                    / ⇒  /opt/jdk-14.0.2
+                    / ⇒  /opt/jdk-15
                 if( necessary )
                     + Add the equivalent of following to your login initializer,
                       e.g. `~/.profile`, `~/.bash_profile` or what have you.
 
-                          JDK_HOME=/var/unbak/opt/jdk-14.0.2
+                          JDK_HOME=/var/unbak/opt/jdk-15
                           export JDK_HOME
 
             + Confirm the JDK commands are accessible.
                 >+ $JDK_HOME/bin/javac --version
-                        / ⇒  javac 14.0.2
-                    - Expect a version of 14, or later.
+                        / ⇒  javac 15
+                    - Expect a version of 15, or later.
         3+ Test your access to the building commands.
             >+ cd *PROJECTS*/
             >+ ./building/bin/build
