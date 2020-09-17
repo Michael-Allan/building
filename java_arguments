@@ -13,4 +13,4 @@
     -XX:+ShowCodeDetailsInExceptionMessages # https://openjdk.java.net/jeps/358
 
 
-                                          # Copyright 2020, Michael Allan and contributors.  Licence MIT.
+                                                           # Copyright 2020  Michael Allan.  Licence MIT.

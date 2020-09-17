@@ -7,4 +7,4 @@ package building;
 public final class Autobuilder {}
 
 
-                                       // Copyright © 2020, Michael Allan and contributors.  Licence MIT.
+                                                        // Copyright © 2020  Michael Allan.  Licence MIT.
