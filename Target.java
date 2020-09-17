@@ -6,9 +6,9 @@ package building;
 public enum Target {
 
 
-    /** The software builder of this project, compiled from Java source code into `.class` files.
+    /** A software builder compiled from Java source code into `.class` files.
       */
     builder; }
 
 
-                                       // Copyright © 2020, Michael Allan and contributors.  Licence MIT.
+                                                        // Copyright © 2020  Michael Allan.  Licence MIT.
