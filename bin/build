@@ -37,14 +37,14 @@ final class BuildCommand { // [AFN]
         final boolean wasClean = !( new File( System.getProperty("java.io.tmpdir") + "/building" )
           .isDirectory() );
 
-      // Compile the autobuilder code
-      // ────────────────────────────
+      // Compile the builder-builder code
+      // ────────────────────────────────
         // Already the working directory is `*PROJECTS*/`.  `../build_instructions.brec`
         final ProcessBuilder pB = new ProcessBuilder(
           System.getProperty("java.home") + "/bin/javac", /* The Java installation at `java.home` is
                known to include `javac` because it is a JDK, as assured by the `JDK_HOME` at top. */
             "@building/javac_arguments", "@building/javac_arguments_addendum",
-            "building/Autobuilder.java" );
+            "building/BuilderBuilder.java" );
         try {
             final int exitValue =  pB.start().waitFor();
             if( exitValue != 0 ) { throw new BootstrappingFailure( "Exit value of " + exitValue
@@ -52,22 +52,22 @@ final class BuildCommand { // [AFN]
         catch( InterruptedException|IOException x ) { throw new BootstrappingFailure( x ); }
         try {
 
-          // Load the autobuilder code
-          // ─────────────────────────
+          // Load the builder-builder code
+          // ─────────────────────────────
             final Class<?> cA;
-                if( wasClean ) { /* Then the directory of the class path (the output directory) did not exist
-                      before the present runtime.  It exists now, but still the class loader will not look
-                      there for its class files (JDK 14.0.2).  Therefore make a new class loader: */
-                    final ClassLoader cL;
-                    try {
-                        cL = new URLClassLoader( new URL[] { new URL( "file:///tmp/building/" )}); }
+                if( wasClean ) { /* Then the single directory given by `../javac_arguments`
+                      for the `--class-path` of the present runtime (namely the output directory
+                      `/tmp/building/`) did not exist before the present runtime.  It exists now, but
+                      still the class loader will not look there for its class files (JDK 14.0.2). */
+                    final ClassLoader cL; // Therefore make a new class loader.
+                    try { cL = new URLClassLoader( new URL[] { new URL( "file:///tmp/building/" )}); }
                     catch( MalformedURLException x ) { throw new BootstrappingFailure( x ); }
-                    cA = cL.loadClass( "building.Autobuilder" ); }
-                else cA = Class.forName( "building.Autobuilder" );
+                    cA = cL.loadClass( "building.BuilderBuilder" ); }
+                else cA = Class.forName( "building.BuilderBuilder" );
 
-          // Make an autobuilder
-          // ───────────────────
-            final Object autobuilder = cA.getDeclaredConstructor().newInstance(); }
+          // Make a builder builder
+          // ──────────────────────
+            final Object builderBuilder = cA.getDeclaredConstructor().newInstance(); }
         catch( ReflectiveOperationException x ) { throw new BootstrappingFailure( x ); }}
 
 
