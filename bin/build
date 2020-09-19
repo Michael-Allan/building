@@ -23,7 +23,7 @@ final class BuildCommand { // [AFN]
 
     /** Execute the command as given by the shell.
       */
-    public static void main( final String[] arguments ) throws BootstrappingFailure {
+    public static void main( final String[] arguments ) {
         if( arguments.length < 2 ){
             System.err.println( "Usage: build <PROJECT>/ <target>..." );
             return; }
@@ -37,7 +37,7 @@ final class BuildCommand { // [AFN]
 
     /** Execute the command.
       */
-    private void execute() throws BootstrappingFailure {
+    private void execute() {
         // Already the working directory is `*PROJECTS*/`.  `../build_instructions.brec`
         final Path sourceFile = Path.of( "building", "BuilderBuilder.java" );
         final Path outputDirectory = Path.of( System.getProperty("java.io.tmpdir"), "building" );
@@ -97,7 +97,7 @@ final class BuildCommand { // [AFN]
    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 
-    private final class BootstrappingFailure extends Exception {
+    private final class BootstrappingFailure extends RuntimeException {
 
         private BootstrappingFailure( Exception cause ) { super( cause ); }
 
