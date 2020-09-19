@@ -6,6 +6,8 @@ package building; // [AFN]
 import java.io.*;
 import java.net.*;
 
+import static java.lang.ProcessBuilder.Redirect.INHERIT;
+
 
 /** A shell command to compile the code of a given project and prepare it for use.
   */
@@ -45,9 +47,13 @@ final class BuildCommand { // [AFN]
                known to include `javac` because it is a JDK, as assured by the `JDK_HOME` at top. */
             "@building/javac_arguments", "@building/javac_arguments_addendum",
             "building/BuilderBuilder.java" );
+        pB.redirectOutput( INHERIT );
+        pB.redirectError( INHERIT );
         try {
             final int exitValue =  pB.start().waitFor();
-            if( exitValue != 0 ) { throw new BootstrappingFailure( "Exit value of " + exitValue
+            if( exitValue == 1 ) { System.err.println( "build: Stopped on `javac` error" ); }
+              // Already `javac` has told the details.
+            else if( exitValue != 0 ) { throw new BootstrappingFailure( "Exit value of " + exitValue
               + " from process: " + pB.command() ); }}
         catch( InterruptedException|IOException x ) { throw new BootstrappingFailure( x ); }
         try {
