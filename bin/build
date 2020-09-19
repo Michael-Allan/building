@@ -3,10 +3,12 @@ package building; // [AFN]
 
 // Usage from working directory `<PROJECTS>/`:  build <PROJECT>/ <target>…
 
-import java.io.*;
+import java.io.IOException;
 import java.net.*;
+import java.nio.file.*;
 
 import static java.lang.ProcessBuilder.Redirect.INHERIT;
+import static java.nio.file.Files.getLastModifiedTime;
 
 
 /** A shell command to compile the code of a given project and prepare it for use.
@@ -36,26 +38,39 @@ final class BuildCommand { // [AFN]
     /** Execute the command.
       */
     private void execute() throws BootstrappingFailure {
-        final boolean wasClean = !( new File( System.getProperty("java.io.tmpdir") + "/building" )
-          .isDirectory() );
-
-      // Compile the builder-builder code
-      // ────────────────────────────────
         // Already the working directory is `*PROJECTS*/`.  `../build_instructions.brec`
-        final ProcessBuilder pB = new ProcessBuilder(
-          System.getProperty("java.home") + "/bin/javac", /* The Java installation at `java.home` is
-               known to include `javac` because it is a JDK, as assured by the `JDK_HOME` at top. */
-            "@building/javac_arguments", "@building/javac_arguments_addendum",
-            "building/BuilderBuilder.java" );
-        pB.redirectOutput( INHERIT );
-        pB.redirectError( INHERIT );
-        try {
-            final int exitValue =  pB.start().waitFor();
-            if( exitValue == 1 ) { System.err.println( "build: Stopped on `javac` error" ); }
-              // Already `javac` has told the details.
-            else if( exitValue != 0 ) { throw new BootstrappingFailure( "Exit value of " + exitValue
-              + " from process: " + pB.command() ); }}
-        catch( InterruptedException|IOException x ) { throw new BootstrappingFailure( x ); }
+        final Path sourceFile = Path.of( "building", "BuilderBuilder.java" );
+        final Path outputDirectory = Path.of( System.getProperty("java.io.tmpdir"), "building" );
+        final Path classFile = outputDirectory.resolve( Path.of( "building", "BuilderBuilder.class" ));
+        final boolean toCompile;
+        final boolean wasClean;
+        if( Files.exists( classFile )) {
+            try { toCompile =
+              getLastModifiedTime(sourceFile).compareTo(getLastModifiedTime(classFile)) >= 0; }
+            catch( IOException x ) { throw new BootstrappingFailure( x ); }
+            wasClean = false; }
+        else {
+            toCompile = true;
+            wasClean = !Files.isDirectory( outputDirectory ); }
+        if( toCompile ) {
+
+          // Compile the builder-builder code
+          // ────────────────────────────────
+            final ProcessBuilder pB = new ProcessBuilder(
+              System.getProperty("java.home") + "/bin/javac", /* The Java installation
+                  at `java.home` is known to include `javac` because also it is a JDK
+                  installation, as assured by the `JDK_HOME` at top. */
+                "@building/javac_arguments", "@building/javac_arguments_addendum",
+                "building/BuilderBuilder.java" );
+            pB.redirectOutput( INHERIT );
+            pB.redirectError( INHERIT );
+            try {
+                final int exitValue =  pB.start().waitFor();
+                if( exitValue == 1 ) { System.err.println( "build: Stopped on `javac` error" ); }
+                  // Already `javac` has told the details.
+                else if( exitValue != 0 ) { throw new BootstrappingFailure( "Exit value of "
+                  + exitValue + " from process: " + pB.command() ); }}
+            catch( InterruptedException|IOException x ) { throw new BootstrappingFailure( x ); }}
         try {
 
           // Load the builder-builder code
@@ -66,7 +81,8 @@ final class BuildCommand { // [AFN]
                   did not exist before the present runtime.  It exists now, but still the class loader
                   will not look there for its class files (JDK 14.0.2). */
                 final ClassLoader cL; // Therefore make a new class loader.
-                try { cL = new URLClassLoader( new URL[] { new URL( "file:///tmp/building/" )}); }
+                try { cL = new URLClassLoader(
+                  new URL[] { new URL( "file://" + outputDirectory + "/" )}); }
                 catch( MalformedURLException x ) { throw new BootstrappingFailure( x ); }
                 cA = cL.loadClass( "building.BuilderBuilder" ); }
             else cA = Class.forName( "building.BuilderBuilder" );
