@@ -8,7 +8,7 @@
       # Any actual use of a preview feature will result in a compiler warning visible to the user
       # that (in most cases) cannot be suppressed.  https://openjdk.java.net/jeps/12
  # --source 15 # (given instead in `./javac_arguments`)
-      # Requesting source launch of a file that lacks a `.java` extension.
+      # To demand source launch of a file that lacks a `.java` extension.
       # https://docs.oracle.com/en/java/javase/15/docs/specs/man/java.html#using-source-file-mode-to-launch-single-file-source-code-programs
     -XX:+ShowCodeDetailsInExceptionMessages # https://openjdk.java.net/jeps/358
 

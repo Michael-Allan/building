@@ -61,15 +61,15 @@ final class BuildCommand { // [AFN]
           // Load the builder-builder code
           // ─────────────────────────────
             final Class<?> cA;
-                if( wasClean ) { /* Then the single directory given by `../javac_arguments`
-                      for the `--class-path` of the present runtime (namely the output directory
-                      `/tmp/building/`) did not exist before the present runtime.  It exists now, but
-                      still the class loader will not look there for its class files (JDK 14.0.2). */
-                    final ClassLoader cL; // Therefore make a new class loader.
-                    try { cL = new URLClassLoader( new URL[] { new URL( "file:///tmp/building/" )}); }
-                    catch( MalformedURLException x ) { throw new BootstrappingFailure( x ); }
-                    cA = cL.loadClass( "building.BuilderBuilder" ); }
-                else cA = Class.forName( "building.BuilderBuilder" );
+            if( wasClean ) { /* Then the single directory given by `../javac_arguments` for the
+                  `--class-path` of the present runtime (namely the output directory `/tmp/building/`)
+                  did not exist before the present runtime.  It exists now, but still the class loader
+                  will not look there for its class files (JDK 14.0.2). */
+                final ClassLoader cL; // Therefore make a new class loader.
+                try { cL = new URLClassLoader( new URL[] { new URL( "file:///tmp/building/" )}); }
+                catch( MalformedURLException x ) { throw new BootstrappingFailure( x ); }
+                cA = cL.loadClass( "building.BuilderBuilder" ); }
+            else cA = Class.forName( "building.BuilderBuilder" );
 
           // Make a builder builder
           // ──────────────────────

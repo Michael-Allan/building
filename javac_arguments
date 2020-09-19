@@ -9,9 +9,8 @@
 # `https://docs.oracle.com/en/java/javase/15/docs/specs/man/java.html#using-source-file-mode-to-launch-single-file-source-code-programs`.
 
    --class-path /tmp/building/ # The same as `-d` in `javac_arguments_addendum`.
- # --enable-preview # To allow for the use of text blocks.  https://openjdk.java.net/jeps/378
- ## no longer required for that purpose as of JDK 15
-   --source 15 # Here allowing for any `--enable-preview` above.
+ # --enable-preview
+   --source 15 # To allow for any `--enable-preview` above.
       # Otherwise this argument would need only be present in `java_arguments`.
 
 # NOTE
