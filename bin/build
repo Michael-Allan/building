@@ -1,7 +1,7 @@
 #!/usr/bin/env --split-string=${JDK_HOME}/bin/java @building/javac_arguments @building/java_arguments \c [SS]
 package building; // [AFN]
 
-// Usage from working directory `<PROJECTS>/`:  build <PROJECT>/ <target>…
+// The working directory must be `*PROJECTS*/`.  Usage:  build <PROJECT>/ <target>…
 
 import java.io.IOException;
 import java.net.*;

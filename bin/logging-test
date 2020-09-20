@@ -1,7 +1,7 @@
 #!/usr/bin/env --split-string=${JDK_HOME}/bin/java @building/javac_arguments @building/java_arguments \c [SS]
 package building; // [AFN]
 
-// Usage from working directory `<PROJECTS>/`:  logging-test
+// The working directory must be `*PROJECTS*/`.  Usage:  logging-test
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
