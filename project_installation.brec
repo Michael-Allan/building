@@ -1,9 +1,10 @@
 Installation instructions for the building project
 
-    + Install the files of this project into `*PROJECTS*/building/`.
-        / Here *PROJECTS* is a placeholder for the general project-installation directory, into which
-          compatible software projects are installed.  The present file, for example, would properly
-          be installed at `*PROJECTS*/building/project_installation.brec`.
+    + Install the files of this project into `*COMMAND-DIRECTORY*/building/`.
+        / COMMAND-DIRECTORY is where all project installations related to the building project
+          are accessible by their proper paths.  The present file, for example, would correctly
+          be installed at `*COMMAND-DIRECTORY*/building/project_installation.brec`.
+            : see `^^command directory$` @ lexicon.brec
 
     initial set-up
         1+ Ensure you are running Linux.
@@ -26,20 +27,20 @@ Installation instructions for the building project
                         / ⇒  javac 15
                     - Expect a version of 15, or later.
         3+ Test your access to the building commands.
-            >+ cd *PROJECTS*/
+            >+ cd *COMMAND-DIRECTORY*
             >+ ./building/bin/build
-                / ⇒  Usage: build <PROJECT>/ <target>...
+                / ⇒  Usage: build <PROJECT-PROPER-PATH> <target>...
         4+ Get convenient access to all building commands.
-            + Append this project’s command directory to the shell’s search path.
-                >+ PATH=$PATH:*PROJECTS*/building/bin
+            + Append the directory of this project’s shell commands to the search path.
+                >+ PATH=$PATH:*COMMAND-DIRECTORY*/building/bin
             + Test it.
                 >+ which build
-                    / ⇒  *PROJECTS*/building/bin/build
+                    / ⇒  *COMMAND-DIRECTORY*/building/bin/build
                 >+ build
-                    / ⇒  Usage: build <PROJECT>/ <target>...
+                    / ⇒  Usage: build <PROJECT-PROPER-PATH> <target>...
             + Make it permanent by adding the same to your login initializer:
 
-                  PATH=$PATH:*PROJECTS*/building/bin
+                  PATH=$PATH:*COMMAND-DIRECTORY*/building/bin
 
         5+ Test the logger.
             >+ logging-test

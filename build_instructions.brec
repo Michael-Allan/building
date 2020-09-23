@@ -3,16 +3,18 @@ Building a project’s software
     set-up per project
         + Ensure the software project is installed according to its instructions.
         + Test the installation by building the project’s minimal target, the builder itself.
-            >+ cd *PROJECTS*/
-                : re `PROJECTS` see @ lexicon.brec
-            >+ build *PROJECT*/ builder
-                / Here *PROJECT* is a placeholder for the specific project-installation directory.  E.g.
-                  for the present project, given `*PROJECTS*/` as a working directory, it is `building`.
+            >+ cd *COMMAND-DIRECTORY*
+                / The command directory is where shell commands of the building project are issued,
+                  whence all related project installations are accessible by their proper paths.
+            >+ build *PROJECT-PROPER-PATH* builder
+                / The proper path of the project is the shortest relative file path unique to its
+                  installation, to where its files are installed.  E.g. for the present project,
+                  substitute `building` or `building/`.
     routine use
-        - Always the working directory must be `*PROJECTS*/`.
+        - Always the working directory must be the command directory.
             : see `^^working directory for software builds$`
               @ http://reluk.ca/project/building/action_plan.brec
-        >+ build *PROJECT*/ *target*…
+        >+ build *PROJECT-PROPER-PATH* *target*…
             / Characters ‘-’ and ‘_’ are equivalent in target names.
             - The project’s source code will include a file, typically called `Target.java`,
               that enumerates the possible build targets.
