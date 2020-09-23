@@ -1,5 +1,6 @@
 package building;
 
+// Changes to this file immediately affect the next runtime.  Treat it as a script.
 
 /** A build target particular to this software project.
   */
