@@ -27,8 +27,7 @@ public final class LoggingTestCommand { // [AFN]
     public static void main( final String[] arguments ) {
         if( arguments.length != 0 ){
             System.err.println( "Usage: logging-test" );
-            return; }
-
+            System.exit( 1 ); }
         new LoggingTestCommand().execute(); }
 
 
