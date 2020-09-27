@@ -1,0 +1,83 @@
+#!/usr/bin/env --split-string=${JDK_HOME}/bin/java @building/javac_arguments @building/java_arguments \c [SS]
+package building; // [AFN]
+
+// Usage:  clean
+//
+// Changes to this file immediately affect the next runtime.  Treat it as a script.
+
+import java.io.IOException;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+
+import static java.nio.file.FileVisitResult.CONTINUE;
+
+
+/** A shell command to remove `/tmp/building/`, the output directory for all build processes.
+  */
+public final class CleanCommand extends SimpleFileVisitor<Path> { // [AFN]
+
+
+
+    private CleanCommand() {}
+
+
+
+    /** Execute the command as given by the shell.
+      */
+    public static void main( final String[] arguments ) throws IOException {
+        if( arguments.length != 0 ){
+            System.err.println( "Usage: clean" );
+            System.exit( 1 ); }
+        new CleanCommand().execute(); }
+
+
+
+   // ━━━  F i l e   V i s i t o r  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+    public @Override FileVisitResult visitFile( final Path file, BasicFileAttributes _a )
+          throws IOException {
+        return delete( file ); }
+
+
+
+    public @Override FileVisitResult postVisitDirectory( final Path directory, final IOException x )
+          throws IOException {
+        if( x != null ) throw x;
+        return delete( directory ); }
+
+
+
+////  P r i v a t e  ////////////////////////////////////////////////////////////////////////////////////
+
+
+    private int count; // Of files deleted.
+
+
+
+    private FileVisitResult delete( final Path file ) throws IOException {
+        Files.delete( file );
+        ++count;
+        return CONTINUE; }
+
+
+
+    /** Execute the command.
+      */
+    private void execute() throws IOException {
+        final Path outDirectory = Path.of(System.getProperty("java.io.tmpdir")).resolve( "building" );
+        if( !Files.isDirectory( outDirectory )) return;
+        Files.walkFileTree( outDirectory, CleanCommand.this );
+        if( count != 0 ) System.out.println( count ); }}
+
+
+
+// NOTES
+// ─────
+//   AFN  Atypical file naming is allowed here, as explained in `./build`.
+//
+//   SS · Long form `--split-string` is for Emacs, as explained in `./build`.
+
+
+
+                                                        // Copyright © 2020  Michael Allan.  Licence MIT.
