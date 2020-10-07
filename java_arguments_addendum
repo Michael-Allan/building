@@ -1,0 +1,7 @@
+# Additional `java_arguments` particular to the `build` command  | -*- coding: us-ascii -*-
+
+    -enableassertions # Widely enough to cover any project whose building code might execute.
+
+# Local Variables:
+# mode: conf-javaprop
+# End:

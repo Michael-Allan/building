@@ -1,4 +1,4 @@
-#!/usr/bin/env --split-string=${JDK_HOME}/bin/java @building/javac_arguments @building/java_arguments \c [SS]
+#!/usr/bin/env --split-string=${JDK_HOME}/bin/java @building/java_arguments @building/java_arguments_addendum @building/javac_arguments \c [SS]
 package building; // [AFN]
 
 // Usage:  build <PROJECT-PROPER-PATH> <target>…
@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.*;
 import java.nio.file.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.lang.ProcessBuilder.Redirect.INHERIT;
 import static java.nio.file.Files.getLastModifiedTime;
@@ -30,13 +32,13 @@ final class BuildCommand { // [AFN]
     public static void main( final String[] arguments ) {
         if( arguments.length < 2 ){
             System.err.println( "Usage: build <PROJECT-PROPER-PATH> <target>..." );
-            return; }
+            System.exit( 1 ); }
         final String argument = arguments[0];
         final Path projectPath = FileSystems.getDefault().getPath( argument ); /* Effectively filters out
           input variance.  Whether or not the argument ends with ‘/’ has no effect on `projectPath`. */
         if( projectPath.isAbsolute() ) {
             System.err.println( "build: Not a relative path: " + argument );
-            return; }
+            System.exit( 1 ); }
         new BuildCommand(projectPath,arguments).execute(); }
 
 
@@ -52,90 +54,103 @@ final class BuildCommand { // [AFN]
       */
     private void execute() { // A bootstrapped process comprising three build stages:
 
-      // ════════════════════════════
       // 1. Build the builder builder
-      // ════════════════════════════
-        final Path sourceFile;
-        final boolean toCompile;
+      // ────────────────────────────
+        final List<String> compilerArguments = new ArrayList<>(); // Empty if no code needs compiling.
         final Path outDirectory;
         final boolean wasClean; {
             // Already the working directory is the command directory.  `../build_instructions.brec`
             final Path p = Path.of( "building" ); // Proper path of the present project.
-            sourceFile = p.resolve( "BuilderBuilder.java" );
             outDirectory = Path.of(System.getProperty("java.io.tmpdir")).resolve( p );
-            final Path classFile = outDirectory.resolve( p.resolve( "BuilderBuilder.class" ));
-            if( Files.exists( classFile )) {
-                try { toCompile =
-                  getLastModifiedTime(sourceFile).compareTo(getLastModifiedTime(classFile)) >= 0; }
-                catch( IOException x ) { throw new Failure( x ); }
-                wasClean = false; }
-            else {
-                toCompile = true;
-                wasClean = !Files.isDirectory( outDirectory ); }}
-        if( toCompile ) {
+            wasClean = !Files.isDirectory( outDirectory );
+            for( String s: new String[]{ "BuilderBuilder", /*dependencies*/"Bootstrap", "Builder" }) {
+                final Path sourceFile = p.resolve( s + ".java" );
+                final Path classFile = outDirectory.resolve( p.resolve( s + ".class" ));
+                final boolean toCompile;
+                if( Files.exists( classFile )) {
+                    try { toCompile =
+                      getLastModifiedTime(sourceFile).compareTo(getLastModifiedTime(classFile)) >= 0; }
+                    catch( IOException x ) { throw new Failure( x ); }}
+                else toCompile = true;
+                if( toCompile ) compilerArguments.add( sourceFile.toString() ); }}
+        final int sourceCount = compilerArguments.size();
+        if( sourceCount > 0 ) {
 
-          // Compile `BuilderBuilder`  cf. `BuilderBuilder.get`
-          // ────────────────────────
-            final ProcessBuilder pB = new ProcessBuilder( System.getProperty("java.home") + "/bin/javac",
-                // The Java installation at `java.home` is known to include `javac` because also
-                // it is a JDK installation, as assured by the `JDK_HOME` at top.
-              "@building/javac_arguments", "@building/javac_arguments_addendum", sourceFile.toString() );
+          // compile the code
+          // ┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+            // Changing?  Sync → `BuilderBuilder.compile`.
+            int a = 0;
+            compilerArguments.add( a++, System.getProperty("java.home") + "/bin/javac" );
+              // The Java installation at `java.home` is known to include `javac` because also
+              // it is a JDK installation, as assured by the `JDK_HOME` at top.
+            compilerArguments.add( a++, "@building/javac_arguments" );
+            compilerArguments.add( a,   "@building/javac_arguments_addendum" );
+            final ProcessBuilder pB = new ProcessBuilder( compilerArguments );
             pB.redirectOutput( INHERIT );
             pB.redirectError( INHERIT );
             try {
                 final int exitValue =  pB.start().waitFor();
                 if( exitValue == 1 ) {
                     System.err.println( "build: Stopped on `javac` error" );
-                    return; } // Already `javac` has told the details.
+                    System.exit( 1 ); } // Already `javac` has told the details.
                 else if( exitValue != 0 ) throw new Failure( "Exit value of " + exitValue
                   + " from process: " + pB.command() ); }
             catch( InterruptedException|IOException x ) { throw new Failure( x ); }}
+        if( wasClean ) {
+
+          // prepare to load the code
+          // ┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+          // The class-path directory given in `../javac_arguments` (output directory `/tmp/building/`)
+          // did not exist before the present runtime.  It exists now, but still the class loader will
+          // not look there for class files (JDK 14.0.2).  Therefore make a new class loader.
+            try {
+              loader = new URLClassLoader( new URL[] { new URL( "file://" + outDirectory + "/" )}); }
+            catch( MalformedURLException x ) { throw new Failure( x ); }}
         try {
             Class<?> c;
+            if( sourceCount > 0 ) {
 
-          // Load the `BuilderBuilder` code
-          // ──────────────────────────────
-            if( wasClean ) { /* Then the single directory given in `../javac_arguments` for the
-                  `--class-path` of the present runtime (namely the output directory `/tmp/building/`)
-                  did not exist before the present runtime.  It exists now, but still the class loader
-                  will not look there for its class files (JDK 14.0.2). */
-                final ClassLoader cL; // Therefore make a new class loader.
-                try { cL = new URLClassLoader( new URL[] { new URL( "file://" + outDirectory + "/" )}); }
-                catch( MalformedURLException x ) { throw new Failure( x ); }
-                c = cL.loadClass( "building.BuilderBuilder" ); }
-            else c = Class.forName( "building.BuilderBuilder" );
+              // inform the user
+              // ┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+                c = load( "building.Bootstrap" );
+                final Object bootstrap = c.getMethod("i").invoke( null/*static*/ );
+                c.getMethod("printCompilation",Integer.TYPE).invoke( bootstrap, sourceCount ); }
 
-          // Get a builder builder for the project to be built
-          // ─────────────────────
-            final Object builderBuilder = c.getDeclaredMethod("forPath",Path.class).invoke(
+          // get a builder builder for the project to be built
+          // ┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+            c = load( "building.BuilderBuilder" );
+            final Object builderBuilder = c.getMethod("forPath",Path.class).invoke(
               null/*static*/, projectPath );
             c = builderBuilder.getClass();
 
-
-          // ════════════════════
           // 2. Build the builder
-          // ════════════════════
+          // ────────────────────
             c.getMethod("build").invoke( builderBuilder );
             final Object builder = c.getMethod("newBuilder").invoke( builderBuilder );
             c = builder.getClass();
 
-
-          // ══════════════════════════════
           // 3. Build the requested targets
-          // ══════════════════════════════
+          // ──────────────────────────────
             final int tN = arguments.length;
             int t = 1;
-            do {
-                final String target = arguments[t];
-                if( !target.equals( "builder" )) { // Already built as `builder`.
-                    c.getMethod("build").invoke( builder, target ); }}
+            do c.getMethod("build",String.class).invoke( builder, arguments[t] );
             while( ++t < tN ); }
         catch( final InvocationTargetException xIT ) {
             final Throwable x = xIT.getCause();
-            if( x != null && "building.BuilderBuilder.UserError".equals( x.getClass().getName() )) {
-                System.err.println( x.getMessage() ); }
+            if( x != null && "building.Builder$UserError".equals( x.getClass().getName() )) {
+                System.err.println( x.getMessage() );
+                System.exit( 1 ); }
             else throw new Failure( xIT ); }
         catch( ReflectiveOperationException x ) { throw new Failure( x ); }}
+
+
+
+    private Class<?> load( final String className ) throws ClassNotFoundException {
+        return loader == null? Class.forName(className): loader.loadClass(className); }
+
+
+
+    private ClassLoader loader; // Null unless a special one is required.
 
 
 
