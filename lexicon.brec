@@ -13,11 +13,13 @@ Definition of terms for the building project
         \ The installation instructions of those related projects repeat in part this definition,
         \ because the readers there must not be expected to look it up elsewhere.
     proper package, of a project
-        - The Java package unique to a project.
-    proper path, of a project
-        - The shortest relative file path unique to the installation of a project,
-          to where its files are installed.
-            : see `^^>\+ build \*PROJECT-PROPER-PATH\* builder$` @ build_instructions.brec
+        - The Java package that identifies the project universally.
+    proper path
+        , of a project
+            - The relative file path that identifies the project universally.
+                : see `^^. The proper path of a project is` @ build_instructions.brec
+        , of a project file
+            - The proper path of the project extended to the file.
 
 
                                                          \ Copyright © 2020  Michael Allan.  Licence MIT.

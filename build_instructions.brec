@@ -7,9 +7,8 @@ Building a project’s software
                 / The command directory is where shell commands of the building project are issued,
                   whence all related project installations are accessible by their proper paths.
             >+ build *PROJECT-PROPER-PATH* builder
-                / The proper path of the project is the shortest relative file path unique to its
-                  installation, to where its files are installed.  E.g. for the present project,
-                  substitute `building` or `building/`.
+                / The proper path of a project is the relative file path that identifies it universally.
+                  E.g. for the present project, substitute `building` or `building/`.
     routine use
         - Always the working directory must be the command directory.
             : see `^^working directory for software builds$`
