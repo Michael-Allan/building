@@ -1,4 +1,4 @@
-#!/usr/bin/env --split-string=${JDK_HOME}/bin/java @building/javac_arguments @building/java_arguments \c [SS]
+#!/usr/bin/env --split-string=${JDK_HOME}/bin/java @building/java_arguments @building/javac_arguments \c [SS]
 package building; // [AFN]
 
 // Usage:  clean
@@ -25,7 +25,7 @@ public final class CleanCommand extends SimpleFileVisitor<Path> { // [AFN]
     /** Execute the command as given by the shell.
       */
     public static void main( final String[] arguments ) throws IOException {
-        if( arguments.length != 0 ){
+        if( arguments.length != 0 ) {
             System.err.println( "Usage: clean" );
             System.exit( 1 ); }
         new CleanCommand().execute(); }
