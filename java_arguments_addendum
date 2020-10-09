@@ -1,4 +1,4 @@
-# Additional `java_arguments` particular to the `build` command  | -*- coding: us-ascii -*-
+# Additional arguments for the `java` launch of the `build` command  | -*- coding: us-ascii -*-
 
     -enableassertions # Widely enough to cover any project whose building code might execute.
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env --split-string=${JDK_HOME}/bin/java @building/java_arguments @building/java_arguments_addendum @building/javac_arguments \c [SS]
+#!/usr/bin/env --split-string=${JDK_HOME}/bin/java @building/java_arguments @building/java_arguments_addendum @building/java_javac_arguments \c [SS]
 package building; // [AFN]
 
 // Usage:  build <PROJECT-PROPER-PATH> <target>…
@@ -83,8 +83,8 @@ final class BuildCommand { // [AFN]
             compilerArguments.add( a++, System.getProperty("java.home") + "/bin/javac" );
               // The Java installation at `java.home` is known to include `javac` because also
               // it is a JDK installation, as assured by the `JDK_HOME` at top.
-            compilerArguments.add( a++, "@building/javac_arguments" );
-            compilerArguments.add( a,   "@building/javac_arguments_addendum" );
+            compilerArguments.add( a++, "@building/java_javac_arguments" );
+            compilerArguments.add( a,   "@building/javac_arguments" );
             final ProcessBuilder pB = new ProcessBuilder( compilerArguments );
             pB.redirectOutput( INHERIT );
             pB.redirectError( INHERIT );
@@ -100,7 +100,7 @@ final class BuildCommand { // [AFN]
 
           // prepare to load the code
           // ┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
-          // The class-path directory given in `../javac_arguments` (output directory `/tmp/building/`)
+          // The directory given in `../java_javac_arguments` for the class path (the output directory)
           // did not exist before the present runtime.  It exists now, but still the class loader will
           // not look there for class files (JDK 14.0.2).  Therefore make a new class loader.
             try {

@@ -31,13 +31,13 @@ public final class Bootstrap {
 
 
 
-    /** Print an indication of successful compilation of building code.
+    /** Print an indication of successful compilation by `javac` of building code.
       */
     public void printCompilation( final int count ) {
         if( !wasPrintingStarted ) {
             System.out.print( "(bootstrap)\n" );
             wasPrintingStarted = true; }
-        System.out.print( "    compile " );
+        System.out.print( "    javac " );
         System.out.println( count ); }
 
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env --split-string=${JDK_HOME}/bin/java @building/java_arguments @building/javac_arguments \c [SS]
+#!/usr/bin/env --split-string=${JDK_HOME}/bin/java @building/java_arguments @building/java_javac_arguments \c [SS]
 package building; // [AFN]
 
 // Usage:  logging-test

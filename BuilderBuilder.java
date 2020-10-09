@@ -181,8 +181,8 @@ public interface BuilderBuilder {
         compilerArguments.add( System.getProperty("java.home") + "/bin/javac" );
           // The Java installation at `java.home` is known to include `javac` because also
           // it is a JDK installation, as assured by the `JDK_HOME` at top.
+        compilerArguments.add( "@building/java_javac_arguments" );
         compilerArguments.add( "@building/javac_arguments" );
-        compilerArguments.add( "@building/javac_arguments_addendum" );
         compilerArguments.addAll( sourceNames );
         final ProcessBuilder pB = new ProcessBuilder( compilerArguments );
         pB.redirectOutput( INHERIT );
