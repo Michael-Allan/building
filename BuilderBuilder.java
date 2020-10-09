@@ -14,12 +14,11 @@ import static java.lang.ProcessBuilder.Redirect.INHERIT;
 import static java.nio.file.Files.getLastModifiedTime;
 
 
-/** A builder of software builders.
-  * In lieu of the {@linkplain BuilderBuilderD default implementation}, a project may define
-  * its own by including with its {@linkplain #internalBuildingCode(Path) internal building code}
-  * a source file named `BuilderBuilder.java`.  The class definition must be public.  It must have
-  * a public constructor that takes either the same parameters as the default implementation, or no
-  * parameters.  It must inherit from the present interface.  It must depend on no code outside of:
+/** A builder of software builders.  In lieu of the {@linkplain BuilderBuilderD default implementation},
+  * a project may define its own builder by putting a source file named `BuilderBuilder.java` into its
+  * {@linkplain #internalBuildingCode(Path) building code}.  The class definition must be public and must
+  * include a public constructor that takes no parameters.  It must inherit from the present interface.
+  * It must depend on no code outside of:
   *
   * <ul><li>The standard libraries</li>
   *     <li>`{@linkplain Bootstrap       Bootstrap}`</li>
@@ -138,12 +137,18 @@ public interface BuilderBuilder {
 
 
     public default Builder newBuilder() {
-        final Path sourceFile = Builder.implementationFile( projectPath() );
-        final String cName = sourceFile.getParent().toString().replace( separatorChar, '.' )
-          + '.' + simpleClassName(sourceFile);
         try {
-            final Class<? extends Builder> c = Class.forName(cName).asSubclass(Builder.class);
-            return c.getConstructor().newInstance(); }
+            final Path projectPath = projectPath();
+            final Class<? extends Builder> cBuilder =
+              Class.forName( className( Builder.implementationFile( projectPath )))
+              .asSubclass( Builder.class );
+            final Class<? extends Enum> cTarget =
+              Class.forName( className( internalBuildingCode(projectPath).resolve( "Target.java" )))
+              .asSubclass( Enum.class );
+            try { // One of (a) the default implementation of `BuilderD`, or (b) a custom one:
+                return cBuilder.getConstructor( String.class, Path.class, Class.class ) // (a)
+                  .newInstance( projectPackage(), projectPath, cTarget ); }
+            catch( NoSuchMethodException x ) { return cBuilder.getConstructor().newInstance(); }} // (b)
         catch( ReflectiveOperationException x ) { throw new RuntimeException( x ); }}
 
 
@@ -171,6 +176,14 @@ public interface BuilderBuilder {
 
 
 ////  P r i v a t e  ////////////////////////////////////////////////////////////////////////////////////
+
+
+    /** @see #simpleClassName(Path)
+      */
+    private static String className( final Path sourceFile ) {
+        return sourceFile.getParent().toString().replace( separatorChar, '.' )
+          + '.' + simpleClassName(sourceFile); }
+
 
 
     /** @param sourceNames The proper path of each source file to compile.
@@ -234,14 +247,16 @@ public interface BuilderBuilder {
         try {
             final Class<? extends BuilderBuilder> c = Class.forName( cName )
               .asSubclass( BuilderBuilder.class );
-            try {
-                return c.getConstructor(String.class,Path.class).newInstance(
-                  projectPackage, projectPath ); }
-            catch( NoSuchMethodException x ) { return c.getConstructor().newInstance(); }}
+            try { // One of (a) the default implementation of `BuilderBuilderD`, or (b) a custom one:
+                return c.getConstructor( String.class, Path.class ) // (a)
+                  .newInstance( projectPackage, projectPath ); }
+            catch( NoSuchMethodException x ) { return c.getConstructor().newInstance(); }} // (b)
         catch( ReflectiveOperationException x ) { throw new RuntimeException( x ); }}
 
 
 
+    /** @see #className(Path)
+      */
     private static String simpleClassName( final Path sourceFile ) {
         final String s = sourceFile.getFileName().toString();
         assert s.endsWith( ".java" );

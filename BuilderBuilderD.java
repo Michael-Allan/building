@@ -14,6 +14,7 @@ public class BuilderBuilderD implements BuilderBuilder {
       * @see #projectPath()
       */
     public BuilderBuilderD( final String projectPackage, final Path projectPath ) {
+        if( projectPath.isAbsolute() ) throw new IllegalArgumentException();
         this.projectPackage = projectPackage;
         this.projectPath = projectPath; }
 

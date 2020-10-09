@@ -9,9 +9,9 @@ import static building.Bootstrap.buildingProjectPath;
 
 
 /** A builder of a project’s software.  It compiles the code of the project and prepares it for use.
-  * In lieu of the {@linkplain BuilderD default implementation}, a project may define its own
-  * by including with its {@linkplain BuilderBuilder#internalBuildingCode(Path) internal building code}
-  * a source file named `Builder.java`.  The class definition must be public and must have
+  * In lieu of the {@linkplain BuilderD default implementation}, a project may define its own builder
+  * by putting into its {@linkplain BuilderBuilder#internalBuildingCode(Path) building code}
+  * a source file named `Builder.java`.  The class definition must be public and must include
   * a public constructor that takes no parameters.  It must inherit from the present interface.
   * It must depend on no code outside of the:
   *
