@@ -22,13 +22,13 @@ import static building.Bootstrap.buildingProjectPath;
 public interface Builder {
 
 
-    /** Build the code to the level of the given target.
+    /** Builds the code to the level of the given target.
       */
     public void build( String target ) throws UserError;
 
 
 
-    /** Give the path of the builder source file for a given project, namely
+    /** Gives the path of the builder source file for a given project, namely
       * `<i>{@linkplain BuilderBuilder#internalBuildingCode(Path) internalBuildingCode}</i>/Builder.java`
       * if a file exists there, else the file path of the {@linkplain BuilderD default implementation}.
       *

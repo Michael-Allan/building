@@ -31,7 +31,7 @@ public final class Bootstrap {
 
 
 
-    /** Print an indication of successful compilation by `javac` of building code.
+    /** Prints an indication of successful compilation by `javac` of building code.
       */
     public void printCompilation( final int count ) {
         if( !wasPrintingStarted ) {

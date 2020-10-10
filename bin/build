@@ -27,7 +27,7 @@ final class BuildCommand { // [AFN]
 
 
 
-    /** Execute the command as given by the shell.
+    /** Executes the command as given by the shell.
       */
     public static void main( final String[] arguments ) {
         if( arguments.length < 2 ){
@@ -50,7 +50,7 @@ final class BuildCommand { // [AFN]
 
 
 
-    /** Execute the command.
+    /** Executes the command.
       */
     private void execute() { // A bootstrapped process comprising three build stages:
 

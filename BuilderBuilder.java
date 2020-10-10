@@ -29,9 +29,9 @@ import static java.nio.file.Files.getLastModifiedTime;
 public interface BuilderBuilder {
 
 
-    /** Compile the code of the software builder, including any
+    /** Compiles the code of the software builder, including any
       * {@linkplain #externalBuildingCode() external building code} on which it depends,
-      * and prepare it for use.
+      * and prepares it for use.
       *
       * <p>To get an instance of the builder once built, use {@linkplain #newBuilder() newBuilder}.</p>
       *
@@ -66,9 +66,9 @@ public interface BuilderBuilder {
 
 
 
-    /** The proper package of each project, aside from the {@linkplain #projectPackage() owning project},
+    /** Gives the proper package of each project, less the {@linkplain #projectPackage() owning project},
       * whose {@linkplain #internalBuildingCode() building code} the software builder may depend on.
-      * The default implementation returns a singleton set comprising ‘building’, the proper package
+      * The default implementation gives a singleton set comprising ‘building’, the proper package
       * of the <a href='http://reluk.ca/project/building/'>building project</a>.
       *
       *     @see #internalBuildingCode(Path)
@@ -77,7 +77,7 @@ public interface BuilderBuilder {
 
 
 
-    /** Give a builder builder for a given project, first compiling its code if necessary.
+    /** Gives a builder builder for a given project, first compiling its code if necessary.
       *
       *     @see #projectPackage()
       */
@@ -87,7 +87,7 @@ public interface BuilderBuilder {
 
 
 
-    /** Give a builder builder for a given project, first compiling its code if necessary.
+    /** Gives a builder builder for a given project, first compiling its code if necessary.
       *
       *     @see #projectPath()
       */
@@ -97,7 +97,7 @@ public interface BuilderBuilder {
 
 
 
-    /** Give the path of the builder-builder source file for a given project, namely
+    /** Gives the path of the builder-builder source file for a given project, namely
       * `<i>{@linkplain #internalBuildingCode(Path) internalBuildingCode}</i>/BuilderBuilder.java`
       * if a file exists there, else the path of the {@linkplain BuilderBuilderD default implementation}.
       *
@@ -121,7 +121,7 @@ public interface BuilderBuilder {
 
 
 
-    /** Give the proper path of the directory containing the internal building code for a given project,
+    /** Gives the proper path of the directory containing the internal building code for a given project,
       * namely `<i>projectPath</i>/builder/` if a directory exists there, else `<i>projectPath</i>/`.
       * A project may store the code in this directory alone, exclusive of subdirectories.
       *
@@ -211,7 +211,7 @@ public interface BuilderBuilder {
 
 
 
-    /** Give a builder builder for a given project, first compiling its code if necessary.
+    /** Gives a builder builder for a given project, first compiling its code if necessary.
       *
       *     @see #projectPackage()
       *     @see #projectPath()
