@@ -83,6 +83,7 @@ public interface BuilderBuilder {
       *     @param projectPackage The proper package of the project.
       */
     public static BuilderBuilder forPackage( final String projectPackage ) throws UserError {
+        Bootstrap.i().verify( projectPackage );
         return get( projectPackage, /*projectPath*/FileSystems.getDefault().getPath(
           projectPackage.replace( '.', separatorChar ))); }
 
@@ -93,7 +94,7 @@ public interface BuilderBuilder {
       *     @param projectPath The proper path of the project.
       */
     public static BuilderBuilder forPath( final Path projectPath ) throws UserError {
-        if( projectPath.isAbsolute() ) throw new IllegalArgumentException();
+        Bootstrap.i().verify( projectPath );
         return get( /*projectPackage*/projectPath.toString().replace(separatorChar,'.'), projectPath ); }
 
 
@@ -105,7 +106,7 @@ public interface BuilderBuilder {
       *     @param projectPath The proper path of the project.
       */
     public static Path implementationFile( final Path projectPath ) { // Cf. @ `Builder`.
-        if( projectPath.isAbsolute() ) throw new IllegalArgumentException();
+        Bootstrap.i().verify( projectPath );
         Path p = internalBuildingCode(projectPath).resolve(
           projectPath.equals(buildingProjectPath)? "BuilderBuilderP.java":"BuilderBuilder.java" );
             // So avoiding a name conflict with the present file.
@@ -129,7 +130,7 @@ public interface BuilderBuilder {
       *     @see #externalBuildingCode()
       */
     public static Path internalBuildingCode( final Path projectPath ) {
-        if( projectPath.isAbsolute() ) throw new IllegalArgumentException();
+        Bootstrap.i().verify( projectPath );
         Path p = projectPath.resolve( "builder" );
         if( !Files.isDirectory( p )) p = projectPath;
         return p; }

@@ -35,7 +35,7 @@ public interface Builder {
       *     @param projectPath The proper path of the project.
       */
     public static Path implementationFile( final Path projectPath ) { // Cf. @ `BuilderBuilder`.
-        if( projectPath.isAbsolute() ) throw new IllegalArgumentException();
+        Bootstrap.i().verify( projectPath );
         Path p = BuilderBuilder.internalBuildingCode(projectPath).resolve(
           projectPath.equals(buildingProjectPath)? "BuilderP.java":"Builder.java" );
             // So avoiding a name conflict with the present file.
@@ -60,7 +60,7 @@ public interface Builder {
    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 
-    /** Thrown on encountering an error that the user is likely in a position to correct.
+    /** Thrown on encountering an anomaly the user is likely in a position to correct.
       */
     public static final class UserError extends Exception {
 
