@@ -140,16 +140,15 @@ public interface BuilderBuilder {
       */
     public default Builder newBuilder() {
         try {
-            final Path projectPath = projectPath();
             final Class<? extends Builder> cBuilder =
-              Class.forName( className( Builder.implementationFile( projectPath )))
+              Class.forName( className( Builder.implementationFile( projectPath() )))
               .asSubclass( Builder.class );
             final Class<? extends Enum> cTarget =
-              Class.forName( className( internalBuildingCode(projectPath).resolve( "Target.java" )))
+              Class.forName( className( internalBuildingCode(projectPath()).resolve( "Target.java" )))
               .asSubclass( Enum.class );
             try { // One of (a) the default implementation of `BuilderD`, or (b) a custom one:
                 return cBuilder.getConstructor( String.class, Path.class, Class.class ) // (a)
-                  .newInstance( projectPackage(), projectPath, cTarget ); }
+                  .newInstance( projectPackage(), projectPath(), cTarget ); }
             catch( NoSuchMethodException x ) { return cBuilder.getConstructor().newInstance(); }} // (b)
         catch( ReflectiveOperationException x ) { throw new RuntimeException( x ); }}
 

@@ -13,7 +13,7 @@ Definition of terms for the building project
         \ The installation instructions of those related projects repeat in part this definition,
         \ because the readers there must not be expected to look it up elsewhere.
     proper package, of a project
-        - The Java package that identifies the project universally.
+        - The Java package that identifies the project.
     proper path
         , of a project
             - The relative file path that identifies the project universally.
