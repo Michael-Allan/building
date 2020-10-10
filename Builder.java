@@ -32,7 +32,7 @@ public interface Builder {
       * `<i>{@linkplain BuilderBuilder#internalBuildingCode(Path) internalBuildingCode}</i>/Builder.java`
       * if a file exists there, else the file path of the {@linkplain BuilderD default implementation}.
       *
-      *     @see #projectPath()
+      *     @param projectPath The proper path of the project.
       */
     public static Path implementationFile( final Path projectPath ) { // Cf. @ `BuilderBuilder`.
         if( projectPath.isAbsolute() ) throw new IllegalArgumentException();
@@ -44,8 +44,7 @@ public interface Builder {
 
 
 
-    /** The <a href='http://reluk.ca/project/building/lexicon.brec'>
-      * proper path</a> of the source file for the {@linkplain BuilderD default implementation}.
+    /** The proper path of the source file for the {@linkplain BuilderD default implementation}.
       */
     public static final Path implementationFileDefault = buildingProjectPath.resolve( "BuilderD.java" );
 

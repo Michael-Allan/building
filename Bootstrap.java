@@ -15,8 +15,7 @@ public final class Bootstrap {
 
 
 
-    /** The <a href='http://reluk.ca/project/building/lexicon.brec'>
-      * proper path</a> of the building project.
+    /** The proper path of the building project.
       */
     public static final Path buildingProjectPath = Path.of( "building" );
 

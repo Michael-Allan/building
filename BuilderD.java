@@ -7,13 +7,14 @@ import java.nio.file.Path;
 
 /** Default implementation of a software builder.
   *
-  *     @param <T> The class that defines the build targets of the project.
+  *     @param <T> The type of build targets.
   */
 public class BuilderD<T extends Enum<T>> implements Builder {
 
 
-    /** @see BuilderBuilder#projectPackage()
-      * @see BuilderBuilder#projectPath()
+    /** @param projectPackage The proper package of the owning project.
+      * @param projectPath The proper path of the owning project.
+      * @param targetClass The class of build targets.
       */
     public BuilderD( final String projectPackage, final Path projectPath, final Class<T> targetClass ) {
         if( projectPath.isAbsolute() ) throw new IllegalArgumentException();

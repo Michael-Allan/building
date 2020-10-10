@@ -72,6 +72,7 @@ public interface BuilderBuilder {
       * of the <a href='http://reluk.ca/project/building/'>building project</a>.
       *
       *     @see #internalBuildingCode(Path)
+      *     @return Set of proper packages.
       */
     public default Set<String> externalBuildingCode() { return Set.of( "building" ); }
 
@@ -79,7 +80,7 @@ public interface BuilderBuilder {
 
     /** Gives a builder builder for a given project, first compiling its code if necessary.
       *
-      *     @see #projectPackage()
+      *     @param projectPackage The proper package of the project.
       */
     public static BuilderBuilder forPackage( final String projectPackage ) throws UserError {
         return get( projectPackage, /*projectPath*/FileSystems.getDefault().getPath(
@@ -89,7 +90,7 @@ public interface BuilderBuilder {
 
     /** Gives a builder builder for a given project, first compiling its code if necessary.
       *
-      *     @see #projectPath()
+      *     @param projectPath The proper path of the project.
       */
     public static BuilderBuilder forPath( final Path projectPath ) throws UserError {
         if( projectPath.isAbsolute() ) throw new IllegalArgumentException();
@@ -97,11 +98,11 @@ public interface BuilderBuilder {
 
 
 
-    /** Gives the path of the builder-builder source file for a given project, namely
+    /** Gives the proper path of the builder-builder source file for a given project, namely
       * `<i>{@linkplain #internalBuildingCode(Path) internalBuildingCode}</i>/BuilderBuilder.java`
       * if a file exists there, else the path of the {@linkplain BuilderBuilderD default implementation}.
       *
-      *     @see #projectPath()
+      *     @param projectPath The proper path of the project.
       */
     public static Path implementationFile( final Path projectPath ) { // Cf. @ `Builder`.
         if( projectPath.isAbsolute() ) throw new IllegalArgumentException();
@@ -113,8 +114,7 @@ public interface BuilderBuilder {
 
 
 
-    /** The <a href='http://reluk.ca/project/building/lexicon.brec'>
-      * proper path</a> of the source file for the {@linkplain BuilderBuilderD default implementation}.
+    /** The proper path of the source file for the {@linkplain BuilderBuilderD default implementation}.
       */
     public static final Path implementationFileDefault =
       buildingProjectPath.resolve( "BuilderBuilderD.java" );
@@ -125,7 +125,7 @@ public interface BuilderBuilder {
       * namely `<i>projectPath</i>/builder/` if a directory exists there, else `<i>projectPath</i>/`.
       * A project may store the code in this directory alone, exclusive of subdirectories.
       *
-      *     @see #projectPath()
+      *     @param projectPath The proper path of the project.
       *     @see #externalBuildingCode()
       */
     public static Path internalBuildingCode( final Path projectPath ) {
@@ -136,6 +136,8 @@ public interface BuilderBuilder {
 
 
 
+    /** Makes an instance of the software builder, once {@linkplain #build() built}.
+      */
     public default Builder newBuilder() {
         try {
             final Path projectPath = projectPath();
@@ -153,23 +155,23 @@ public interface BuilderBuilder {
 
 
 
-    /** The <a href='http://reluk.ca/project/building/lexicon.brec'>
-      * proper package</a> of the owning project.
+    /** The proper package of the owning project.
       */
     public String projectPackage();
 
 
 
-    /** The <a href='http://reluk.ca/project/building/lexicon.brec'>
-      * proper path</a> of the owning project.
+    /** The proper path of the owning project.
       */
     public Path projectPath();
 
 
 
     /** Set of projects for which a {@linkplain #build() builder build} was called in the present
-      * runtime.  Here each project is represented by its {@linkplain #projectPackage() proper package}.
-      * Never remove a project from this set.  Use it in builder builds to avoid duplicate builds.
+      * runtime.  Here each project is represented by its proper package.
+      *
+      * <p>Never remove a project from this set.  Rather use it in builder builds to avoid
+      * duplicate builds of a project.</p>
       */
     public static final Set<String> projectsUnderBuild = new HashSet<>();
 
@@ -213,8 +215,8 @@ public interface BuilderBuilder {
 
     /** Gives a builder builder for a given project, first compiling its code if necessary.
       *
-      *     @see #projectPackage()
-      *     @see #projectPath()
+      *     @param projectPackage The proper package of the project.
+      *     @param projectPath The proper path of the project.
       */
     private static BuilderBuilder get( final String projectPackage, final Path projectPath )
       throws UserError {

@@ -154,8 +154,7 @@ final class BuildCommand { // [AFN]
 
 
 
-    /** The <a href='http://reluk.ca/project/building/lexicon.brec'>
-      * proper path</a> of the project to build.
+    /** The proper path of the project to build.
       */
     private final Path projectPath;
 
