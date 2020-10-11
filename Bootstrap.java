@@ -111,7 +111,8 @@ public final class Bootstrap {
 ////  P r i v a t e  ////////////////////////////////////////////////////////////////////////////////////
 
 
-    private static final Set<String> projectsShowingProgress = new HashSet<>(); }
+    private static final Set<String> projectsShowingProgress = new HashSet<>(); } /* Generally a maximum
+      of two members, unless one project has customized its build to entail the build of another. */
 
 
 

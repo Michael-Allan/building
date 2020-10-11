@@ -12,8 +12,8 @@ import java.nio.file.Path;
 public class BuilderD<T extends Enum<T>> implements Builder {
 
 
-    /** @param projectPackage The proper package of the owning project.
-      * @param projectPath The proper path of the owning project.
+    /** @see projectPackage()
+      * @see projectPath()
       * @param targetClass The class of build targets.
       */
     public BuilderD( final String projectPackage, final Path projectPath, final Class<T> targetClass ) {
@@ -30,6 +30,24 @@ public class BuilderD<T extends Enum<T>> implements Builder {
     /** Does nothing, this builder is already built.
       */
     public final void buildTarget_builder() {}
+
+
+
+    /** The proper package of the owning project.
+      */
+    public final String projectPackage() { return projectPackage; }
+
+
+        private final String projectPackage;
+
+
+
+    /** The proper path of the owning project.
+      */
+    public final Path projectPath() { return projectPath; }
+
+
+        private final Path projectPath;
 
 
 
@@ -51,14 +69,6 @@ public class BuilderD<T extends Enum<T>> implements Builder {
 
 
 ////  P r i v a t e  ////////////////////////////////////////////////////////////////////////////////////
-
-
-    private final String projectPackage;
-
-
-
-    private final Path projectPath;
-
 
 
     private final Class<T> targetClass; }
