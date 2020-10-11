@@ -114,7 +114,8 @@ final class BuildCommand { // [AFN]
               // ┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
                 c = load( "building.Bootstrap" );
                 final Object bootstrap = c.getMethod("i").invoke( null/*static*/ );
-                c.getMethod("printCompilation",Integer.TYPE).invoke( bootstrap, sourceCount ); }
+                c.getMethod("showProgress",String.class,String.class,Integer.TYPE)
+                  .invoke( bootstrap, null/*bootstrapping*/, "javac", sourceCount ); }
 
           // get a builder builder for the project to be built
           // ┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈

@@ -3,12 +3,13 @@ package building;
 // Changes to this file immediately affect the next runtime.  Treat it as a script.
 
 import java.nio.file.Path;
+import java.util.*;
 
 import static java.io.File.separatorChar;
 
 
-/** A miscellany of resources for building the building code,
-  * residual odds and ends that properly fit nowhere else.
+/** A miscellany of resources for building software builders, residual odds and ends that properly fit
+  * nowhere else during the earliest build stages.
   */
 public final class Bootstrap {
 
@@ -32,14 +33,22 @@ public final class Bootstrap {
 
 
 
-    /** Prints an indication of successful compilation by `javac` of building code.
+    /** Prints a message of incremental build progress to standard output.
+      *
+      *     @param projectPackage The proper package of the project whose software is being built,
+      *       or null if the software builder itself is being built.
+      *     @param type A short name to identify the type of progress.
+      *     @param volume The amount of progress.
       */
-    public void printCompilation( final int count ) {
-        if( !wasPrintingStarted ) {
-            System.out.print( "(bootstrap)\n" );
-            wasPrintingStarted = true; }
-        System.out.print( "    javac " );
-        System.out.println( count ); }
+    public void showProgress( final String projectPackage, final String type, final int volume ) {
+        final String project = projectPackage == null? "(bootstrap)": projectPackage;
+        if( !projectsShowingProgress.contains( project )) {
+            System.out.println( project );
+            projectsShowingProgress.add( project ); }
+        System.out.print( "    " );
+        System.out.print( type );
+        System.out.print( ' ' );
+        System.out.println( volume ); }
 
 
 
@@ -102,7 +111,8 @@ public final class Bootstrap {
 ////  P r i v a t e  ////////////////////////////////////////////////////////////////////////////////////
 
 
-    private boolean wasPrintingStarted; }
+    private static final Set<String> projectsShowingProgress = new HashSet<>(); }
+
 
 
                                                         // Copyright © 2020  Michael Allan.  Licence MIT.

@@ -168,7 +168,7 @@ public interface BuilderBuilder {
 
 
     /** Set of projects for which a {@linkplain #build() builder build} was called in the present
-      * runtime.  Here each project is represented by its proper package.
+      * runtime, each identified by its proper package.
       *
       * <p>Never remove a project from this set.  Rather use it in builder builds to avoid
       * duplicate builds of a project.</p>
@@ -209,7 +209,7 @@ public interface BuilderBuilder {
             else if( exitValue != 0 ) throw new RuntimeException( "Exit value of " + exitValue
               + " from process: " + pB.command() ); }
         catch( InterruptedException|IOException x ) { throw new RuntimeException( x ); }
-        Bootstrap.i().printCompilation( sourceNames.size() ); }
+        Bootstrap.i().showProgress( null/*bootstrapping*/, "javac", sourceNames.size() ); }
 
 
 
