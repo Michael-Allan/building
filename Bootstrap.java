@@ -52,7 +52,7 @@ public final class Bootstrap {
 
 
 
-    /** Tests the validity of a proper package given for a project.
+    /** Tests the validity of `projectPackage` given as the proper package of a project.
       *
       *     @throws IllegalArgumentException
       */
@@ -63,7 +63,7 @@ public final class Bootstrap {
 
 
 
-    /** Tests the validity of a proper path given for a project.
+    /** Tests the validity of `projectPath` given as the proper path of a project.
       *
       *     @throws IllegalArgumentException
       */

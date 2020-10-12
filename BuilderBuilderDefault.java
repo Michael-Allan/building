@@ -7,13 +7,13 @@ import java.nio.file.Path;
 
 /** Default implementation of a builder builder.
   */
-public class BuilderBuilderD implements BuilderBuilder {
+public class BuilderBuilderDefault implements BuilderBuilder {
 
 
     /** @see #projectPackage()
       * @see #projectPath()
       */
-    public BuilderBuilderD( final String projectPackage, final Path projectPath ) {
+    public BuilderBuilderDefault( final String projectPackage, final Path projectPath ) {
         Bootstrap.i().verify( projectPackage );
         Bootstrap.i().verify( projectPath );
         Bootstrap.i().verify( projectPackage, projectPath );

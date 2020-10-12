@@ -9,14 +9,15 @@ import java.nio.file.Path;
   *
   *     @param <T> The type of build targets.
   */
-public class BuilderD<T extends Enum<T>> implements Builder {
+public class BuilderDefault<T extends Enum<T>> implements Builder {
 
 
     /** @see projectPackage()
       * @see projectPath()
       * @param targetClass The class of build targets.
       */
-    public BuilderD( final String projectPackage, final Path projectPath, final Class<T> targetClass ) {
+    public BuilderDefault( final String projectPackage, final Path projectPath,
+          final Class<T> targetClass ) {
         Bootstrap.i().verify( projectPackage );
         Bootstrap.i().verify( projectPath );
         Bootstrap.i().verify( projectPackage, projectPath );
@@ -54,9 +55,9 @@ public class BuilderD<T extends Enum<T>> implements Builder {
    // ━━━  B u i l d e r  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 
-    /** @throws UserError If the given target is undefined for the owning project.
+    /** @throws UserError If `target` is undefined for the owning project.
       *    This exception may be thrown for other reasons as well.
-      * @throws IllegalArgumentException If the given target is unsupported by this implementation.
+      * @throws IllegalArgumentException If `target` is unsupported by this implementation.
       */
     public @Override void build( final String target ) throws UserError {
         try { Enum.valueOf( targetClass, target ); }

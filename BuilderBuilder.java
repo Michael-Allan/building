@@ -14,7 +14,7 @@ import static java.lang.ProcessBuilder.Redirect.INHERIT;
 import static java.nio.file.Files.getLastModifiedTime;
 
 
-/** A builder of software builders.  In lieu of the {@linkplain BuilderBuilderD default implementation},
+/** A builder of software builders.  In place of the {@linkplain BuilderBuilderDefault default},
   * a project may define its own builder by putting a source file named `BuilderBuilder.java` into its
   * {@linkplain #internalBuildingCode(Path) building code}.  The class definition must be public and must
   * include a public constructor that takes no parameters.  It must inherit from the present interface.
@@ -24,7 +24,7 @@ import static java.nio.file.Files.getLastModifiedTime;
   *     <li>`{@linkplain Bootstrap       Bootstrap}`</li>
   *     <li>`{@linkplain Builder         Builder}`</li>
   *     <li>                            `BuilderBuilder` (the present interface)</li>
-  *     <li>`{@linkplain BuilderBuilderD BuilderBuilderD}`</li></ul>
+  *     <li>`{@linkplain BuilderBuilderDefault BuilderBuilderDefault}`</li></ul>
   */
 public interface BuilderBuilder {
 
@@ -78,9 +78,9 @@ public interface BuilderBuilder {
 
 
 
-    /** Gives a builder builder for a given project, first compiling its code if necessary.
+    /** Gives a builder builder, first compiling its code if necessary.
       *
-      *     @param projectPackage The proper package of the project.
+      *     @param projectPackage The proper package of the owning project.
       */
     public static BuilderBuilder forPackage( final String projectPackage ) throws UserError {
         Bootstrap.i().verify( projectPackage );
@@ -89,9 +89,9 @@ public interface BuilderBuilder {
 
 
 
-    /** Gives a builder builder for a given project, first compiling its code if necessary.
+    /** Gives a builder builder, first compiling its code if necessary.
       *
-      *     @param projectPath The proper path of the project.
+      *     @param projectPath The proper path of the owning project.
       */
     public static BuilderBuilder forPath( final Path projectPath ) throws UserError {
         Bootstrap.i().verify( projectPath );
@@ -99,11 +99,11 @@ public interface BuilderBuilder {
 
 
 
-    /** Gives the proper path of the builder-builder source file for a given project, namely
-      * `<i>{@linkplain #internalBuildingCode(Path) internalBuildingCode}</i>/BuilderBuilder.java`
-      * if a file exists there, else the path of the {@linkplain BuilderBuilderD default implementation}.
+    /** Gives the proper path of a builder builder’s source file.  The given path is either
+      * `<i>{@linkplain #internalBuildingCode(Path) internalBuildingCode}</i>/BuilderBuilder.java` if a
+      * file exists there, or the path to the {@linkplain BuilderBuilderDefault default implementation}.
       *
-      *     @param projectPath The proper path of the project.
+      *     @param projectPath The proper path of the owning project.
       */
     public static Path implementationFile( final Path projectPath ) { // Cf. @ `Builder`.
         Bootstrap.i().verify( projectPath );
@@ -115,15 +115,16 @@ public interface BuilderBuilder {
 
 
 
-    /** The proper path of the source file for the {@linkplain BuilderBuilderD default implementation}.
+    /** The proper path of the source file for the
+      * {@linkplain BuilderBuilderDefault default implementation}.
       */
     public static final Path implementationFileDefault =
-      buildingProjectPath.resolve( "BuilderBuilderD.java" );
+      buildingProjectPath.resolve( "BuilderBuilderDefault.java" );
 
 
 
-    /** Gives the proper path of the directory containing the internal building code for a given project,
-      * namely `<i>projectPath</i>/builder/` if a directory exists there, else `<i>projectPath</i>/`.
+    /** Gives the proper path of the directory containing a project’s internal building code.  Gives
+      * either `<i>projectPath</i>/builder/` if a directory exists there, else `<i>projectPath</i>/`.
       * A project may store the code in this directory alone, exclusive of subdirectories.
       *
       *     @param projectPath The proper path of the project.
@@ -147,7 +148,7 @@ public interface BuilderBuilder {
             final Class<? extends Enum> cTarget =
               Class.forName( className( internalBuildingCode(projectPath()).resolve( "Target.java" )))
               .asSubclass( Enum.class );
-            try { // One of (a) the default implementation of `BuilderD`, or (b) a custom one:
+            try { // One of (a) the default implementation `BuilderDefault`, or (b) a custom one:
                 return cBuilder.getConstructor( String.class, Path.class, Class.class ) // (a)
                   .newInstance( projectPackage(), projectPath(), cTarget ); }
             catch( NoSuchMethodException x ) { return cBuilder.getConstructor().newInstance(); }} // (b)
@@ -213,15 +214,15 @@ public interface BuilderBuilder {
 
 
 
-    /** Gives a builder builder for a given project, first compiling its code if necessary.
+    /** Gives a builder builder, first compiling its code if necessary.
       *
-      *     @param projectPackage The proper package of the project.
-      *     @param projectPath The proper path of the project.
+      *     @param projectPackage The proper package of the owning project.
+      *     @param projectPath The proper path of the owning project.
       */
     private static BuilderBuilder get( final String projectPackage, final Path projectPath )
       throws UserError {
         Path sourceDirectory = null; // Of the implementation file.
-        String simpleClassName = null; // Of the implementation, e.g. ‘BuilderBuilderD’.
+        String simpleClassName = null; // Of the implementation, e.g. ‘BuilderBuilderDefault’.
 
       // Compile the code
       // ────────────────
@@ -249,7 +250,7 @@ public interface BuilderBuilder {
         try {
             final Class<? extends BuilderBuilder> c = Class.forName( cName )
               .asSubclass( BuilderBuilder.class );
-            try { // One of (a) the default implementation of `BuilderBuilderD`, or (b) a custom one:
+            try { // One of (a) the default implementation `BuilderBuilderDefault`, or (b) a custom one:
                 return c.getConstructor( String.class, Path.class ) // (a)
                   .newInstance( projectPackage, projectPath ); }
             catch( NoSuchMethodException x ) { return c.getConstructor().newInstance(); }} // (b)

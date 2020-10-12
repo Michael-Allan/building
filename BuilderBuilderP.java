@@ -7,7 +7,7 @@ import java.util.Set;
 
 /** The builder builder proper to the building project.
   */
-public final class BuilderBuilderP extends BuilderBuilderD {
+public final class BuilderBuilderP extends BuilderBuilderDefault {
 
 
     public BuilderBuilderP() { super( "building", Bootstrap.buildingProjectPath ); }

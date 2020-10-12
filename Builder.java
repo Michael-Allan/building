@@ -9,7 +9,7 @@ import static building.Bootstrap.buildingProjectPath;
 
 
 /** A builder of a project’s software.  It compiles the code of the project and prepares it for use.
-  * In lieu of the {@linkplain BuilderD default implementation}, a project may define its own builder
+  * In place of the {@linkplain BuilderDefault default}, a project may define its own builder
   * by putting into its {@linkplain BuilderBuilder#internalBuildingCode(Path) building code}
   * a source file named `Builder.java`.  The class definition must be public and must include
   * a public constructor that takes no parameters.  It must inherit from the present interface.
@@ -22,17 +22,17 @@ import static building.Bootstrap.buildingProjectPath;
 public interface Builder {
 
 
-    /** Builds the code to the level of the given target.
+    /** Builds the code to the level of `target`.
       */
     public void build( String target ) throws UserError;
 
 
 
-    /** Gives the path of the builder source file for a given project, namely
+    /** Gives the proper path of a builder’s source file.  The given path is either
       * `<i>{@linkplain BuilderBuilder#internalBuildingCode(Path) internalBuildingCode}</i>/Builder.java`
-      * if a file exists there, else the file path of the {@linkplain BuilderD default implementation}.
+      * if a file exists there, or the path to the {@linkplain BuilderDefault default implementation}.
       *
-      *     @param projectPath The proper path of the project.
+      *     @param projectPath The proper path of the owning project.
       */
     public static Path implementationFile( final Path projectPath ) { // Cf. @ `BuilderBuilder`.
         Bootstrap.i().verify( projectPath );
@@ -44,9 +44,9 @@ public interface Builder {
 
 
 
-    /** The proper path of the source file for the {@linkplain BuilderD default implementation}.
+    /** The proper path of the source file for the {@linkplain BuilderDefault default implementation}.
       */
-    public static final Path implementationFileDefault = buildingProjectPath.resolve( "BuilderD.java" );
+    public static final Path implementationFileDefault = buildingProjectPath.resolve( "BuilderDefault.java" );
 
 
 
