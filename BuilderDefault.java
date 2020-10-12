@@ -5,9 +5,12 @@ package building;
 import java.nio.file.Path;
 
 
-/** Default implementation of a software builder.
+/** Default implementation of a software builder.  It supports all the targets
+  * named in `building.template.{@linkplain building.template.Target Target}`,
+  * but will refuse to build any outside of `T`.
   *
-  *     @param <T> The type of build targets.
+  *     @param <T> The type of build targets.  The names of all its targets should comprise
+  *       a subset of {@linkplain building.template.Target those supported}.
   */
 public class BuilderDefault<T extends Enum<T>> implements Builder {
 
@@ -65,11 +68,22 @@ public class BuilderDefault<T extends Enum<T>> implements Builder {
             throw new UserError( "build: Undefined in `" + targetClass.getName() + "`: " + target ); }
         switch( target ) {
             case "builder" -> buildTarget_builder();
-            default -> throw new IllegalArgumentException(); }}
+            default -> {
+                assert !isSupportDocumented( target );
+                throw new IllegalArgumentException(); }}
+        assert isSupportDocumented( target ); }
 
 
 
 ////  P r i v a t e  ////////////////////////////////////////////////////////////////////////////////////
+
+
+    private static boolean isSupportDocumented( final String target ) {
+        boolean is = true;
+        try { building.template.Target.valueOf( target ); }
+        catch( IllegalArgumentException _x ) { is = false; }
+        return is; }
+
 
 
     private final Class<T> targetClass; }

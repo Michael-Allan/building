@@ -2,6 +2,7 @@ package building.builder;
 
 // Changes to this file immediately affect the next runtime.  Treat it as a script.
 
+import java.nio.file.Path;
 import java.util.Set;
 
 
@@ -13,7 +14,9 @@ public final class BuilderBuilder extends building.BuilderBuilderDefault {
     public BuilderBuilder() { super( "building", building.Bootstrap.buildingProjectPath ); }
 
 
-    public @Override Set<java.nio.file.Path> addedBuildingCode() { return Set.of( projectPath() ); }
+    public @Override Set<Path> addedBuildingCode() {
+        final Path p = projectPath();
+        return Set.of( p, p.resolve("template") ); }
 
 
     public @Override Set<String> externalBuildingCode() { return Set.of(); }}
