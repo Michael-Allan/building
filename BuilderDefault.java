@@ -23,6 +23,7 @@ public class BuilderDefault<T extends Enum<T>> implements Builder {
           final Class<T> targetClass ) {
         Bootstrap.i().verify( projectPackage );
         Bootstrap.i().verify( projectPath );
+        Bootstrap.i().verify( targetClass );
         Bootstrap.i().verify( projectPackage, projectPath );
         Bootstrap.i().verify( projectPackage, targetClass );
         this.projectPackage = projectPackage;

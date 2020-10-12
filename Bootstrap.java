@@ -52,7 +52,7 @@ public final class Bootstrap {
 
 
 
-    /** Tests the validity of `projectPackage` given as the proper package of a project.
+    /** Tests the validity of a `projectPackage` given as the proper package of a project.
       *
       *     @throws IllegalArgumentException
       */
@@ -63,7 +63,7 @@ public final class Bootstrap {
 
 
 
-    /** Tests the validity of `projectPath` given as the proper path of a project.
+    /** Tests the validity of a `projectPath` given as the proper path of a project.
       *
       *     @throws IllegalArgumentException
       */
@@ -73,6 +73,15 @@ public final class Bootstrap {
           throw new IllegalArgumentException( "Project path ends with `builder`: " + projectPath ); }}
           // Simpler than trying to fathom the repercussions of allowing it, given that subdirectory
           // `builder/` is reserved for a project’s building code.
+
+
+
+    /** Tests the validity of a `targetClass` given as the class of build targets for a project.
+      *
+      *     @throws IllegalArgumentException
+      */
+    public <T extends Enum<T>> void verify( final Class<T> targetClass ) {
+        Enum.valueOf( targetClass, "builder" ); }
 
 
 
@@ -97,12 +106,12 @@ public final class Bootstrap {
       *     @throws IllegalArgumentException
       */
     public void verify( final String projectPackage, final Class<?> targetClass ) {
-        final String buildingCodePackage = targetClass.getPackageName();
-        // According to `BuilderBuilder.internalBuildingCode`, one of these tests must pass:
-        if( buildingCodePackage.equals( projectPackage )) return;
-        if( buildingCodePackage.length() == projectPackage.length() + ".builder".length()
-          && buildingCodePackage.startsWith( projectPackage )
-          && buildingCodePackage.endsWith( ".builder" )) return;
+        final String iBC = targetClass.getPackageName(); /* Of `BuilderBuilder.internalBuildingCode`,
+          that is, according to whose API documentation one of the following tests must pass. */
+        if( iBC.equals( projectPackage )) return;
+        if( iBC.length() == projectPackage.length() + ".builder".length()
+          && iBC.startsWith( projectPackage )
+          && iBC.endsWith( ".builder" )) return;
         throw new IllegalArgumentException(
           "Inconsistency between `projectPackage` and `targetClass` package" ); }
 
