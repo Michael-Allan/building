@@ -36,9 +36,7 @@ public interface Builder {
       */
     public static Path implementationFile( final Path projectPath ) { // Cf. @ `BuilderBuilder`.
         Bootstrap.i().verify( projectPath );
-        Path p = BuilderBuilder.internalBuildingCode(projectPath).resolve(
-          projectPath.equals(buildingProjectPath)? "BuilderP.java":"Builder.java" );
-            // So avoiding a name conflict with the present file.
+        Path p = BuilderBuilder.internalBuildingCode(projectPath).resolve( "Builder.java" );
         if( !Files.isRegularFile( p )) p = implementationFileDefault;
         return p; }
 

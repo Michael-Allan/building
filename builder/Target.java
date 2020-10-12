@@ -1,4 +1,4 @@
-package building;
+package building.builder;
 
 // Changes to this file immediately affect the next runtime.  Treat it as a script.
 

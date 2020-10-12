@@ -29,6 +29,20 @@ import static java.nio.file.Files.getLastModifiedTime;
 public interface BuilderBuilder {
 
 
+    /** Gives the proper path of each directory of building code additional to the
+      * {@linkplain #internalBuildingCode() internal building code}.  The added code
+      * comprises all the files of each directory, exclusive of its subdirectories.
+      * Such code may be intended for the use of other projects, for example, as part
+      * of their {@linkplain #externalBuildingCode() <em>external</em> building code}.
+      *
+      * <p>The default implementation gives an empty set.</p>
+      *
+      *     @see #internalBuildingCode(Path)
+      */
+    public default Set<Path> addedBuildingCode() { return Set.of(); }
+
+
+
     /** Compiles the code of the software builder, including any
       * {@linkplain #externalBuildingCode() external building code} on which it depends,
       * and prepares it for use.
@@ -52,16 +66,9 @@ public interface BuilderBuilder {
 
       // Compile the internal building code
       // ──────────────────────────────────
-        final Path sourceDirectory = internalBuildingCode( projectPath() );
         final List<String> sourceNames = new ArrayList<>();
-        try( final Stream<Path> pp = Files.list( sourceDirectory )) {
-            for( final Path sourceFile: (Iterable<Path>)pp::iterator ) {
-                if( Files.isDirectory( sourceFile )) continue;
-                final String name = sourceFile.toString();
-                if( !name.endsWith( ".java" )) continue;
-                if( toCompile( sourceFile, simpleClassName(sourceFile) )) {
-                    sourceNames.add( sourceFile.toString() ); }}}
-        catch( IOException x ) { throw new RuntimeException( x ); }
+        addCompilableSource( sourceNames, internalBuildingCode(projectPath()) );
+        addedBuildingCode().forEach( directory -> addCompilableSource( sourceNames, directory ));
         if( sourceNames.size() > 0 ) compile( sourceNames ); }
 
 
@@ -72,7 +79,6 @@ public interface BuilderBuilder {
       * of the <a href='http://reluk.ca/project/building/'>building project</a>.
       *
       *     @see #internalBuildingCode(Path)
-      *     @return Set of proper packages.
       */
     public default Set<String> externalBuildingCode() { return Set.of( "building" ); }
 
@@ -107,9 +113,7 @@ public interface BuilderBuilder {
       */
     public static Path implementationFile( final Path projectPath ) { // Cf. @ `Builder`.
         Bootstrap.i().verify( projectPath );
-        Path p = internalBuildingCode(projectPath).resolve(
-          projectPath.equals(buildingProjectPath)? "BuilderBuilderP.java":"BuilderBuilder.java" );
-            // So avoiding a name conflict with the present file.
+        Path p = internalBuildingCode(projectPath).resolve( "BuilderBuilder.java" );
         if( !Files.isRegularFile( p )) p = implementationFileDefault;
         return p; }
 
@@ -128,6 +132,7 @@ public interface BuilderBuilder {
       * A project may store the code in this directory alone, exclusive of subdirectories.
       *
       *     @param projectPath The proper path of the project.
+      *     @see #addedBuildingCode()
       *     @see #externalBuildingCode()
       */
     public static Path internalBuildingCode( final Path projectPath ) {
@@ -179,6 +184,18 @@ public interface BuilderBuilder {
 
 
 ////  P r i v a t e  ////////////////////////////////////////////////////////////////////////////////////
+
+
+    private static void addCompilableSource( final List<String> names, final Path directory ) {
+        try( final Stream<Path> pp = Files.list( directory )) {
+            for( final Path p: (Iterable<Path>)pp::iterator ) {
+                if( Files.isDirectory( p )) continue;
+                final String name = p.toString();
+                if( !name.endsWith( ".java" )) continue;
+                if( toCompile( p, simpleClassName(p) )) {
+                    names.add( p.toString() ); }}}
+        catch( IOException x ) { throw new RuntimeException( x ); }}
+
 
 
     /** @see #simpleClassName(Path)

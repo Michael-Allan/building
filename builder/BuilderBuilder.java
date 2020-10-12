@@ -1,4 +1,4 @@
-package building;
+package building.builder;
 
 // Changes to this file immediately affect the next runtime.  Treat it as a script.
 
@@ -7,14 +7,15 @@ import java.util.Set;
 
 /** The builder builder proper to the building project.
   */
-public final class BuilderBuilderP extends BuilderBuilderDefault {
+public final class BuilderBuilder extends building.BuilderBuilderDefault {
 
 
-    public BuilderBuilderP() { super( "building", Bootstrap.buildingProjectPath ); }
+    public BuilderBuilder() { super( "building", building.Bootstrap.buildingProjectPath ); }
 
 
-    /** Gives an empty set.
-      */
+    public @Override Set<java.nio.file.Path> addedBuildingCode() { return Set.of( projectPath() ); }
+
+
     public @Override Set<String> externalBuildingCode() { return Set.of(); }}
 
 
