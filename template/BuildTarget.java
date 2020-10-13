@@ -4,7 +4,7 @@ package building.template;
 
 /** A build target of the present project.
   */
-public enum Target {
+public enum BuildTarget {
 
 
     /** A software builder compiled from Java source code into `.class` files.  All other targets

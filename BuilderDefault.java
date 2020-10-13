@@ -6,11 +6,11 @@ import java.nio.file.Path;
 
 
 /** Default implementation of a software builder.  It supports all the targets
-  * named in `building.template.{@linkplain building.template.Target Target}`,
+  * named in `building.template.{@linkplain building.template.BuildTarget BuildTarget}`,
   * but will refuse to build any outside of `T`.
   *
   *     @param <T> The type of build targets.  The names of all its targets should comprise
-  *       a subset of {@linkplain building.template.Target those supported}.
+  *       a subset of {@linkplain building.template.BuildTarget those supported}.
   */
 public class BuilderDefault<T extends Enum<T>> implements Builder {
 
@@ -81,7 +81,7 @@ public class BuilderDefault<T extends Enum<T>> implements Builder {
 
     private static boolean isSupportDocumented( final String target ) {
         boolean is = true;
-        try { building.template.Target.valueOf( target ); }
+        try { building.template.BuildTarget.valueOf( target ); }
         catch( IllegalArgumentException _x ) { is = false; }
         return is; }
 

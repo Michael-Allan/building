@@ -4,6 +4,7 @@ package building;
 
 import java.nio.file.Path;
 import java.util.*;
+import java.util.function.Predicate;
 
 import static java.io.File.separatorChar;
 
@@ -30,6 +31,12 @@ public final class Bootstrap {
 
 
         private static final Bootstrap i = new Bootstrap();
+
+
+
+    /** A path tester that answers only `true`.
+      */
+    public static final Predicate<Path> pathTester_true = _p -> { return true; };
 
 
 

@@ -15,8 +15,8 @@ Building a project’s software
               @ http://reluk.ca/project/building/action_plan.brec
         >+ build *PROJECT-PROPER-PATH* *target*…
             / Characters ‘-’ and ‘_’ are equivalent in target names.
-            - The project’s source code will include a file, typically called `Target.java`,
-              that enumerates the possible build targets.
+            - The project should document its build targets; typically a project includes
+              a file named `Target.java` or `BuildTarget.java` for this purpose.
 
 
                                                          \ Copyright © 2020  Michael Allan.  Licence MIT.

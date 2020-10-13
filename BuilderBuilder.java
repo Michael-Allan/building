@@ -4,10 +4,12 @@ package building;
 
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.stream.Stream;
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static building.Bootstrap.buildingProjectPath;
+import static building.Bootstrap.pathTester_true;
 import static building.Builder.UserError;
 import static java.io.File.separatorChar;
 import static java.lang.ProcessBuilder.Redirect.INHERIT;
@@ -64,10 +66,12 @@ public interface BuilderBuilder {
             if( projectsUnderBuild.contains( externalProject )) continue;
             forPackage(externalProject).build(); }
 
-      // Compile the internal building code
-      // ──────────────────────────────────
+      // Compile the project’s own building code
+      // ───────────────────────────────────────
         final List<String> sourceNames = new ArrayList<>();
-        addCompilableSource( sourceNames, internalBuildingCode(projectPath()) );
+        final Predicate<Path> tester = targetFile().getFileName().toString().equals( "Target.java" )?
+          pathTester_true: p -> { return p.getFileName().toString().startsWith("Build"); };
+        addCompilableSource( sourceNames, internalBuildingCode(projectPath()), tester );
         addedBuildingCode().forEach( directory -> addCompilableSource( sourceNames, directory ));
         if( sourceNames.size() > 0 ) compile( sourceNames ); }
 
@@ -127,13 +131,22 @@ public interface BuilderBuilder {
 
 
 
-    /** Gives the proper path of the directory containing a project’s internal building code.  Gives
-      * either `<i>projectPath</i>/builder/` if a directory exists there, else `<i>projectPath</i>/`.
-      * A project may store the code in this directory alone, exclusive of subdirectories.
+    /** Gives the proper path of the directory containing a project’s internal building code.
+      * Gives either (a) `<i>projectPath</i>/builder/` if a directory exists there,
+      * else (b) `<i>projectPath</i>/`.  A project may store its internal building code
+      * in this directory alone, exclusive of subdirectories.
+      *
+      * <p>Moreover, in the default implementation, if (c) this directory contains a file
+      * named `BuildTarget.java`, then it defines the build targets of the project
+      * and the building code comprises only those files whose names begin with `Build`.
+      * Otherwise the building code comprises all child files of the directory.</p>
       *
       *     @param projectPath The proper path of the project.
       *     @see #addedBuildingCode()
       *     @see #externalBuildingCode()
+      *     @see <a href='http://reluk.ca/project/building/example/sub/'      >Example of (a)</a>
+      *     @see <a href='http://reluk.ca/project/building/example/top/'      >Example of (b)</a>
+      *     @see <a href='http://reluk.ca/project/building/example/mixed_top/'>Example of (c)</a>
       */
     public static Path internalBuildingCode( final Path projectPath ) {
         Bootstrap.i().verify( projectPath );
@@ -151,8 +164,7 @@ public interface BuilderBuilder {
               Class.forName( className( Builder.implementationFile( projectPath() )))
               .asSubclass( Builder.class );
             final Class<? extends Enum> cTarget =
-              Class.forName( className( internalBuildingCode(projectPath()).resolve( "Target.java" )))
-              .asSubclass( Enum.class );
+              Class.forName( className( targetFile() )).asSubclass( Enum.class );
             try { // One of (a) the default implementation `BuilderDefault`, or (b) a custom one:
                 return cBuilder.getConstructor( String.class, Path.class, Class.class ) // (a)
                   .newInstance( projectPackage(), projectPath(), cTarget ); }
@@ -183,15 +195,35 @@ public interface BuilderBuilder {
 
 
 
+    /** Gives the proper path of the source file that defines the build targets of the project.
+      * The default implementation gives a subpath
+      * of the {@linkplain #internalBuildingCode(Path) internal building code} with a simple name
+      * of either `BuildTarget.java` if a file exists there, else `Target.java`.
+      */
+    public default Path targetFile() {
+        final Path iBC = internalBuildingCode( projectPath() );
+        Path p = iBC.resolve( "BuildTarget.java" );
+        if( !Files.isRegularFile( p )) p = iBC.resolve( "Target.java" );
+        return p; }
+
+
+
 ////  P r i v a t e  ////////////////////////////////////////////////////////////////////////////////////
 
 
     private static void addCompilableSource( final List<String> names, final Path directory ) {
+        addCompilableSource( names, directory, pathTester_true ); }
+
+
+
+    private static void addCompilableSource( final List<String> names, final Path directory,
+          final Predicate<Path> tester ) {
         try( final Stream<Path> pp = Files.list( directory )) {
             for( final Path p: (Iterable<Path>)pp::iterator ) {
                 if( Files.isDirectory( p )) continue;
                 final String name = p.toString();
                 if( !name.endsWith( ".java" )) continue;
+                if( !tester.test( p )) continue;
                 if( toCompile( p, simpleClassName(p) )) {
                     names.add( p.toString() ); }}}
         catch( IOException x ) { throw new RuntimeException( x ); }}
