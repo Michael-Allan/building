@@ -1,22 +1,45 @@
 Building a project’s software
 
-    set-up per project
-        + Ensure the software project is installed according to its instructions.
-        + Test the installation by building the project’s minimal target, the builder itself.
+
+    initial set-up, per project
+        + Ensure the project is installed according to its instructions.
+        + Test the installation by building the minimal target, the software builder itself.
             >+ cd *COMMAND-DIRECTORY*
                 / The command directory is where shell commands of the building project are issued,
                   whence all related project installations are accessible by their proper paths.
             >+ build *PROJECT-PROPER-PATH* builder
                 / The proper path of a project is the relative file path that identifies it universally.
                   E.g. for the present project, substitute `building` or `building/`.
-    routine use
+    routine builds
         - Always the working directory must be the command directory.
             : see `^^working directory for software builds$`
               @ http://reluk.ca/project/building/action_plan.brec
+        >+ clean
+            / If wanted.
         >+ build *PROJECT-PROPER-PATH* *target*…
             / Characters ‘-’ and ‘_’ are equivalent in target names.
-            - The project should document its build targets; typically a project includes
-              a file named `Target.java` or `BuildTarget.java` for this purpose.
+            - The allowable targets should be documented in a source file of the project,
+              typically either `Target.java` or `BuildTarget.java`.
+
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     Coding a software builder
+    ───────────────────────────
+        - For the typical case of a Java project using a default builder,
+          all you need is `BuildTarget.java`.
+            : re `default builder` see BuilderDefault.java
+            : see example/mixed_top/
+        >+ cd *COMMAND-DIRECTORY*
+        >+ cp building/template/BuildTarget.java *PROJECT-PROPER-PATH*/
+        + Edit your `BuildTarget.java`.
+            + Correct the package name.
+            + Delete the name of any target inapplicable to your project.
+        if( you must customize the builder further )
+            / E.g. you have a build target unsupported by the default builder.
+            + Code your own `Builder.java`.
+                : see `a project may define its own builder` @ Builder.java
+                : see example/
+
 
 
                                                          \ Copyright © 2020  Michael Allan.  Licence MIT.
