@@ -40,14 +40,14 @@ public final class Bootstrap {
 
 
 
-    /** Prints a message of incremental build progress to standard output.
+    /** Prints and flushes through standard output the beginning of a message of incremental
+      * build progress.  Be sure to print the remainder and terminate it with a newline character.
       *
       *     @param projectPackage The proper package of the project whose software is being built,
       *       or null if the software builder itself is being built.
       *     @param type A short name to identify the type of progress.
-      *     @param volume The amount of progress.
       */
-    public void showProgress( final String projectPackage, final String type, final int volume ) {
+    public void printProgressLeader( final String projectPackage, final String type ) {
         final String project = projectPackage == null? "(bootstrap)": projectPackage;
         if( !projectsShowingProgress.contains( project )) {
             System.out.println( project );
@@ -55,7 +55,7 @@ public final class Bootstrap {
         System.out.print( "    " );
         System.out.print( type );
         System.out.print( ' ' );
-        System.out.println( volume ); }
+        System.out.flush(); }
 
 
 

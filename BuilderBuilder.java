@@ -242,6 +242,7 @@ public interface BuilderBuilder {
       */
     private static void compile( final List<String> sourceNames ) throws UserError {
         // Changing?  Sync → `BuildCommand.execute`.
+        Bootstrap.i().printProgressLeader( null/*bootstrapping*/, "javac" );
         final List<String> compilerArguments = new ArrayList<>();
         compilerArguments.add( System.getProperty("java.home") + "/bin/javac" );
           // The Java installation at `java.home` is known to include `javac` because also
@@ -259,7 +260,7 @@ public interface BuilderBuilder {
             else if( exitValue != 0 ) throw new RuntimeException( "Exit value of " + exitValue
               + " from process: " + pB.command() ); }
         catch( InterruptedException|IOException x ) { throw new RuntimeException( x ); }
-        Bootstrap.i().showProgress( null/*bootstrapping*/, "javac", sourceNames.size() ); }
+        finally{ System.out.println( sourceNames.size() ); }}
 
 
 
