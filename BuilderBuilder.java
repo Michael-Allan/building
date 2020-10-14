@@ -13,6 +13,7 @@ import static building.Bootstrap.packageOf;
 import static building.Bootstrap.pathOf;
 import static building.Bootstrap.pathTester_true;
 import static building.Bootstrap.typeName;
+import static building.Bootstrap.verify;
 import static building.Builder.UserError;
 
 
@@ -94,7 +95,7 @@ public interface BuilderBuilder {
       *     @param projectPackage The proper package of the owning project.
       */
     public static BuilderBuilder forPackage( final String projectPackage ) throws UserError {
-        Bootstrap.i.verify( projectPackage );
+        verify( projectPackage );
         return get( projectPackage, /*projectPath*/pathOf( projectPackage )); }
 
 
@@ -104,7 +105,7 @@ public interface BuilderBuilder {
       *     @param projectPath The proper path of the owning project.
       */
     public static BuilderBuilder forPath( final Path projectPath ) throws UserError {
-        Bootstrap.i.verify( projectPath );
+        verify( projectPath );
         return get( /*projectPackage*/packageOf(projectPath), projectPath ); }
 
 
@@ -116,7 +117,7 @@ public interface BuilderBuilder {
       *     @param projectPath The proper path of the owning project.
       */
     public static Path implementationFile( final Path projectPath ) { // Cf. @ `Builder`.
-        Bootstrap.i.verify( projectPath );
+        verify( projectPath );
         Path p = internalBuildingCode(projectPath).resolve( "BuilderBuilder.java" );
         if( !Files.isRegularFile( p )) p = implementationFileDefault;
         return p; }
@@ -149,7 +150,7 @@ public interface BuilderBuilder {
       *     @see <a href='http://reluk.ca/project/building/example/mixed_top/'>Example of (c)</a>
       */
     public static Path internalBuildingCode( final Path projectPath ) {
-        Bootstrap.i.verify( projectPath );
+        verify( projectPath );
         Path p = projectPath.resolve( "builder" );
         if( !Files.isDirectory( p )) p = projectPath;
         return p; }

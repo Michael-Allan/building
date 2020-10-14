@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.util.*;
 
 import static building.Bootstrap.pathOf;
+import static building.Bootstrap.verify;
 
 
 /** Default implementation of a software builder.  It supports all the targets
@@ -22,9 +23,9 @@ public class BuilderDefault<T extends Enum<T>> implements Builder {
       * @see projectPackage()
       */
     public BuilderDefault( final Class<T> targetClass, final String projectPackage ) {
-        Bootstrap.i.verify( targetClass );
-        Bootstrap.i.verify( projectPackage );
-        Bootstrap.i.verify( targetClass, projectPackage );
+        verify( targetClass );
+        verify( projectPackage );
+        verify( targetClass, projectPackage );
         this.targetClass = targetClass;
         this.projectPackage = projectPackage;
         projectPath = pathOf( projectPackage ); }
@@ -37,11 +38,11 @@ public class BuilderDefault<T extends Enum<T>> implements Builder {
       */
     public BuilderDefault( final Class<T> targetClass, final String projectPackage,
           final Path projectPath ) {
-        Bootstrap.i.verify( targetClass );
-        Bootstrap.i.verify( projectPackage );
-        Bootstrap.i.verify( projectPath );
-        Bootstrap.i.verify( projectPackage, projectPath );
-        Bootstrap.i.verify( targetClass, projectPackage );
+        verify( targetClass );
+        verify( projectPackage );
+        verify( projectPath );
+        verify( projectPackage, projectPath );
+        verify( targetClass, projectPackage );
         this.targetClass = targetClass;
         this.projectPackage = projectPackage;
         this.projectPath = projectPath; }

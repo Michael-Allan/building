@@ -197,7 +197,7 @@ public final class Bootstrap {
       *
       *     @throws IllegalArgumentException
       */
-    public <T extends Enum<T>> void verify( final Class<T> targetClass ) {
+    public static <T extends Enum<T>> void verify( final Class<T> targetClass ) {
         Enum.valueOf( targetClass, "builder" ); }
 
 
@@ -209,7 +209,7 @@ public final class Bootstrap {
       *     @param projectPackage The proper package of the project.
       *     @throws IllegalArgumentException
       */
-    public void verify( final Class<?> targetClass, final String projectPackage ) {
+    public static void verify( final Class<?> targetClass, final String projectPackage ) {
         final String iBC = targetClass.getPackageName(); /* Of `BuilderBuilder.internalBuildingCode`,
           that is, according to whose API documentation one of the following tests must pass. */
         if( iBC.equals( projectPackage )) return;
@@ -225,7 +225,7 @@ public final class Bootstrap {
       *
       *     @throws IllegalArgumentException
       */
-    public void verify( final Path projectPath ) {
+    public static void verify( final Path projectPath ) {
         if( projectPath.isAbsolute() ) throw new IllegalArgumentException( "Absolute `projectPath`" );
         if( projectPath.getFileName().toString().equals( "builder" )) {
           throw new IllegalArgumentException( "Project path ends with `builder`: " + projectPath ); }}
@@ -238,7 +238,7 @@ public final class Bootstrap {
       *
       *     @throws IllegalArgumentException
       */
-    public void verify( final String projectPackage ) {
+    public static void verify( final String projectPackage ) {
         if( projectPackage.equals("builder") || projectPackage.endsWith( ".builder" )) {
           throw new IllegalArgumentException( "Project package ends with `builder`: "
             + projectPackage ); }} // Simpler than allowing it, as explained for `#verify(Path)`.
@@ -252,7 +252,7 @@ public final class Bootstrap {
       *     @param projectPath The proper path of the project.
       *     @throws IllegalArgumentException
       */
-    public void verify( final String projectPackage, final Path projectPath ) {
+    public static void verify( final String projectPackage, final Path projectPath ) {
         if( !pathStringOf(projectPackage).equals( projectPath.toString() )) {
             throw new IllegalArgumentException( "Inequivalent `projectPackage` and `projectPath`" ); }}
 

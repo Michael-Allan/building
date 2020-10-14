@@ -4,6 +4,8 @@ package building;
 
 import java.nio.file.Path;
 
+import static building.Bootstrap.verify;
+
 
 /** Default implementation of a builder builder.
   */
@@ -13,7 +15,7 @@ public class BuilderBuilderDefault implements BuilderBuilder {
     /** @see #projectPackage()
       */
     public BuilderBuilderDefault( final String projectPackage ) {
-        Bootstrap.i.verify( projectPackage );
+        verify( projectPackage );
         this.projectPackage = projectPackage;
         this.projectPath = Bootstrap.pathOf( projectPackage ); }
 
@@ -23,9 +25,9 @@ public class BuilderBuilderDefault implements BuilderBuilder {
       * @see #projectPath()
       */
     public BuilderBuilderDefault( final String projectPackage, final Path projectPath ) {
-        Bootstrap.i.verify( projectPackage );
-        Bootstrap.i.verify( projectPath );
-        Bootstrap.i.verify( projectPackage, projectPath );
+        verify( projectPackage );
+        verify( projectPath );
+        verify( projectPackage, projectPath );
         this.projectPackage = projectPackage;
         this.projectPath = projectPath; }
 
