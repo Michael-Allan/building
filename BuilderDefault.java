@@ -45,9 +45,24 @@ public class BuilderDefault<T extends Enum<T>> implements Builder {
 
 
 
+    /** Builds the code to the level of `target`.
+      *
+      *     @param target The full name of the target.
+      *     @throws IllegalArgumentException If `target` is unsupported by this implementation.
+      */
+    protected final void buildTo( final String target ) throws UserError {
+        switch( target ) {
+            case "builder" -> buildTo_builder();
+            default -> {
+                assert !isSupportDocumented( target );
+                throw new IllegalArgumentException(); }}
+        assert isSupportDocumented( target ); }
+
+
+
     /** Does nothing, this builder is already built.
       */
-    public final void buildTarget_builder() {}
+    protected void buildTo_builder() {}
 
 
 
@@ -72,20 +87,10 @@ public class BuilderDefault<T extends Enum<T>> implements Builder {
    // ━━━  B u i l d e r  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 
-    /** @throws UserError If `target` is undefined for the owning project.
-      *    This exception may be thrown for other reasons as well.
-      * @throws IllegalArgumentException If `target` is unsupported by this implementation.
+    /** @throws IllegalArgumentException If the matching target is unsupported by this implementation.
       */
-    public @Override void build( final String target ) throws UserError {
-        try { Enum.valueOf( targetClass, target ); }
-        catch( IllegalArgumentException x ) {
-            throw new UserError( "build: Undefined in `" + targetClass.getName() + "`: " + target ); }
-        switch( target ) {
-            case "builder" -> buildTarget_builder();
-            default -> {
-                assert !isSupportDocumented( target );
-                throw new IllegalArgumentException(); }}
-        assert isSupportDocumented( target ); }
+    public @Override void build( final String targ ) throws UserError {
+        buildTo( Builder.matchingTargetName( targ, targetClass )); }
 
 
 

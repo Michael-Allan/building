@@ -22,9 +22,13 @@ import static building.Bootstrap.buildingProjectPath;
 public interface Builder {
 
 
-    /** Builds the code to the level of `target`.
+    /** Builds the code to the level of a given target.
+      *
+      *     @param targ The name of the target, or a unique substring of it.
+      *     @throws UserError If `targ` does not match exactly one build target of the owning project.
+      *       This exception may be thrown for other reasons as well.
       */
-    public void build( String target ) throws UserError;
+    public void build( String targ ) throws UserError;
 
 
 
@@ -45,6 +49,30 @@ public interface Builder {
     /** The proper path of the source file for the {@linkplain BuilderDefault default implementation}.
       */
     public static final Path implementationFileDefault = buildingProjectPath.resolve( "BuilderDefault.java" );
+
+
+
+    /** Gives the target name that matches `targ`.
+      *
+      *     @param targ The name of a build target, or a unique substring of it.
+      *     @param targetClass The class of build targets.
+      *     @throws UserError If `targ` does not match exactly one build target of `targetClass`.
+      */
+    public static <T extends Enum<T>> String matchingTargetName( final String targ,
+          final Class<T> targetClass ) throws UserError {
+        final Enum<?>[] targets;
+        try { targets = (Enum[])targetClass.getMethod("values").invoke( null/*static*/ ); }
+        catch( ReflectiveOperationException x ) { throw new RuntimeException( x ); }
+        String name = null;
+        for( final Enum<?> t: targets ) {
+            final String tS = t.toString();
+            if( tS.contains( targ )) {
+                if( name != null ) {
+                    throw new UserError( "Ambiguous in `" + targetClass.getName() + "`: " + targ ); }
+                name = tS; }}
+        if( name == null ) {
+            throw new UserError( "Unmatched in `" + targetClass.getName() + "`: " + targ ); }
+        return name; }
 
 
 

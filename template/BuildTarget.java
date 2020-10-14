@@ -2,7 +2,9 @@ package building.template;
 
 // Changes to this file immediately affect the next runtime.  Treat it as a script.
 
-/** A build target of the present project.
+
+/** A build target of the present project.  A particular target name may be specified in the shell
+  * by any substring that uniquely matches it.
   */
 public enum BuildTarget {
 
