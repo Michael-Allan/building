@@ -2,12 +2,16 @@ package building;
 
 // Changes to this file immediately affect the next runtime.  Treat it as a script.
 
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
+import java.io.IOException;
+import java.nio.file.*;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
+import static building.Builder.UserError;
 import static java.io.File.separatorChar;
+import static java.lang.ProcessBuilder.Redirect.INHERIT;
+import static java.nio.file.Files.getLastModifiedTime;
 
 
 /** A miscellany of resources for building software builders, residual odds and ends that properly fit
@@ -20,15 +24,79 @@ public final class Bootstrap {
 
 
 
+    /** Appends to `names` the proper path of each `.java` file of `directory` that needs to be compiled
+      * or recompiled.  Does not descend into subdirectories.
+      *
+      *     @see #compile(List)
+      */
+    public static void addCompilableSource( final List<String> names, final Path directory ) {
+        addCompilableSource( names, directory, pathTester_true ); }
+
+
+
+    /** Appends to `names` the proper path of each `.java` file of `directory` that a) tests true
+      * with `tester` and b) needs to be compiled or recompiled.  Does not descend into subdirectories.
+      *
+      *     @see #compile(List)
+      */
+    public static void addCompilableSource( final List<String> names, final Path directory,
+          final Predicate<Path> tester ) {
+        try( final Stream<Path> pp = Files.list( directory )) {
+            for( final Path p: (Iterable<Path>)pp::iterator ) {
+                if( Files.isDirectory( p )) continue;
+                final String name = p.toString();
+                if( !name.endsWith( ".java" )) continue;
+                if( !tester.test( p )) continue;
+                if( toCompile( p, simpleTypeName(p) )) {
+                    names.add( p.toString() ); }}}
+        catch( IOException x ) { throw new RuntimeException( x ); }}
+
+
+
     /** The proper path of the building project.
       */
     public static final Path buildingProjectPath = Path.of( "building" );
 
 
 
+    /** Compiles Java source code to class files.
+      *
+      *     @param sourceNames The proper path of each source file to compile.
+      */
+    public void compile( final List<String> sourceNames ) throws UserError {
+        // Changing?  Sync → `execute` @ `bin/build`.
+        printProgressLeader( null/*bootstrapping*/, "javac" );
+        final List<String> compilerArguments = new ArrayList<>();
+        compilerArguments.add( System.getProperty("java.home") + "/bin/javac" );
+          // The Java installation at `java.home` is known to include `javac` because also
+          // it is a JDK installation, as assured by the `JDK_HOME` atop `bin/build`.
+        compilerArguments.add( "@building/java_javac_arguments" );
+        compilerArguments.add( "@building/javac_arguments" );
+        compilerArguments.addAll( sourceNames );
+        final ProcessBuilder pB = new ProcessBuilder( compilerArguments );
+        pB.redirectOutput( INHERIT );
+        pB.redirectError( INHERIT );
+        try {
+            final int exitValue =  pB.start().waitFor();
+            if( exitValue == 1 ) throw new UserError( "Stopped on `javac` error" );
+              // Already `javac` has told the details.
+            else if( exitValue != 0 ) throw new RuntimeException( "Exit value of " + exitValue
+              + " from process: " + pB.command() ); }
+        catch( InterruptedException|IOException x ) { throw new RuntimeException( x ); }
+        finally{ System.out.println( sourceNames.size() ); }}
+
+
+
     /** The single instance of `Bootstrap`.
       */
     public static final Bootstrap i = new Bootstrap();
+
+
+
+    /** The output directory for builds.
+      */
+    public static final Path outDirectory = Path.of( System.getProperty( "java.io.tmpdir" ))
+      .resolve( buildingProjectPath );
 
 
 
@@ -78,6 +146,50 @@ public final class Bootstrap {
         System.out.print( type );
         System.out.print( ' ' );
         System.out.flush(); }
+
+
+
+    /** Gives the simple name of the Java type proper to a source file at path `sourcePath`.
+      * This assumes the restriction described at the end of §7.6 of the language specification,
+      * e.g. giving type name ‘Toad’ for a path of `wet/sprocket/Toad.java`.
+      *
+      *     @param sourcePath The proper path of the source file.
+      *     @see <a href='https://docs.oracle.com/javase/specs/jls/se15/html/jls-7.html#jls-7.6'>§7.6</a>
+      *     @see #typeName(Path)
+      */
+    public static String simpleTypeName( final Path sourcePath ) {
+        final String s = sourcePath.getFileName().toString();
+        assert s.endsWith( ".java" );
+        return s.substring( 0, s.length()-".java".length() ); }
+
+
+
+    /** Answers whether `sourceFile` needs to be compiled or recompiled.
+      *
+      *     @param sourcePath The proper path of a Java source file.
+      *     @param simpleTypeName The corresponding {@linkplain #simpleTypeName(Path) simple type name}.
+      */
+    public static boolean toCompile( final Path sourceFile, final String simpleTypeName ) {
+        final Path classFile = outDirectory.resolve(
+          sourceFile.getParent().resolve( simpleTypeName + ".class" ));
+        if( Files.exists( classFile )) {
+            try {
+                return getLastModifiedTime(sourceFile).compareTo(getLastModifiedTime(classFile)) >= 0; }
+            catch( IOException x ) { throw new RuntimeException( x ); }}
+        return true; }
+
+
+
+    /** Gives the fully extended name of the Java type proper to a source file at path `sourcePath`.
+      * This assumes the restriction described at the end of §7.6 of the language specification,
+      * e.g. giving type name ‘wet.sprocket.Toad’ for a path of `wet/sprocket/Toad.java`.
+      *
+      *     @param sourcePath The proper path of the source file.
+      *     @see <a href='https://docs.oracle.com/javase/specs/jls/se15/html/jls-7.html#jls-7.6'>§7.6</a>
+      *     @see #simpleTypeName(Path)
+      */
+    public static String typeName( final Path sourcePath ) {
+        return packageOf(sourcePath.getParent()) + '.' + simpleTypeName(sourcePath); }
 
 
 

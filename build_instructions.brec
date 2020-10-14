@@ -25,20 +25,21 @@ Building a project’s software
     ━━━━━━━━━━━━━━━━━━━━━━━━━━━
      Coding a software builder
     ───────────────────────────
-        - For the typical case of a Java project using a default builder,
-          all you need is `BuildTarget.java`.
-            : re `default builder` see BuilderDefault.java
+        - For the common case of a Java project with a single package,
+          typically all you need is `BuildTarget.java`.
             : see example/mixed_top/
         >+ cd *COMMAND-DIRECTORY*
         >+ cp building/template/BuildTarget.java *PROJECT-PROPER-PATH*/
         + Edit your `BuildTarget.java`.
             + Correct the package name.
             + Delete the name of any target inapplicable to your project.
-        if( you must customize the builder further )
-            / E.g. you have a build target unsupported by the default builder.
+        if( you need to customize the builds further )
+            / E.g. you have subpackages, or a build target unsupported by the default builder.
             + Code your own `Builder.java`.
                 : see `a project may define its own builder` @ Builder.java
                 : see example/
+                - Typically you would subclass the default builder, overriding a method or two.
+                    : re `default builder` see BuilderDefault.java
 
 
 

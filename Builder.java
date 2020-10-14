@@ -5,8 +5,6 @@ package building;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static building.Bootstrap.buildingProjectPath;
-
 
 /** A builder of a project’s software.  It compiles the code of the project and prepares it for use.
   * In place of the {@linkplain BuilderDefault default}, a project may define its own builder
@@ -48,7 +46,8 @@ public interface Builder {
 
     /** The proper path of the source file for the {@linkplain BuilderDefault default implementation}.
       */
-    public static final Path implementationFileDefault = buildingProjectPath.resolve( "BuilderDefault.java" );
+    public static final Path implementationFileDefault =
+      Bootstrap.buildingProjectPath.resolve( "BuilderDefault.java" );
 
 
 
@@ -73,13 +72,6 @@ public interface Builder {
         if( name == null ) {
             throw new UserError( "Unmatched in `" + targetClass.getName() + "`: " + targ ); }
         return name; }
-
-
-
-    /** The output directory for builds.
-      */
-    public static final Path outDirectory = Path.of( System.getProperty( "java.io.tmpdir" ))
-      .resolve( buildingProjectPath );
 
 
 

@@ -3,6 +3,9 @@ package building;
 // Changes to this file immediately affect the next runtime.  Treat it as a script.
 
 import java.nio.file.Path;
+import java.util.*;
+
+import static building.Bootstrap.pathOf;
 
 
 /** Default implementation of a software builder.  It supports all the targets
@@ -24,7 +27,7 @@ public class BuilderDefault<T extends Enum<T>> implements Builder {
         Bootstrap.i.verify( targetClass, projectPackage );
         this.targetClass = targetClass;
         this.projectPackage = projectPackage;
-        projectPath = Bootstrap.pathOf( projectPackage ); }
+        projectPath = pathOf( projectPackage ); }
 
 
 
@@ -52,7 +55,8 @@ public class BuilderDefault<T extends Enum<T>> implements Builder {
       */
     protected final void buildTo( final String target ) throws UserError {
         switch( target ) {
-            case "builder" -> buildTo_builder();
+            case "builder"          -> buildTo_builder();
+            case "Java_class_files" -> buildTo_Java_class_files();
             default -> {
                 assert !isSupportDocumented( target );
                 throw new IllegalArgumentException(); }}
@@ -63,6 +67,36 @@ public class BuilderDefault<T extends Enum<T>> implements Builder {
     /** Does nothing, this builder is already built.
       */
     protected void buildTo_builder() {}
+
+
+
+    protected void buildTo_Java_class_files() throws UserError {
+        final List<String> sourceNames = new ArrayList<>();
+        JavaCode().forEach( pkg -> Bootstrap.addCompilableSource( sourceNames, pathOf(pkg) ));
+        if( sourceNames.size() > 0 ) Bootstrap.i.compile( sourceNames ); }
+
+
+
+    /** The packages of Java code proper to the owning project, exclusive of its building code.  The code
+      * comprises all `.java` files of the {@linkplain Bootstrap#pathOf(String) equivalent directories},
+      * exclusive of their subdirectories.
+      *
+      * <p>This method is called only if the project declares a `Java_class_files` build target.</p>
+      *
+      * <p>The default is either a singleton set comprising the proper package of the owning project,
+      * or an empty set.  It is a singleton set if the project has either `BuildTarget.java` as its
+      * target file or no internal building code in its proper package, otherwise it is an empty set.</p>
+      *
+      *     @see building.template.BuildTarget.Java_class_files
+      *     @see #targetFile()
+      *     @see #internalBuildingCode()
+      */
+    public Set<String> JavaCode() { /* Packages for elements because they are codeable
+          by implementers as cross-platform literals, whereas paths are not. */
+        if( targetClass.getName().equals( projectPackage + ".BuildTarget" )
+         || !projectPath.equals( BuilderBuilder.internalBuildingCode( projectPath ))) {
+            return Set.of( projectPackage ); }
+        return Set.of(); }
 
 
 

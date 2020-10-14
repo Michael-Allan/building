@@ -2,20 +2,18 @@ package building;
 
 // Changes to this file immediately affect the next runtime.  Treat it as a script.
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
+import static building.Bootstrap.addCompilableSource;
 import static building.Bootstrap.buildingProjectPath;
 import static building.Bootstrap.packageOf;
 import static building.Bootstrap.pathOf;
 import static building.Bootstrap.pathTester_true;
+import static building.Bootstrap.typeName;
 import static building.Builder.UserError;
-import static java.lang.ProcessBuilder.Redirect.INHERIT;
-import static java.nio.file.Files.getLastModifiedTime;
 
 
 /** A builder of software builders.  In place of the {@linkplain BuilderBuilderDefault default},
@@ -33,13 +31,13 @@ import static java.nio.file.Files.getLastModifiedTime;
 public interface BuilderBuilder {
 
 
-    /** Gives the proper packages of all building code additional to
+    /** The packages of all building code additional to
       * the {@linkplain #internalBuildingCode() internal building code}.  The added code
-      * comprises all files of the {@linkplain Bootstrap#pathOf(String) equivalent directories},
+      * comprises all `.java` files of the {@linkplain Bootstrap#pathOf(String) equivalent directories},
       * exclusive of their subdirectories.  Such code may be intended for the use of other projects, for
       * example, as part of their {@linkplain #externalBuildingCode() <em>external</em> building code}.
       *
-      * <p>The default implementation gives an empty set.</p>
+      * <p>The default is an empty set.</p>
       *
       *     @see #internalBuildingCode(Path)
       */
@@ -76,13 +74,13 @@ public interface BuilderBuilder {
           pathTester_true: p -> { return p.getFileName().toString().startsWith("Build"); };
         addCompilableSource( sourceNames, internalBuildingCode(projectPath()), tester );
         addedBuildingCode().forEach( pkg -> addCompilableSource( sourceNames, pathOf(pkg) ));
-        if( sourceNames.size() > 0 ) compile( sourceNames ); }
+        if( sourceNames.size() > 0 ) Bootstrap.i.compile( sourceNames ); }
 
 
 
-    /** Gives the proper package of each project, less the {@linkplain #projectPackage() owning project},
+    /** The proper package of each project, less the {@linkplain #projectPackage() owning project},
       * whose {@linkplain #internalBuildingCode() building code} the software builder may depend on.
-      * The default implementation gives a singleton set comprising ‘building’, the proper package
+      * The default is a singleton set comprising ‘building’, the proper package
       * of the <a href='http://reluk.ca/project/building/'>building project</a>.
       *
       *     @see #internalBuildingCode(Path)
@@ -163,10 +161,10 @@ public interface BuilderBuilder {
     public default Builder newBuilder() {
         try {
             final Class<? extends Builder> cBuilder =
-              Class.forName( className( Builder.implementationFile( projectPath() )))
+              Class.forName( typeName( Builder.implementationFile( projectPath() )))
               .asSubclass( Builder.class );
             final Class<? extends Enum> cTarget =
-              Class.forName( className( targetFile() )).asSubclass( Enum.class );
+              Class.forName( typeName( targetFile() )).asSubclass( Enum.class );
             try { // One of (a) the default implementation `BuilderDefault`, or (b) a custom one:
                 return cBuilder.getConstructor( Class.class, String.class, Path.class ) // (a)
                   .newInstance( cTarget, projectPackage(), projectPath() ); }
@@ -197,8 +195,8 @@ public interface BuilderBuilder {
 
 
 
-    /** Gives the proper path of the source file that defines the build targets of the project.
-      * The default implementation gives a subpath
+    /** The proper path of the source file that defines the build targets of the project.
+      * For the default implementation, this is the child path
       * of the {@linkplain #internalBuildingCode(Path) internal building code} with a simple name
       * of either `BuildTarget.java` if a file exists there, else `Target.java`.
       */
@@ -213,58 +211,6 @@ public interface BuilderBuilder {
 ////  P r i v a t e  ////////////////////////////////////////////////////////////////////////////////////
 
 
-    private static void addCompilableSource( final List<String> names, final Path directory ) {
-        addCompilableSource( names, directory, pathTester_true ); }
-
-
-
-    private static void addCompilableSource( final List<String> names, final Path directory,
-          final Predicate<Path> tester ) {
-        try( final Stream<Path> pp = Files.list( directory )) {
-            for( final Path p: (Iterable<Path>)pp::iterator ) {
-                if( Files.isDirectory( p )) continue;
-                final String name = p.toString();
-                if( !name.endsWith( ".java" )) continue;
-                if( !tester.test( p )) continue;
-                if( toCompile( p, simpleClassName(p) )) {
-                    names.add( p.toString() ); }}}
-        catch( IOException x ) { throw new RuntimeException( x ); }}
-
-
-
-    /** @see #simpleClassName(Path)
-      */
-    private static String className( final Path sourceFile ) {
-        return packageOf(sourceFile.getParent()) + '.' + simpleClassName(sourceFile); }
-
-
-
-    /** @param sourceNames The proper path of each source file to compile.
-      */
-    private static void compile( final List<String> sourceNames ) throws UserError {
-        // Changing?  Sync → `BuildCommand.execute`.
-        Bootstrap.i.printProgressLeader( null/*bootstrapping*/, "javac" );
-        final List<String> compilerArguments = new ArrayList<>();
-        compilerArguments.add( System.getProperty("java.home") + "/bin/javac" );
-          // The Java installation at `java.home` is known to include `javac` because also
-          // it is a JDK installation, as assured by the `JDK_HOME` at top.
-        compilerArguments.add( "@building/java_javac_arguments" );
-        compilerArguments.add( "@building/javac_arguments" );
-        compilerArguments.addAll( sourceNames );
-        final ProcessBuilder pB = new ProcessBuilder( compilerArguments );
-        pB.redirectOutput( INHERIT );
-        pB.redirectError( INHERIT );
-        try {
-            final int exitValue =  pB.start().waitFor();
-            if( exitValue == 1 ) throw new UserError( "Stopped on `javac` error" );
-              // Already `javac` has told the details.
-            else if( exitValue != 0 ) throw new RuntimeException( "Exit value of " + exitValue
-              + " from process: " + pB.command() ); }
-        catch( InterruptedException|IOException x ) { throw new RuntimeException( x ); }
-        finally{ System.out.println( sourceNames.size() ); }}
-
-
-
     /** Gives a builder builder, first compiling its code if necessary.
       *
       *     @param projectPackage The proper package of the owning project.
@@ -273,7 +219,7 @@ public interface BuilderBuilder {
     private static BuilderBuilder get( final String projectPackage, final Path projectPath )
       throws UserError {
         Path sourceDirectory = null; // Of the implementation file.
-        String simpleClassName = null; // Of the implementation, e.g. ‘BuilderBuilderDefault’.
+        String simpleTypeName = null; // Of the implementation, e.g. ‘BuilderBuilderDefault’.
 
       // Compile the code
       // ────────────────
@@ -284,19 +230,19 @@ public interface BuilderBuilder {
                 if( !iF.equals( implementationFileDefault )) { // Then the project defines a custom one.
                     sources.add( 0, implementationFileDefault ); }} /* Nevertheless insert the default
                       in case the custom one inherits from it.  Insert it at 0 to ensure correct setting
-                      of `sourceDirectory` and `simpleClassName` above. */
+                      of `sourceDirectory` and `simpleTypeName` above. */
             for( final Path sourceFile: sources ) {
                 sourceDirectory = sourceFile.getParent();
-                simpleClassName = simpleClassName( sourceFile );
-                final Path classFile = Builder.outDirectory.resolve(
-                  sourceDirectory.resolve( simpleClassName + ".class" ));
-                if( toCompile( sourceFile, simpleClassName )) {
+                simpleTypeName = Bootstrap.simpleTypeName( sourceFile );
+                final Path classFile = Bootstrap.outDirectory.resolve(
+                  sourceDirectory.resolve( simpleTypeName + ".class" ));
+                if( Bootstrap.toCompile( sourceFile, simpleTypeName )) {
                     sourceNames.add( sourceFile.toString() ); }}}
-        if( sourceNames.size() > 0 ) compile( sourceNames );
+        if( sourceNames.size() > 0 ) Bootstrap.i.compile( sourceNames );
 
       // Construct an instance
       // ─────────────────────
-        final String cName = packageOf(sourceDirectory) + '.' + simpleClassName;
+        final String cName = packageOf(sourceDirectory) + '.' + simpleTypeName;
         try {
             final Class<? extends BuilderBuilder> c = Class.forName( cName )
               .asSubclass( BuilderBuilder.class );
@@ -304,27 +250,7 @@ public interface BuilderBuilder {
                 return c.getConstructor( String.class, Path.class ) // (a)
                   .newInstance( projectPackage, projectPath ); }
             catch( NoSuchMethodException x ) { return c.getConstructor().newInstance(); }} // (b)
-        catch( ReflectiveOperationException x ) { throw new RuntimeException( x ); }}
-
-
-
-    /** @see #className(Path)
-      */
-    private static String simpleClassName( final Path sourceFile ) {
-        final String s = sourceFile.getFileName().toString();
-        assert s.endsWith( ".java" );
-        return s.substring( 0, s.length()-".java".length() ); }
-
-
-
-    private static boolean toCompile( final Path sourceFile, final String simpleClassName ) {
-        final Path classFile = Builder.outDirectory.resolve(
-          sourceFile.getParent().resolve( simpleClassName + ".class" ));
-        if( Files.exists( classFile )) {
-            try {
-                return getLastModifiedTime(sourceFile).compareTo(getLastModifiedTime(classFile)) >= 0; }
-            catch( IOException x ) { throw new RuntimeException( x ); }}
-        return true; }}
+        catch( ReflectiveOperationException x ) { throw new RuntimeException( x ); }}}
 
 
 

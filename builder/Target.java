@@ -9,7 +9,7 @@ package building.builder;
 public enum Target {
 
 
-    /** A software builder compiled from Java source code into `.class` files.  All other targets
+    /** A software builder compiled from source code into Java class files.  All other targets
       * implicitly include it, none can build without first building a builder.
       */
     builder; }

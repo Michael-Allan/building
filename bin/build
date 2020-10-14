@@ -78,7 +78,7 @@ final class BuildCommand { // [AFN]
 
           // compile the code
           // ┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
-            // Changing?  Sync → `BuilderBuilder.compile`.
+            // Changing?  Sync → `Bootstrap.compile`.
             int a = 0;
             compilerArguments.add( a++, System.getProperty("java.home") + "/bin/javac" );
               // The Java installation at `java.home` is known to include `javac` because also

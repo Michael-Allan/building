@@ -9,10 +9,16 @@ package building.template;
 public enum BuildTarget {
 
 
-    /** A software builder compiled from Java source code into `.class` files.  All other targets
+    /** A software builder compiled from source code into Java class files.  All other targets
       * implicitly include it, none can build without first building a builder.
       */
-    builder; }
+    builder,
+
+
+    /** Java class files compiled from source code.
+      */
+    Java_class_files; }
+
 
 
                                                         // Copyright © 2020  Michael Allan.  Licence MIT.
