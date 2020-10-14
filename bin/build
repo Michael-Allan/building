@@ -140,7 +140,7 @@ final class BuildCommand { // [AFN]
         catch( final InvocationTargetException xIT ) {
             final Throwable x = xIT.getCause();
             if( x != null && "building.Builder$UserError".equals( x.getClass().getName() )) {
-                System.err.println( x.getMessage() );
+                System.err.println( "build: " + x.getMessage() );
                 System.exit( 1 ); }
             else throw new Failure( xIT ); }
         catch( ReflectiveOperationException x ) { throw new Failure( x ); }}

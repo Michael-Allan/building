@@ -256,7 +256,7 @@ public interface BuilderBuilder {
         pB.redirectError( INHERIT );
         try {
             final int exitValue =  pB.start().waitFor();
-            if( exitValue == 1 ) throw new UserError( "build: Stopped on `javac` error" );
+            if( exitValue == 1 ) throw new UserError( "Stopped on `javac` error" );
               // Already `javac` has told the details.
             else if( exitValue != 0 ) throw new RuntimeException( "Exit value of " + exitValue
               + " from process: " + pB.command() ); }
