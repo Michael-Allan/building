@@ -35,7 +35,7 @@ public interface Builder {
       *     @param projectPath The proper path of the owning project.
       */
     public static Path implementationFile( final Path projectPath ) { // Cf. @ `BuilderBuilder`.
-        Bootstrap.i().verify( projectPath );
+        Bootstrap.i.verify( projectPath );
         Path p = BuilderBuilder.internalBuildingCode(projectPath).resolve( "Builder.java" );
         if( !Files.isRegularFile( p )) p = implementationFileDefault;
         return p; }

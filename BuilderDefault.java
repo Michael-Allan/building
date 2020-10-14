@@ -15,20 +15,33 @@ import java.nio.file.Path;
 public class BuilderDefault<T extends Enum<T>> implements Builder {
 
 
-    /** @see projectPackage()
-      * @see projectPath()
-      * @param targetClass The class of build targets.
+    /** @param targetClass The class of build targets.
+      * @see projectPackage()
       */
-    public BuilderDefault( final String projectPackage, final Path projectPath,
-          final Class<T> targetClass ) {
-        Bootstrap.i().verify( projectPackage );
-        Bootstrap.i().verify( projectPath );
-        Bootstrap.i().verify( targetClass );
-        Bootstrap.i().verify( projectPackage, projectPath );
-        Bootstrap.i().verify( projectPackage, targetClass );
+    public BuilderDefault( final Class<T> targetClass, final String projectPackage ) {
+        Bootstrap.i.verify( targetClass );
+        Bootstrap.i.verify( projectPackage );
+        Bootstrap.i.verify( targetClass, projectPackage );
+        this.targetClass = targetClass;
         this.projectPackage = projectPackage;
-        this.projectPath = projectPath;
-        this.targetClass = targetClass; }
+        projectPath = Bootstrap.pathOf( projectPackage ); }
+
+
+
+    /** @param targetClass The class of build targets.
+      * @see projectPackage()
+      * @see projectPath()
+      */
+    public BuilderDefault( final Class<T> targetClass, final String projectPackage,
+          final Path projectPath ) {
+        Bootstrap.i.verify( targetClass );
+        Bootstrap.i.verify( projectPackage );
+        Bootstrap.i.verify( projectPath );
+        Bootstrap.i.verify( projectPackage, projectPath );
+        Bootstrap.i.verify( targetClass, projectPackage );
+        this.targetClass = targetClass;
+        this.projectPackage = projectPackage;
+        this.projectPath = projectPath; }
 
 
 

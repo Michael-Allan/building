@@ -3,15 +3,17 @@ package building;
 // Changes to this file immediately affect the next runtime.  Treat it as a script.
 
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static building.Bootstrap.buildingProjectPath;
+import static building.Bootstrap.packageOf;
+import static building.Bootstrap.pathOf;
 import static building.Bootstrap.pathTester_true;
 import static building.Builder.UserError;
-import static java.io.File.separatorChar;
 import static java.lang.ProcessBuilder.Redirect.INHERIT;
 import static java.nio.file.Files.getLastModifiedTime;
 
@@ -31,17 +33,18 @@ import static java.nio.file.Files.getLastModifiedTime;
 public interface BuilderBuilder {
 
 
-    /** Gives the proper path of each directory of building code additional to the
-      * {@linkplain #internalBuildingCode() internal building code}.  The added code
-      * comprises all the files of each directory, exclusive of its subdirectories.
-      * Such code may be intended for the use of other projects, for example, as part
-      * of their {@linkplain #externalBuildingCode() <em>external</em> building code}.
+    /** Gives the proper packages of all building code additional to
+      * the {@linkplain #internalBuildingCode() internal building code}.  The added code
+      * comprises all files of the {@linkplain Bootstrap#pathOf(String) equivalent directories},
+      * exclusive of their subdirectories.  Such code may be intended for the use of other projects, for
+      * example, as part of their {@linkplain #externalBuildingCode() <em>external</em> building code}.
       *
       * <p>The default implementation gives an empty set.</p>
       *
       *     @see #internalBuildingCode(Path)
       */
-    public default Set<Path> addedBuildingCode() { return Set.of(); }
+    public default Set<String> addedBuildingCode() { return Set.of(); } /* Packages for elements
+      because they are codeable by implementers as cross-platform literals, whereas paths are not. */
 
 
 
@@ -72,7 +75,7 @@ public interface BuilderBuilder {
         final Predicate<Path> tester = targetFile().getFileName().toString().equals( "Target.java" )?
           pathTester_true: p -> { return p.getFileName().toString().startsWith("Build"); };
         addCompilableSource( sourceNames, internalBuildingCode(projectPath()), tester );
-        addedBuildingCode().forEach( directory -> addCompilableSource( sourceNames, directory ));
+        addedBuildingCode().forEach( pkg -> addCompilableSource( sourceNames, pathOf(pkg) ));
         if( sourceNames.size() > 0 ) compile( sourceNames ); }
 
 
@@ -93,9 +96,8 @@ public interface BuilderBuilder {
       *     @param projectPackage The proper package of the owning project.
       */
     public static BuilderBuilder forPackage( final String projectPackage ) throws UserError {
-        Bootstrap.i().verify( projectPackage );
-        return get( projectPackage, /*projectPath*/FileSystems.getDefault().getPath(
-          projectPackage.replace( '.', separatorChar ))); }
+        Bootstrap.i.verify( projectPackage );
+        return get( projectPackage, /*projectPath*/pathOf( projectPackage )); }
 
 
 
@@ -104,8 +106,8 @@ public interface BuilderBuilder {
       *     @param projectPath The proper path of the owning project.
       */
     public static BuilderBuilder forPath( final Path projectPath ) throws UserError {
-        Bootstrap.i().verify( projectPath );
-        return get( /*projectPackage*/projectPath.toString().replace(separatorChar,'.'), projectPath ); }
+        Bootstrap.i.verify( projectPath );
+        return get( /*projectPackage*/packageOf(projectPath), projectPath ); }
 
 
 
@@ -116,7 +118,7 @@ public interface BuilderBuilder {
       *     @param projectPath The proper path of the owning project.
       */
     public static Path implementationFile( final Path projectPath ) { // Cf. @ `Builder`.
-        Bootstrap.i().verify( projectPath );
+        Bootstrap.i.verify( projectPath );
         Path p = internalBuildingCode(projectPath).resolve( "BuilderBuilder.java" );
         if( !Files.isRegularFile( p )) p = implementationFileDefault;
         return p; }
@@ -149,7 +151,7 @@ public interface BuilderBuilder {
       *     @see <a href='http://reluk.ca/project/building/example/mixed_top/'>Example of (c)</a>
       */
     public static Path internalBuildingCode( final Path projectPath ) {
-        Bootstrap.i().verify( projectPath );
+        Bootstrap.i.verify( projectPath );
         Path p = projectPath.resolve( "builder" );
         if( !Files.isDirectory( p )) p = projectPath;
         return p; }
@@ -166,8 +168,8 @@ public interface BuilderBuilder {
             final Class<? extends Enum> cTarget =
               Class.forName( className( targetFile() )).asSubclass( Enum.class );
             try { // One of (a) the default implementation `BuilderDefault`, or (b) a custom one:
-                return cBuilder.getConstructor( String.class, Path.class, Class.class ) // (a)
-                  .newInstance( projectPackage(), projectPath(), cTarget ); }
+                return cBuilder.getConstructor( Class.class, String.class, Path.class ) // (a)
+                  .newInstance( cTarget, projectPackage(), projectPath() ); }
             catch( NoSuchMethodException x ) { return cBuilder.getConstructor().newInstance(); }} // (b)
         catch( ReflectiveOperationException x ) { throw new RuntimeException( x ); }}
 
@@ -233,8 +235,7 @@ public interface BuilderBuilder {
     /** @see #simpleClassName(Path)
       */
     private static String className( final Path sourceFile ) {
-        return sourceFile.getParent().toString().replace( separatorChar, '.' )
-          + '.' + simpleClassName(sourceFile); }
+        return packageOf(sourceFile.getParent()) + '.' + simpleClassName(sourceFile); }
 
 
 
@@ -242,7 +243,7 @@ public interface BuilderBuilder {
       */
     private static void compile( final List<String> sourceNames ) throws UserError {
         // Changing?  Sync → `BuildCommand.execute`.
-        Bootstrap.i().printProgressLeader( null/*bootstrapping*/, "javac" );
+        Bootstrap.i.printProgressLeader( null/*bootstrapping*/, "javac" );
         final List<String> compilerArguments = new ArrayList<>();
         compilerArguments.add( System.getProperty("java.home") + "/bin/javac" );
           // The Java installation at `java.home` is known to include `javac` because also
@@ -295,8 +296,7 @@ public interface BuilderBuilder {
 
       // Construct an instance
       // ─────────────────────
-        final String cName = sourceDirectory.toString().replace( separatorChar, '.' )
-          + '.' + simpleClassName;
+        final String cName = packageOf(sourceDirectory) + '.' + simpleClassName;
         try {
             final Class<? extends BuilderBuilder> c = Class.forName( cName )
               .asSubclass( BuilderBuilder.class );

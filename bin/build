@@ -113,16 +113,16 @@ final class BuildCommand { // [AFN]
               // inform the user
               // ┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
                 c = load( "building.Bootstrap" );
-                final Object bootstrap = c.getMethod("i").invoke( null/*static*/ );
-                c.getMethod("printProgressLeader",String.class,String.class)
+                final Object bootstrap = c.getField("i").get( null/*static*/ );
+                c.getMethod( "printProgressLeader", String.class, String.class )
                   .invoke( bootstrap, null/*bootstrapping*/, "javac" );
                 System.out.println( sourceCount ); }
 
           // get a builder builder for the project to be built
           // ┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
             c = load( "building.BuilderBuilder" );
-            final Object builderBuilder = c.getMethod("forPath",Path.class).invoke(
-              null/*static*/, projectPath );
+            final Object builderBuilder = c.getMethod( "forPath", Path.class )
+              .invoke( null/*static*/, projectPath );
             c = builderBuilder.getClass();
 
           // 2. Build the builder

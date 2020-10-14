@@ -2,6 +2,7 @@ package building;
 
 // Changes to this file immediately affect the next runtime.  Treat it as a script.
 
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Predicate;
@@ -27,10 +28,31 @@ public final class Bootstrap {
 
     /** The single instance of `Bootstrap`.
       */
-    public static Bootstrap i() { return i; }
+    public static final Bootstrap i = new Bootstrap();
 
 
-        private static final Bootstrap i = new Bootstrap();
+
+    /** Converts `path` to an equivalent Java package name.
+      *
+      *     @throws IllegalArgumentException If `path` is absolute.
+      */
+    public static String packageOf( final Path path ) {
+        if( path.isAbsolute() ) throw new IllegalArgumentException();
+        return path.toString().replace( separatorChar, '.' ); }
+
+
+
+    /** Converts `JavaPackage` to an equivalent relative path.
+      */
+    public static Path pathOf( final String JavaPackage ) {
+        return FileSystems.getDefault().getPath( pathStringOf( JavaPackage )); }
+
+
+
+    /** Converts `JavaPackage` to an equivalent relative path.
+      */
+    public static String pathStringOf( final String JavaPackage ) {
+        return JavaPackage.replace( '.', separatorChar ); }
 
 
 
@@ -59,14 +81,31 @@ public final class Bootstrap {
 
 
 
-    /** Tests the validity of a `projectPackage` given as the proper package of a project.
+    /** Tests the validity of a `targetClass` given as the class of build targets for a project.
       *
       *     @throws IllegalArgumentException
       */
-    public void verify( final String projectPackage ) {
-        if( projectPackage.equals("builder") || projectPackage.endsWith( ".builder" )) {
-          throw new IllegalArgumentException( "Project package ends with `builder`: "
-            + projectPackage ); }} // Simpler than allowing it, as explained for `#verify(Path)`.
+    public <T extends Enum<T>> void verify( final Class<T> targetClass ) {
+        Enum.valueOf( targetClass, "builder" ); }
+
+
+
+    /** Tests for consistency between parameters given for a project.
+      * Where applicable, individually test each parameter before calling this method.
+      *
+      *     @param targetClass The class of the project’s build targets.
+      *     @param projectPackage The proper package of the project.
+      *     @throws IllegalArgumentException
+      */
+    public void verify( final Class<?> targetClass, final String projectPackage ) {
+        final String iBC = targetClass.getPackageName(); /* Of `BuilderBuilder.internalBuildingCode`,
+          that is, according to whose API documentation one of the following tests must pass. */
+        if( iBC.equals( projectPackage )) return;
+        if( iBC.length() == projectPackage.length() + ".builder".length()
+          && iBC.startsWith( projectPackage )
+          && iBC.endsWith( ".builder" )) return;
+        throw new IllegalArgumentException(
+          "Inconsistency between `projectPackage` and `targetClass` package" ); }
 
 
 
@@ -83,12 +122,14 @@ public final class Bootstrap {
 
 
 
-    /** Tests the validity of a `targetClass` given as the class of build targets for a project.
+    /** Tests the validity of a `projectPackage` given as the proper package of a project.
       *
       *     @throws IllegalArgumentException
       */
-    public <T extends Enum<T>> void verify( final Class<T> targetClass ) {
-        Enum.valueOf( targetClass, "builder" ); }
+    public void verify( final String projectPackage ) {
+        if( projectPackage.equals("builder") || projectPackage.endsWith( ".builder" )) {
+          throw new IllegalArgumentException( "Project package ends with `builder`: "
+            + projectPackage ); }} // Simpler than allowing it, as explained for `#verify(Path)`.
 
 
 
@@ -100,34 +141,15 @@ public final class Bootstrap {
       *     @throws IllegalArgumentException
       */
     public void verify( final String projectPackage, final Path projectPath ) {
-        if( !projectPackage.replace('.',separatorChar).equals( projectPath.toString() )) {
+        if( !pathStringOf(projectPackage).equals( projectPath.toString() )) {
             throw new IllegalArgumentException( "Inequivalent `projectPackage` and `projectPath`" ); }}
-
-
-
-    /** Tests for consistency between parameters given for a project.
-      * Where applicable, individually test each parameter before calling this method.
-      *
-      *     @param projectPackage The proper package of the project.
-      *     @param targetClass The class of the project’s build targets.
-      *     @throws IllegalArgumentException
-      */
-    public void verify( final String projectPackage, final Class<?> targetClass ) {
-        final String iBC = targetClass.getPackageName(); /* Of `BuilderBuilder.internalBuildingCode`,
-          that is, according to whose API documentation one of the following tests must pass. */
-        if( iBC.equals( projectPackage )) return;
-        if( iBC.length() == projectPackage.length() + ".builder".length()
-          && iBC.startsWith( projectPackage )
-          && iBC.endsWith( ".builder" )) return;
-        throw new IllegalArgumentException(
-          "Inconsistency between `projectPackage` and `targetClass` package" ); }
 
 
 
 ////  P r i v a t e  ////////////////////////////////////////////////////////////////////////////////////
 
 
-    private static final Set<String> projectsShowingProgress = new HashSet<>(); } /* Generally a maximum
+    private final Set<String> projectsShowingProgress = new HashSet<>(); } /* Generally a maximum
       of two members, unless one project has customized its build to entail the build of another. */
 
 

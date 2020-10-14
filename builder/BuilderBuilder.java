@@ -14,9 +14,8 @@ public final class BuilderBuilder extends building.BuilderBuilderDefault {
     public BuilderBuilder() { super( "building", building.Bootstrap.buildingProjectPath ); }
 
 
-    public @Override Set<Path> addedBuildingCode() {
-        final Path p = projectPath();
-        return Set.of( p, p.resolve("template") ); }
+    public @Override Set<String> addedBuildingCode() {
+        return Set.of( "building", "building.template" ); }
 
 
     public @Override Set<String> externalBuildingCode() { return Set.of(); }}
