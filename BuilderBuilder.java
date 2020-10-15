@@ -32,13 +32,13 @@ import static building.Builder.UserError;
 public interface BuilderBuilder {
 
 
-    /** The packages of all building code additional to
+    /** Packages of building code additional to
       * the {@linkplain #internalBuildingCode() internal building code}.  The added code
       * comprises all `.java` files of the {@linkplain Bootstrap#pathOf(String) equivalent directories},
       * exclusive of their subdirectories.  Such code may be intended for the use of other projects, for
       * example, as part of their {@linkplain #externalBuildingCode() <em>external</em> building code}.
       *
-      * <p>The default is an empty set.</p>
+      * <p>The default implementation is an empty set.</p>
       *
       *     @see #internalBuildingCode(Path)
       */
@@ -81,7 +81,7 @@ public interface BuilderBuilder {
 
     /** The proper package of each project, less the {@linkplain #projectPackage() owning project},
       * whose {@linkplain #internalBuildingCode() building code} the software builder may depend on.
-      * The default is a singleton set comprising ‘building’, the proper package
+      * The default implementation is a singleton set comprising ‘building’, the proper package
       * of the <a href='http://reluk.ca/project/building/'>building project</a>.
       *
       *     @see #internalBuildingCode(Path)
@@ -90,9 +90,9 @@ public interface BuilderBuilder {
 
 
 
-    /** Gives a builder builder, first compiling its code if necessary.
+    /** Gives a builder builder for a project, first compiling its code if necessary.
       *
-      *     @param projectPackage The proper package of the owning project.
+      *     @param projectPackage The proper package of the project.
       */
     public static BuilderBuilder forPackage( final String projectPackage ) throws UserError {
         verify( projectPackage );
@@ -100,9 +100,9 @@ public interface BuilderBuilder {
 
 
 
-    /** Gives a builder builder, first compiling its code if necessary.
+    /** Gives a builder builder for a project, first compiling its code if necessary.
       *
-      *     @param projectPath The proper path of the owning project.
+      *     @param projectPath The proper path of the project.
       */
     public static BuilderBuilder forPath( final Path projectPath ) throws UserError {
         verify( projectPath );
@@ -110,11 +110,11 @@ public interface BuilderBuilder {
 
 
 
-    /** Gives the proper path of a builder builder’s source file.  The given path is either
+    /** Gives the proper path of a project’s builder-builder source file.  The given path is either
       * `<i>{@linkplain #internalBuildingCode(Path) internalBuildingCode}</i>/BuilderBuilder.java` if a
       * file exists there, or the path to the {@linkplain BuilderBuilderDefault default implementation}.
       *
-      *     @param projectPath The proper path of the owning project.
+      *     @param projectPath The proper path of the project.
       */
     public static Path implementationFile( final Path projectPath ) { // Cf. @ `Builder`.
         verify( projectPath );
@@ -186,20 +186,16 @@ public interface BuilderBuilder {
 
 
 
-    /** Set of projects for which a {@linkplain #build() builder build} was called in the present
-      * runtime, each identified by its proper package.
-      *
-      * <p>Never remove a project from this set.  Rather use it in builder builds to avoid
-      * duplicate builds of a project.</p>
+    /** Projects for which a {@linkplain #build() builder build} was called in the present runtime,
+      * each identified by its proper package.
       */
     public static final Set<String> projectsUnderBuild = new HashSet<>();
 
 
 
-    /** The proper path of the source file that defines the build targets of the project.
-      * For the default implementation, this is the child path
-      * of the {@linkplain #internalBuildingCode(Path) internal building code} with a simple name
-      * of either `BuildTarget.java` if a file exists there, else `Target.java`.
+    /** The proper path of the source file defining the build targets.  The default implementation
+      * is a child path of the {@linkplain #internalBuildingCode(Path) internal building code}
+      * with a simple name of either `BuildTarget.java` if a file exists there, else `Target.java`.
       */
     public default Path targetFile() {
         final Path iBC = internalBuildingCode( projectPath() );
@@ -212,10 +208,10 @@ public interface BuilderBuilder {
 ////  P r i v a t e  ////////////////////////////////////////////////////////////////////////////////////
 
 
-    /** Gives a builder builder, first compiling its code if necessary.
+    /** Gives a builder builder for a project, first compiling its code if necessary.
       *
-      *     @param projectPackage The proper package of the owning project.
-      *     @param projectPath The proper path of the owning project.
+      *     @param projectPackage The proper package of the project.
+      *     @param projectPath The proper path of the project.
       */
     private static BuilderBuilder get( final String projectPackage, final Path projectPath )
       throws UserError {

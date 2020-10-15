@@ -78,26 +78,18 @@ public class BuilderDefault<T extends Enum<T>> implements Builder {
 
 
 
-    /** The packages of Java code proper to the owning project, exclusive of its building code.  The code
+    /** Packages of Java code proper to the owning project, exclusive of building code.  The code
       * comprises all `.java` files of the {@linkplain Bootstrap#pathOf(String) equivalent directories},
       * exclusive of their subdirectories.
       *
-      * <p>This method is called only if the project declares a `Java_class_files` build target.</p>
+      * <p>The default implementation is a singleton set comprising the proper package
+      * of the owning project.</p>
       *
-      * <p>The default is either a singleton set comprising the proper package of the owning project,
-      * or an empty set.  It is a singleton set if the project has either `BuildTarget.java` as its
-      * target file or no internal building code in its proper package, otherwise it is an empty set.</p>
-      *
-      *     @see building.template.BuildTarget.Java_class_files
-      *     @see #targetFile()
-      *     @see #internalBuildingCode()
+      * <p>This method is not called unless the project declares build target
+      * `{@linkplain building.template.BuildTarget.Java_class_files Java_class_files}`.</p>
       */
-    public Set<String> JavaCode() { /* Packages for elements because they are codeable
-          by implementers as cross-platform literals, whereas paths are not. */
-        if( targetClass.getName().equals( projectPackage + ".BuildTarget" )
-         || !projectPath.equals( BuilderBuilder.internalBuildingCode( projectPath ))) {
-            return Set.of( projectPackage ); }
-        return Set.of(); }
+    public Set<String> JavaCode() { return Set.of( projectPackage ); } /* Packages for elements
+          because they are codeable by implementers as cross-platform literals, whereas paths are not. */
 
 
 
