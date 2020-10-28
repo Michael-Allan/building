@@ -1,20 +1,20 @@
-package building;
+package building.Javanese;
 
 // Changes to this file immediately affect the next runtime.  Treat it as a script.
 
 import java.nio.file.Path;
 import java.util.*;
 
-import static building.Bootstrap.pathOf;
-import static building.Bootstrap.verify;
+import static building.Javanese.Bootstrap.pathOf;
+import static building.Javanese.Bootstrap.verify;
 
 
-/** Default implementation of a software builder.  It supports all the targets
-  * named in `building.template.{@linkplain building.template.BuildTarget BuildTarget}`,
+/** Default implementation of a software builder.  It supports all the targets named in
+  * `building.Javanese.template.{@linkplain building.Javanese.template.BuildTarget BuildTarget}`,
   * but will refuse to build any outside of `T`.
   *
   *     @param <T> The type of build targets.  The names of all its targets should comprise
-  *       a subset of {@linkplain building.template.BuildTarget those supported}.
+  *       a subset of {@linkplain building.Javanese.template.BuildTarget those supported}.
   */
 public class BuilderDefault<T extends Enum<T>> implements Builder {
 
@@ -86,7 +86,7 @@ public class BuilderDefault<T extends Enum<T>> implements Builder {
       * of the owning project.</p>
       *
       * <p>This method is not called unless the project declares build target
-      * `{@linkplain building.template.BuildTarget.Java_class_files Java_class_files}`.</p>
+      * `{@linkplain building.Javanese.template.BuildTarget.Java_class_files Java_class_files}`.</p>
       */
     public Set<String> JavaCode() { return Set.of( projectPackage ); } /* Packages for elements
           because they are codeable by implementers as cross-platform literals, whereas paths are not. */
@@ -126,7 +126,7 @@ public class BuilderDefault<T extends Enum<T>> implements Builder {
 
     private static boolean isSupportDocumented( final String target ) {
         boolean is = true;
-        try { building.template.BuildTarget.valueOf( target ); }
+        try { building.Javanese.template.BuildTarget.valueOf( target ); }
         catch( IllegalArgumentException _x ) { is = false; }
         return is; }
 

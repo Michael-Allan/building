@@ -1,5 +1,5 @@
-#!/usr/bin/env --split-string=${JDK_HOME}/bin/java @building/java_arguments @building/java_arguments_addendum @building/java_javac_arguments \c [SS]
-package building; // [AFN]
+#!/usr/bin/env --split-string=${JDK_HOME}/bin/java @building/Javanese/java_arguments @building/Javanese/java_arguments_addendum @building/Javanese/java_javac_arguments \c [SS]
+package building.Javanese; // [AFN]
 
 // Usage:  build <PROJECT-PROPER-PATH> <target>…
 //
@@ -8,10 +8,12 @@ package building; // [AFN]
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.*;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.io.File.separatorChar;
 import static java.lang.ProcessBuilder.Redirect.INHERIT;
 import static java.nio.file.Files.getLastModifiedTime;
 
@@ -34,8 +36,8 @@ final class BuildCommand { // [AFN]
             System.err.println( "Usage: build <PROJECT-PROPER-PATH> <target>..." );
             System.exit( 1 ); }
         final String argument = arguments[0];
-        final Path projectPath = FileSystems.getDefault().getPath( argument ); /* Effectively filters out
-          input variance.  Whether or not the argument ends with ‘/’ has no effect on `projectPath`. */
+        final Path projectPath = Path.of( argument ); /* Effectively filters out input variance.
+          Whether or not the argument ends with ‘/’ has no effect on `projectPath`. */
         if( projectPath.isAbsolute() ) {
             System.err.println( "build: Not a relative path: " + argument );
             System.exit( 1 ); }
@@ -60,7 +62,7 @@ final class BuildCommand { // [AFN]
         final Path outDirectory;
         final boolean wasClean; {
             // Already the working directory is the command directory.  `../build_instructions.brec`
-            final Path p = Path.of( "building" ); // Proper path of the present project.
+            final Path p = pathOf( "building.Javanese" ); // Proper path of the present project.
             outDirectory = Path.of(System.getProperty("java.io.tmpdir")).resolve( p );
             wasClean = !Files.isDirectory( outDirectory );
             for( String s: new String[]{ "BuilderBuilder", /*dependencies*/"Bootstrap", "Builder" }) {
@@ -83,8 +85,8 @@ final class BuildCommand { // [AFN]
             compilerArguments.add( a++, System.getProperty("java.home") + "/bin/javac" );
               // The Java installation at `java.home` is known to include `javac` because also
               // it is a JDK installation, as assured by the `JDK_HOME` at top.
-            compilerArguments.add( a++, "@building/java_javac_arguments" );
-            compilerArguments.add( a,   "@building/javac_arguments" );
+            compilerArguments.add( a++, "@building/Javanese/java_javac_arguments" );
+            compilerArguments.add( a,   "@building/Javanese/javac_arguments" );
             final ProcessBuilder pB = new ProcessBuilder( compilerArguments );
             pB.redirectOutput( INHERIT );
             pB.redirectError( INHERIT );
@@ -112,7 +114,7 @@ final class BuildCommand { // [AFN]
 
               // inform the user
               // ┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
-                c = load( "building.Bootstrap" );
+                c = load( "building.Javanese.Bootstrap" );
                 final Object bootstrap = c.getField("i").get( null/*static*/ );
                 c.getMethod( "printProgressLeader", String.class, String.class )
                   .invoke( bootstrap, null/*bootstrapping*/, "javac" );
@@ -120,7 +122,7 @@ final class BuildCommand { // [AFN]
 
           // get a builder builder for the project to be built
           // ┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
-            c = load( "building.BuilderBuilder" );
+            c = load( "building.Javanese.BuilderBuilder" );
             final Object builderBuilder = c.getMethod( "forPath", Path.class )
               .invoke( null/*static*/, projectPath );
             c = builderBuilder.getClass();
@@ -139,7 +141,7 @@ final class BuildCommand { // [AFN]
             while( ++t < tN ); }
         catch( final InvocationTargetException xIT ) {
             final Throwable x = xIT.getCause();
-            if( x != null && "building.Builder$UserError".equals( x.getClass().getName() )) {
+            if( x != null && "building.Javanese.Builder$UserError".equals( x.getClass().getName() )) {
                 System.err.println( "build: " + x.getMessage() );
                 System.exit( 1 ); }
             else throw new Failure( xIT ); }
@@ -153,6 +155,22 @@ final class BuildCommand { // [AFN]
 
 
     private ClassLoader loader; // Null unless a special one is required.
+
+
+
+    /** Converts `JavaPackage` to an equivalent relative path.
+      */
+    public static Path pathOf( final String JavaPackage ) {
+        return Path.of( pathStringOf( JavaPackage )); }
+        // Changing?  Sync → `Bootstrap.pathOf`.
+
+
+
+    /** Converts `JavaPackage` to an equivalent relative path.
+      */
+    public static String pathStringOf( final String JavaPackage ) {
+        return JavaPackage.replace( '.', separatorChar ); }
+        // Changing?  Sync → `Bootstrap.pathStringOf`.
 
 
 

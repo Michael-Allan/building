@@ -1,14 +1,14 @@
-Installation instructions for the building project
+Installation instructions for Javanese Builder
 
-    + Install the files of this project into `*COMMAND-DIRECTORY*/building/`.
-        / COMMAND-DIRECTORY is where all project installations related to the building project
+    + Install the files of this project into `*COMMAND-DIRECTORY*/building/Javanese/`.
+        / The command directory is where project installations dependent on Javanese Builder
           are accessible by their proper paths.  The present file, for example, would correctly
-          be installed at `*COMMAND-DIRECTORY*/building/project_installation.brec`.
+          be installed at `*COMMAND-DIRECTORY*/building/Javanese/project_installation.brec`.
             : see `^^command directory$` @ lexicon.brec
 
     initial set-up
         1+ Ensure you are running Linux.
-            : see `^^operating system$` @ http://reluk.ca/project/building/action_plan.brec
+            : see `^^operating system$` @ http://reluk.ca/project/building/Javanese/action_plan.brec
         2+ Ensure the latest JDK is installed and accessible.
             : see https://jdk.java.net/
             + Ensure the path to its installation directory is exported as
@@ -28,35 +28,35 @@ Installation instructions for the building project
                     - Expect a version of 15, or later.
         3+ Test your access to the building commands.
             >+ cd *COMMAND-DIRECTORY*
-            >+ ./building/bin/build
+            >+ ./building/Javanese/bin/build
                 / ⇒  Usage: build <PROJECT-PROPER-PATH> <target>...
         4+ Get convenient access to all building commands.
             + Append the directory of this project’s shell commands to the search path.
-                >+ PATH=$PATH:*COMMAND-DIRECTORY*/building/bin
+                >+ PATH=$PATH:*COMMAND-DIRECTORY*/building/Javanese/bin
             + Test it.
                 >+ which build
-                    / ⇒  *COMMAND-DIRECTORY*/building/bin/build
+                    / ⇒  *COMMAND-DIRECTORY*/building/Javanese/bin/build
                 >+ build
                     / ⇒  Usage: build <PROJECT-PROPER-PATH> <target>...
             + Make it permanent by adding the same to your login initializer:
 
-                  PATH=$PATH:*COMMAND-DIRECTORY*/building/bin
+                  PATH=$PATH:*COMMAND-DIRECTORY*/building/Javanese/bin
 
         5+ Test the logger.
             >+ logging-test
-                / ⇒  Aug. 28, 2020 12:26:58 P.M. building.LoggingTestCommand execute
+                / ⇒  Oct. 27, 2020 10:34:34 A.M. building.Javanese.LoggingTestCommand execute
                      OFF: Logging at levels `OFF`, `SEVERE`, `WARNING`, `INFO`, `CONFIG`, `FINE`, `FINER`, `FINEST` and `ALL`:
-                     Aug. 28, 2020 12:26:58 P.M. building.LoggingTestCommand test
+                     Oct. 27, 2020 10:34:34 A.M. building.Javanese.LoggingTestCommand test
                      OFF: Testing at level OFF
-                     Aug. 28, 2020 12:26:58 P.M. building.LoggingTestCommand test
+                     Oct. 27, 2020 10:34:34 A.M. building.Javanese.LoggingTestCommand test
                      SEVERE: Testing at level SEVERE
-                     Aug. 28, 2020 12:26:58 P.M. building.LoggingTestCommand test
+                     Oct. 27, 2020 10:34:34 A.M. building.Javanese.LoggingTestCommand test
                      WARNING: Testing at level WARNING
-                     Aug. 28, 2020 12:26:58 P.M. building.LoggingTestCommand test
+                     Oct. 27, 2020 10:34:34 A.M. building.Javanese.LoggingTestCommand test
                      INFO: Testing at level INFO
-                     Aug. 28, 2020 12:26:58 P.M. building.LoggingTestCommand test
+                     Oct. 27, 2020 10:34:34 A.M. building.Javanese.LoggingTestCommand test
                      CONFIG: Testing at level CONFIG
-                     Aug. 28, 2020 12:26:58 P.M. building.LoggingTestCommand test
+                     Oct. 27, 2020 10:34:34 A.M. building.Javanese.LoggingTestCommand test
                      FINE: Testing at level FINE
             - The location of the output depends on your logger configuration,
               as does the number of levels that appear.

@@ -1,4 +1,4 @@
-package building;
+package building.Javanese;
 
 // Changes to this file immediately affect the next runtime.  Treat it as a script.
 
@@ -8,7 +8,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static building.Builder.UserError;
+import static building.Javanese.Builder.UserError;
 import static java.io.File.separatorChar;
 import static java.lang.ProcessBuilder.Redirect.INHERIT;
 import static java.nio.file.Files.getLastModifiedTime;
@@ -53,9 +53,9 @@ public final class Bootstrap {
 
 
 
-    /** The proper path of the building project.
+    /** The proper path of Javanese Builder.
       */
-    public static final Path buildingProjectPath = Path.of( "building" );
+    public static final Path buildingProjectPath = pathOf( "building.Javanese" );
 
 
 
@@ -70,8 +70,8 @@ public final class Bootstrap {
         compilerArguments.add( System.getProperty("java.home") + "/bin/javac" );
           // The Java installation at `java.home` is known to include `javac` because also
           // it is a JDK installation, as assured by the `JDK_HOME` atop `bin/build`.
-        compilerArguments.add( "@building/java_javac_arguments" );
-        compilerArguments.add( "@building/javac_arguments" );
+        compilerArguments.add( "@building/Javanese/java_javac_arguments" );
+        compilerArguments.add( "@building/Javanese/javac_arguments" );
         compilerArguments.addAll( sourceNames );
         final ProcessBuilder pB = new ProcessBuilder( compilerArguments );
         pB.redirectOutput( INHERIT );
@@ -113,7 +113,8 @@ public final class Bootstrap {
     /** Converts `JavaPackage` to an equivalent relative path.
       */
     public static Path pathOf( final String JavaPackage ) {
-        return FileSystems.getDefault().getPath( pathStringOf( JavaPackage )); }
+        return Path.of( pathStringOf( JavaPackage )); }
+        // Changing?  Sync → any `pathOf` in each of `bin/*`.
 
 
 
@@ -121,6 +122,7 @@ public final class Bootstrap {
       */
     public static String pathStringOf( final String JavaPackage ) {
         return JavaPackage.replace( '.', separatorChar ); }
+        // Changing?  Sync → any `pathStringOf` in each of `bin/*`.
 
 
 

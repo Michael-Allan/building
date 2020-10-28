@@ -1,5 +1,5 @@
-#!/usr/bin/env --split-string=${JDK_HOME}/bin/java @building/java_arguments @building/java_javac_arguments \c [SS]
-package building; // [AFN]
+#!/usr/bin/env --split-string=${JDK_HOME}/bin/java @building/Javanese/java_arguments @building/Javanese/java_javac_arguments \c [SS]
+package building.Javanese; // [AFN]
 
 // Usage:  clean
 //
@@ -9,10 +9,11 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 
+import static java.io.File.separatorChar;
 import static java.nio.file.FileVisitResult.CONTINUE;
 
 
-/** A shell command to remove `/tmp/building/`, the output directory for all build processes.
+/** A shell command to remove `/tmp/building/Javanese/`, the output directory for all build processes.
   */
 public final class CleanCommand extends SimpleFileVisitor<Path> { // [AFN]
 
@@ -65,10 +66,19 @@ public final class CleanCommand extends SimpleFileVisitor<Path> { // [AFN]
     /** Execute the command.
       */
     private void execute() throws IOException {
-        final Path outDirectory = Path.of(System.getProperty("java.io.tmpdir")).resolve( "building" );
+        final Path outDirectory = Path.of( System.getProperty( "java.io.tmpdir" ),
+          pathStringOf( "building.Javanese" ));
         if( !Files.isDirectory( outDirectory )) return;
         Files.walkFileTree( outDirectory, CleanCommand.this );
-        if( count != 0 ) System.out.println( count ); }}
+        if( count != 0 ) System.out.println( count ); }
+
+
+
+    /** Converts `JavaPackage` to an equivalent relative path.
+      */
+    public static String pathStringOf( final String JavaPackage ) {
+        return JavaPackage.replace( '.', separatorChar ); }}
+        // Changing?  Sync → `Bootstrap.pathStringOf`.
 
 
 

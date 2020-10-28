@@ -1,5 +1,5 @@
-#!/usr/bin/env --split-string=${JDK_HOME}/bin/java @building/java_arguments @building/java_javac_arguments \c [SS]
-package building; // [AFN]
+#!/usr/bin/env --split-string=${JDK_HOME}/bin/java @building/Javanese/java_arguments @building/Javanese/java_javac_arguments \c [SS]
+package building.Javanese; // [AFN]
 
 // Usage:  logging-test
 //
@@ -53,8 +53,8 @@ public final class LoggingTestCommand { // [AFN]
 
 
 
-    private final Logger logger = Logger.getLogger( "building" );
-      // The logger proper to the building project.
+    private final Logger logger = Logger.getLogger( "building.Javanese" );
+      // The logger proper to Javanese Builder.
 
 
 

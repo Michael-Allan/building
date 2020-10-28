@@ -3,7 +3,7 @@
 # This file is a referent of `javac` commands issued at runtime by software builders.  For syntax:
 # `https://docs.oracle.com/en/java/javase/15/docs/specs/man/javac.html#command-line-argument-files`.
 
-   -d /tmp/building/ # The output directory for class files.
+   -d /tmp/building/Javanese/ # The output directory for class files.
       # Cf. `--class-path` in `./java_javac_arguments`.
    --source-path . # The working directory `.` is the command directory, as per
       # `./build_instructions.brec`.  Even when no ‘additional source files’ need

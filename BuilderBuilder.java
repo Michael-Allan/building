@@ -1,4 +1,4 @@
-package building;
+package building.Javanese;
 
 // Changes to this file immediately affect the next runtime.  Treat it as a script.
 
@@ -7,14 +7,14 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Predicate;
 
-import static building.Bootstrap.addCompilableSource;
-import static building.Bootstrap.buildingProjectPath;
-import static building.Bootstrap.packageOf;
-import static building.Bootstrap.pathOf;
-import static building.Bootstrap.pathTester_true;
-import static building.Bootstrap.typeName;
-import static building.Bootstrap.verify;
-import static building.Builder.UserError;
+import static building.Javanese.Bootstrap.addCompilableSource;
+import static building.Javanese.Bootstrap.buildingProjectPath;
+import static building.Javanese.Bootstrap.packageOf;
+import static building.Javanese.Bootstrap.pathOf;
+import static building.Javanese.Bootstrap.pathTester_true;
+import static building.Javanese.Bootstrap.typeName;
+import static building.Javanese.Bootstrap.verify;
+import static building.Javanese.Builder.UserError;
 
 
 /** A builder of software builders.  In place of the {@linkplain BuilderBuilderDefault default},
@@ -63,7 +63,7 @@ public interface BuilderBuilder {
       // Build the external building code
       // ────────────────────────────────
         for( final String externalProject: externalBuildingCode() ) { /* Iteration order is unimportant;
-              regardless projects will build here in correct order.  The building project, for instance,
+              regardless projects will build here in correct order.  Javanese Builder, for instance,
               will always build before any other project that nominally depends on it. */
             if( projectsUnderBuild.contains( externalProject )) continue;
             forPackage(externalProject).build(); }
@@ -81,12 +81,11 @@ public interface BuilderBuilder {
 
     /** The proper package of each project, less the {@linkplain #projectPackage() owning project},
       * whose {@linkplain #internalBuildingCode() building code} the software builder may depend on.
-      * The default implementation is a singleton set comprising ‘building’, the proper package
-      * of the <a href='http://reluk.ca/project/building/'>building project</a>.
+      * The default implementation is a singleton set comprising ‘building.Javanese’.
       *
       *     @see #internalBuildingCode(Path)
       */
-    public default Set<String> externalBuildingCode() { return Set.of( "building" ); }
+    public default Set<String> externalBuildingCode() { return Set.of( "building.Javanese" ); }
 
 
 
@@ -145,9 +144,9 @@ public interface BuilderBuilder {
       *     @param projectPath The proper path of the project.
       *     @see #addedBuildingCode()
       *     @see #externalBuildingCode()
-      *     @see <a href='http://reluk.ca/project/building/example/sub/'      >Example of (a)</a>
-      *     @see <a href='http://reluk.ca/project/building/example/top/'      >Example of (b)</a>
-      *     @see <a href='http://reluk.ca/project/building/example/mixed_top/'>Example of (c)</a>
+      *     @see <a href='http://reluk.ca/project/building/Javanese/example/sub/'      >Example of (a)</a>
+      *     @see <a href='http://reluk.ca/project/building/Javanese/example/top/'      >Example of (b)</a>
+      *     @see <a href='http://reluk.ca/project/building/Javanese/example/mixed_top/'>Example of (c)</a>
       */
     public static Path internalBuildingCode( final Path projectPath ) {
         verify( projectPath );
