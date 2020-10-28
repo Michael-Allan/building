@@ -1,5 +1,5 @@
-#!/usr/bin/env --split-string=${JDK_HOME}/bin/java @building/Javanese/java_arguments @building/Javanese/java_arguments_addendum @building/Javanese/java_javac_arguments \c [SS]
-package building.Javanese; // [AFN]
+#!/usr/bin/env --split-string=${JDK_HOME}/bin/java @building/Makeshift/java_arguments @building/Makeshift/java_arguments_addendum @building/Makeshift/java_javac_arguments \c [SS]
+package building.Makeshift; // [AFN]
 
 // Usage:  build <PROJECT-PROPER-PATH> <target>…
 //
@@ -62,7 +62,7 @@ final class BuildCommand { // [AFN]
         final Path outDirectory;
         final boolean wasClean; {
             // Already the working directory is the command directory.  `../build_instructions.brec`
-            final Path p = pathOf( "building.Javanese" ); // Proper path of the present project.
+            final Path p = pathOf( "building.Makeshift" ); // Proper path of the present project.
             outDirectory = Path.of(System.getProperty("java.io.tmpdir")).resolve( p );
             wasClean = !Files.isDirectory( outDirectory );
             for( String s: new String[]{ "BuilderBuilder", /*dependencies*/"Bootstrap", "Builder" }) {
@@ -85,8 +85,8 @@ final class BuildCommand { // [AFN]
             compilerArguments.add( a++, System.getProperty("java.home") + "/bin/javac" );
               // The Java installation at `java.home` is known to include `javac` because also
               // it is a JDK installation, as assured by the `JDK_HOME` at top.
-            compilerArguments.add( a++, "@building/Javanese/java_javac_arguments" );
-            compilerArguments.add( a,   "@building/Javanese/javac_arguments" );
+            compilerArguments.add( a++, "@building/Makeshift/java_javac_arguments" );
+            compilerArguments.add( a,   "@building/Makeshift/javac_arguments" );
             final ProcessBuilder pB = new ProcessBuilder( compilerArguments );
             pB.redirectOutput( INHERIT );
             pB.redirectError( INHERIT );
@@ -114,7 +114,7 @@ final class BuildCommand { // [AFN]
 
               // inform the user
               // ┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
-                c = load( "building.Javanese.Bootstrap" );
+                c = load( "building.Makeshift.Bootstrap" );
                 final Object bootstrap = c.getField("i").get( null/*static*/ );
                 c.getMethod( "printProgressLeader", String.class, String.class )
                   .invoke( bootstrap, null/*bootstrapping*/, "javac" );
@@ -122,7 +122,7 @@ final class BuildCommand { // [AFN]
 
           // get a builder builder for the project to be built
           // ┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
-            c = load( "building.Javanese.BuilderBuilder" );
+            c = load( "building.Makeshift.BuilderBuilder" );
             final Object builderBuilder = c.getMethod( "forPath", Path.class )
               .invoke( null/*static*/, projectPath );
             c = builderBuilder.getClass();
@@ -141,7 +141,7 @@ final class BuildCommand { // [AFN]
             while( ++t < tN ); }
         catch( final InvocationTargetException xIT ) {
             final Throwable x = xIT.getCause();
-            if( x != null && "building.Javanese.Builder$UserError".equals( x.getClass().getName() )) {
+            if( x != null && "building.Makeshift.Builder$UserError".equals( x.getClass().getName() )) {
                 System.err.println( "build: " + x.getMessage() );
                 System.exit( 1 ); }
             else throw new Failure( xIT ); }

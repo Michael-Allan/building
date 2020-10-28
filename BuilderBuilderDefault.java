@@ -1,10 +1,10 @@
-package building.Javanese;
+package building.Makeshift;
 
 // Changes to this file immediately affect the next runtime.  Treat it as a script.
 
 import java.nio.file.Path;
 
-import static building.Javanese.Bootstrap.verify;
+import static building.Makeshift.Bootstrap.verify;
 
 
 /** Default implementation of a builder builder.

@@ -1,5 +1,5 @@
-#!/usr/bin/env --split-string=${JDK_HOME}/bin/java @building/Javanese/java_arguments @building/Javanese/java_javac_arguments \c [SS]
-package building.Javanese; // [AFN]
+#!/usr/bin/env --split-string=${JDK_HOME}/bin/java @building/Makeshift/java_arguments @building/Makeshift/java_javac_arguments \c [SS]
+package building.Makeshift; // [AFN]
 
 // Usage:  clean
 //
@@ -13,7 +13,7 @@ import static java.io.File.separatorChar;
 import static java.nio.file.FileVisitResult.CONTINUE;
 
 
-/** A shell command to remove `/tmp/building/Javanese/`, the output directory for all build processes.
+/** A shell command to remove `/tmp/building/Makeshift/`, the output directory for all build processes.
   */
 public final class CleanCommand extends SimpleFileVisitor<Path> { // [AFN]
 
@@ -67,7 +67,7 @@ public final class CleanCommand extends SimpleFileVisitor<Path> { // [AFN]
       */
     private void execute() throws IOException {
         final Path outDirectory = Path.of( System.getProperty( "java.io.tmpdir" ),
-          pathStringOf( "building.Javanese" ));
+          pathStringOf( "building.Makeshift" ));
         if( !Files.isDirectory( outDirectory )) return;
         Files.walkFileTree( outDirectory, CleanCommand.this );
         if( count != 0 ) System.out.println( count ); }

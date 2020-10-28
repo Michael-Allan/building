@@ -10,12 +10,12 @@ Building a project’s software
                     : see `^^command directory$` @ http://reluk.ca/project/building/lexicon.brec
             >+ build *PROJECT-PROPER-PATH* builder
                 / The proper path of a project is the relative file path that identifies it universally.
-                  E.g. for the present project, substitute `building/Javanese` or `building/Javanese/`.
+                  E.g. for the present project, substitute `building/Makeshift` or `building/Makeshift/`.
                     : see `^^proper path$` @ http://reluk.ca/project/building/lexicon.brec
     routine builds
         - Always the working directory must be the command directory.
             : see `^^working directory for software builds$`
-              @ http://reluk.ca/project/building/Javanese/action_plan.brec
+              @ http://reluk.ca/project/building/Makeshift/action_plan.brec
         >+ clean
             / If wanted.
         >+ build *PROJECT-PROPER-PATH* *target*…
@@ -31,7 +31,7 @@ Building a project’s software
           typically all you need is `BuildTarget.java`.
             : see example/mixed_top/
         >+ cd *COMMAND-DIRECTORY*
-        >+ cp building/Javanese/template/BuildTarget.java *PROJECT-PROPER-PATH*/
+        >+ cp building/Makeshift/template/BuildTarget.java *PROJECT-PROPER-PATH*/
         + Edit your `BuildTarget.java`.
             + Correct the package name.
             + Delete the name of any target inapplicable to your project.

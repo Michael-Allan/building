@@ -1,4 +1,4 @@
-package building.Javanese.builder;
+package building.Makeshift.builder;
 
 // Changes to this file immediately affect the next runtime.  Treat it as a script.
 
@@ -6,17 +6,17 @@ import java.nio.file.Path;
 import java.util.Set;
 
 
-/** The builder builder proper to Javanese Builder.
+/** The builder builder proper to Makeshift.
   */
-public final class BuilderBuilder extends building.Javanese.BuilderBuilderDefault {
+public final class BuilderBuilder extends building.Makeshift.BuilderBuilderDefault {
 
 
     public BuilderBuilder() {
-        super( "building.Javanese", building.Javanese.Bootstrap.buildingProjectPath ); }
+        super( "building.Makeshift", building.Makeshift.Bootstrap.buildingProjectPath ); }
 
 
     public @Override Set<String> addedBuildingCode() {
-        return Set.of( "building.Javanese", "building.Javanese.template" ); }
+        return Set.of( "building.Makeshift", "building.Makeshift.template" ); }
 
 
     public @Override Set<String> externalBuildingCode() { return Set.of(); }}
