@@ -1,10 +1,10 @@
 Installation instructions for Makeshift
 
-    + Install the files of this project into `*COMMAND-DIRECTORY*/building/Makeshift/`.
-        / The command directory is where project installations dependent on Makeshift
-          are accessible by their proper paths.  The present file, for example, would correctly
-          be installed at `*COMMAND-DIRECTORY*/building/Makeshift/project_installation.brec`.
-            : see `^^command directory$` @ lexicon.brec
+    >+ cd *COMMAND-DIRECTORY*/
+        / The command directory is where project installations are accessible by their proper paths.
+          The present project, for example, will shortly be accessible at `building/Makeshift`.
+            : see `^^command directory$` @ http://reluk.ca/project/building/lexicon.brec
+    >+ git clone http://reluk.ca/var/repo/git/Makeshift.git building/Makeshift
 
     initial set-up
         1+ Ensure you are running Linux.
@@ -26,11 +26,11 @@ Installation instructions for Makeshift
                 >+ $JDK_HOME/bin/javac --version
                         / ⇒  javac 15
                     - Expect a version of 15, or later.
-        3+ Test your access to the building commands.
+        3+ Test your access to the Makeshift commands.
             >+ cd *COMMAND-DIRECTORY*
-            >+ ./building/Makeshift/bin/build
+            >+ building/Makeshift/bin/build
                 / ⇒  Usage: build <PROJECT-PROPER-PATH> <target>...
-        4+ Get convenient access to all building commands.
+        4+ Get convenient access to all Makeshift commands.
             + Append the directory of this project’s shell commands to the search path.
                 >+ PATH=$PATH:*COMMAND-DIRECTORY*/building/Makeshift/bin
             + Test it.
