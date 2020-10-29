@@ -201,7 +201,7 @@ public final class Bootstrap {
       *     @throws IllegalArgumentException
       */
     public static <T extends Enum<T>> void verify( final Class<T> targetClass ) {
-        Enum.valueOf( targetClass, "builder" ); }
+        Enum.valueOf( targetClass, "builder" ); } // Ensuring the presence of this mandatory target.
 
 
 

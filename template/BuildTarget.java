@@ -3,16 +3,16 @@ package building.Makeshift.template;
 // Changes to this file immediately affect the next runtime.  Treat it as a script.
 
 
-/** A build target of the present project.  A particular target name may be specified in the shell
-  * by any substring that uniquely matches it.
+/** A build target of the present project.  Shell commands will accept abbreviated target names:
+  * a target may be specified by any substring of its name that matches no other target name.
   */
 public enum BuildTarget {
 
 
-    /** A software builder compiled from source code into Java class files.  All other targets
-      * implicitly include it, none can build without first building a builder.
+    /** A software builder compiled from source code into Java class files.
+      * All other targets depend on this target and include it implicitly.
       */
-    builder,
+    builder, // Mandatory, do not remove.
 
 
     /** Java class files compiled from source code.
