@@ -1,6 +1,6 @@
 package building.Makeshift;
 
-// Changes to this file immediately affect the next runtime.  Treat it as a script.
+// Changes to this file immediately affect the next build.  Treat it as a build script.
 
 import java.nio.file.Path;
 

@@ -3,7 +3,7 @@ package building.Makeshift; // [AFN]
 
 // Usage:  logging-test
 //
-// Changes to this file immediately affect the next runtime.  Treat it as a script.
+// This command runs directly from the present source file, which is uncompiled during builds.
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

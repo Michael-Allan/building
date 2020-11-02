@@ -3,7 +3,7 @@ package building.Makeshift; // [AFN]
 
 // Usage:  build <PROJECT-PROPER-PATH> <target>…
 //
-// Changes to this file immediately affect the next runtime.  Treat it as a script.
+// Changes to this file immediately affect the next build.  Treat it as a build script.
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
