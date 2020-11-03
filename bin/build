@@ -29,7 +29,7 @@ final class BuildCommand { // [AFN]
 
 
 
-    /** Takes a `build` command from the shell.
+    /** Takes a `build` command from the shell and executes it.
       */
     public static void main( final String[] arguments ) {
         if( arguments.length < 2 ){

@@ -23,7 +23,7 @@ public final class CleanCommand extends SimpleFileVisitor<Path> { // [AFN]
 
 
 
-    /** Takes a `clean` command from the shell.
+    /** Takes a `clean` command from the shell and executes it.
       */
     public static void main( final String[] arguments ) throws IOException {
         if( arguments.length != 0 ) {
