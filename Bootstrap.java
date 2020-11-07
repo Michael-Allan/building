@@ -2,7 +2,7 @@ package building.Makeshift;
 
 // Changes to this file immediately affect the next build.  Treat it as a build script.
 
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 import java.util.function.Predicate;
@@ -10,7 +10,6 @@ import java.util.stream.Stream;
 
 import static building.Makeshift.Builder.UserError;
 import static java.io.File.separatorChar;
-import static java.lang.ProcessBuilder.Redirect.INHERIT;
 import static java.nio.file.Files.getLastModifiedTime;
 
 
@@ -88,16 +87,22 @@ public final class Bootstrap {
         compilerArguments.addAll( additionalArguments );
         compilerArguments.addAll( sourceNames );
         final ProcessBuilder pB = new ProcessBuilder( compilerArguments );
-        pB.redirectOutput( INHERIT );
-        pB.redirectError( INHERIT );
+        pB.redirectErrorStream( true );
+        final StringBuilder capture = new StringBuilder(); // E.g. of compiler warnings or errors.
         try {
-            final int exitValue =  pB.start().waitFor();
+            final Process p = pB.start();
+            appendAll( p, capture );
+            final int exitValue =  p.waitFor();
             if( exitValue == 1 ) throw new UserError( "Stopped on `javac` error" );
               // Already `javac` has told the details.
             else if( exitValue != 0 ) throw new RuntimeException( "Exit value of " + exitValue
               + " from process: " + pB.command() ); }
         catch( InterruptedException|IOException x ) { throw new RuntimeException( x ); }
-        finally{ System.out.println( sourceNames.size() ); }}
+        finally{
+            System.out.println( sourceNames.size() );
+            if( capture.length() > 0 ) {
+                System.out.print( capture.toString() );
+                System.out.flush(); }}}
 
 
 
@@ -276,6 +281,29 @@ public final class Bootstrap {
 
 
 ////  P r i v a t e  ////////////////////////////////////////////////////////////////////////////////////
+
+
+    /** Transfers to `a` the whole of `in`.
+      *
+      *     @see Process#getInputStream()
+      */
+    private void appendAll( final Reader in, final Appendable a ) throws IOException {
+        for( ;; ) {
+            int c = in.read();
+            if( c == -1 ) break;
+            a.append( (char)c ); }}
+
+
+
+    /** Transfers to `a` the whole output of `process` and closes the transfer stream.
+      *
+      *     @see Process#getInputStream()
+      */
+    private void appendAll( final Process process, final Appendable a ) throws IOException {
+        final BufferedReader in = new BufferedReader( new InputStreamReader( process.getInputStream() ));
+        try{ appendAll( in, a ); }
+        finally{ in.close(); }}
+
 
 
     private final Set<String> projectsShowingProgress = new HashSet<>(); } /* Generally a maximum
