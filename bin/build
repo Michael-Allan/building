@@ -200,7 +200,7 @@ final class BuildCommand { // [AFN]
 //        https://docs.oracle.com/javase/specs/jls/se15/html/jls-7.html#jls-7.6
 //
 //   SS · Here the long form `--split-string` (as opposed to `-S`) enables Emacs to recognize this file
-//        as Java source code.  See the note apropos ‘source-launch files encoded with a shebang’ at
+//        as Java source code.  See the note apropos of ‘source-launch files encoded with a shebang’ at
 //        `http://reluk.ca/project/Java/Emacs/jmt-mode.el`.
 
 
