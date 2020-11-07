@@ -66,15 +66,28 @@ public class BuilderDefault<T extends Enum<T>> implements Builder {
 
 
     /** Does nothing, this builder is already built.
+      *
+      *     @see building.Makeshift.template.BuildTarget.builder
       */
     protected void buildTo_builder() {}
 
 
 
+    /** @see building.Makeshift.template.BuildTarget.Java_class_files
+      * @see #javacArguments()
+      */
     protected void buildTo_Java_class_files() throws UserError {
         final List<String> sourceNames = new ArrayList<>();
         JavaCode().forEach( pkg -> Bootstrap.addCompilableSource( sourceNames, pathOf(pkg) ));
-        if( sourceNames.size() > 0 ) Bootstrap.i.compile( sourceNames ); }
+        if( sourceNames.size() > 0 ) Bootstrap.i.compile( sourceNames, javacArguments() ); }
+
+
+
+    /** Additional arguments for the Java compiler.  The default implementation is an empty list.
+      *
+      *     @see building.Makeshift.template.BuildTarget.Java_class_files
+      */
+    protected List<String> javacArguments() { return List.of(); }
 
 
 

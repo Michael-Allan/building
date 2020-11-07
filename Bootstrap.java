@@ -47,8 +47,7 @@ public final class Bootstrap {
                 final String name = p.toString();
                 if( !name.endsWith( ".java" )) continue;
                 if( !tester.test( p )) continue;
-                if( toCompile( p, simpleTypeName(p) )) {
-                    names.add( p.toString() ); }}}
+                if( toCompile( p, simpleTypeName(p) )) names.add( name ); }}
         catch( IOException x ) { throw new RuntimeException( x ); }}
 
 
@@ -64,6 +63,20 @@ public final class Bootstrap {
       *     @param sourceNames The proper path of each source file to compile.
       */
     public void compile( final List<String> sourceNames ) throws UserError {
+        compile( sourceNames, List.of() ); }
+
+
+
+    /** Compiles Java source code to class files.
+      *
+      *     @param sourceNames The proper path of each source file to compile.
+      *     @param additionalArguments Additional arguments for `javac`.  These will be inserted
+      *       before the given source names.
+      *     @see <a href='https://docs.oracle.com/en/java/javase/15/docs/specs/man/javac.html#synopsis'>
+      *       Synopsis of `javac`</a>
+      */
+    public void compile( final List<String> sourceNames, final List<String> additionalArguments )
+          throws UserError {
         // Changing?  Sync → `execute` @ `bin/build`.
         printProgressLeader( null/*bootstrapping*/, "javac" );
         final List<String> compilerArguments = new ArrayList<>();
@@ -72,6 +85,7 @@ public final class Bootstrap {
           // it is a JDK installation, as assured by the `JDK_HOME` atop `bin/build`.
         compilerArguments.add( "@building/Makeshift/java_javac_arguments" );
         compilerArguments.add( "@building/Makeshift/javac_arguments" );
+        compilerArguments.addAll( additionalArguments );
         compilerArguments.addAll( sourceNames );
         final ProcessBuilder pB = new ProcessBuilder( compilerArguments );
         pB.redirectOutput( INHERIT );

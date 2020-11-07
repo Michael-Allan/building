@@ -10,8 +10,8 @@
 
    --class-path /tmp/building/Makeshift/ # Cf. `-d` in `./javac_arguments`.
  # --enable-preview
-   --source 15 # To allow for any `--enable-preview` above.
-      # Otherwise this argument would need to be present only in `./java_arguments`.
+   --source 15 # To allow for `--enable-preview` above.
+      # Otherwise this argument would only need to be present in `./java_arguments`.
 
 # NOTE
 # ----
