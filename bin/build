@@ -1,8 +1,6 @@
 #!/usr/bin/env --split-string=${JDK_HOME}/bin/java @building/Makeshift/java_arguments @building/Makeshift/java_arguments_addendum @building/Makeshift/java_javac_arguments \c [SS]
 package building.Makeshift; // [AFN]
 
-// Usage:  build <PROJECT-PROPER-PATH> <target>…
-//
 // Changes to this file immediately affect the next build.  Treat it as a build script.
 
 import java.io.IOException;
@@ -18,7 +16,9 @@ import static java.lang.ProcessBuilder.Redirect.INHERIT;
 import static java.nio.file.Files.getLastModifiedTime;
 
 
-/** A shell command to compile the code of a given project and prepare it for use.
+/** A shell command to compile the software of a project and prepare it for use.
+  *
+  *     @see <a href='http://reluk.ca/project/building/Makeshift/bin/build.brec'>The `build` command</a>
   */
 final class BuildCommand { // [AFN]
 
@@ -32,20 +32,25 @@ final class BuildCommand { // [AFN]
     /** Takes a `build` command from the shell and executes it.
       */
     public static void main( final String[] arguments ) {
-        if( arguments.length < 2 ){
-            System.err.println( "Usage: build <PROJECT-PROPER-PATH> <target>..." );
-            System.exit( 1 ); }
-        final String argument = arguments[0];
-        final Path projectPath = Path.of( argument ); /* Effectively filters out input variance.
-          Whether or not the argument ends with ‘/’ has no effect on `projectPath`. */
+        if( arguments.length < 2 ) abortWithUsage();
+        final String a = arguments[0];
+        if( a.startsWith( "-" )) abortWithUsage(); // Allowing e.g. for a deliberate `-?`.
+        final Path projectPath = Path.of( a ); /* Filters out input variance en passent.
+          The resulting `projectPath` is the same whether or not `a` ends with slash. */
         if( projectPath.isAbsolute() ) {
-            System.err.println( "build: Not a relative path: " + argument );
+            System.err.println( "build: Not a relative path: " + a );
             System.exit( 1 ); }
         new BuildCommand(projectPath,arguments).execute(); }
 
 
 
 ////  P r i v a t e  ////////////////////////////////////////////////////////////////////////////////////
+
+
+    private static void abortWithUsage() {
+        System.err.println( "Usage: build <project> <target>..." );
+        System.exit( 1 ); }
+
 
 
     private final String[] arguments;
@@ -61,7 +66,7 @@ final class BuildCommand { // [AFN]
         final List<String> compilerArguments = new ArrayList<>(); // Empty if no code needs compiling.
         final Path outDirectory;
         final boolean wasClean; {
-            // Already the working directory is the command directory.  `../build_instructions.brec`
+            // Already the working directory is the command directory, as per `./build.brec`.
             final Path p = pathOf( "building.Makeshift" ); // Proper path of the present project.
             outDirectory = Path.of(System.getProperty("java.io.tmpdir")).resolve( p );
             wasClean = !Files.isDirectory( outDirectory );

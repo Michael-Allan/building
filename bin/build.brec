@@ -1,0 +1,70 @@
+`build` - Compile the software of a project and prepare it for use
+
+        build <project> <target>…
+
+    - The working directory must be the command directory.
+        : see `^^working directory$` @ `^^shell commands$`
+          @ http://reluk.ca/project/Java/action_plan.brec
+    - The `project` argument gives the proper path of the project to build.
+        / The proper path is the relative file path that identifies the project universally.
+          E.g. for the present project, use `building/Makeshift` or `building/Makeshift/`.
+            : see `^^proper path$` @ http://reluk.ca/project/lexicon.brec
+    - Each `target` specifies a build target proper to the project.
+        / All build targets should be documented in a source file of the project,
+          conventionally named either `BuildTarget.java` or `builder/Target.java`.
+            : see ../template/BuildTarget.java
+        - Characters ‘-’ and ‘_’ are taken as equivalent in `target` arguments.
+        - Abbreviation is allowed.
+            - Give any substring of the target name that matches no other target name.
+
+
+    ━━━━━━━━━━━━━━━━━━━
+     Scripting a build ─ How a project defines its builder
+    ───────────────────
+        - For the common case of a Java project with a single package,
+          typically all you need is `BuildTarget.java`.
+            : see ../example/mixed_top/
+        >+ cd <command-directory>
+        >+ cp building/Makeshift/template/BuildTarget.java <project>/
+        + Edit your `BuildTarget.java`.
+            + Correct the package name.
+            + Delete the name of any target inapplicable to your project.
+        if( you need to customize the builds further )
+            / E.g. you have subpackages, or a build target unsupported by the default builder.
+            + Code your own `Builder.java`.
+                : see `a project may define its own builder` @ Builder.java
+                : see ../example/
+                - Typically you would subclass the default builder, overriding a method or two.
+                    : re `default builder` see ../BuilderDefault.java
+
+
+    ━━━━━━━━━━
+     Examples
+    ──────────
+        - A simple build is the `builder` target of the present project:
+
+              build building/Makeshift builder
+
+        - Other builds require other projects to be installed.
+        - A more typical build is:
+
+              build build Breccia/Web/imager cl
+
+        - Equivalent forms of the above are:
+
+              build build Breccia/Web/imager class-files
+             
+              build build Breccia/Web/imager Java_class_files
+
+            : see `Abbreviation is allowed.`
+            : see `Characters ‘-’ and ‘_’ are taken as equivalent`
+
+
+    ━━━━━━━━━━
+     See also
+    ──────────
+        • `clean`
+            : see clean.brec
+
+
+                                                         \ Copyright © 2020  Michael Allan.  Licence MIT.

@@ -1,8 +1,6 @@
 #!/usr/bin/env --split-string=${JDK_HOME}/bin/java @building/Makeshift/java_arguments @building/Makeshift/java_javac_arguments \c [SS]
 package building.Makeshift; // [AFN]
 
-// Usage:  clean
-//
 // This command runs directly from the present source file, which is uncompiled during builds.
 
 import java.io.IOException;
@@ -13,7 +11,9 @@ import static java.io.File.separatorChar;
 import static java.nio.file.FileVisitResult.CONTINUE;
 
 
-/** A shell command to remove `/tmp/building/Makeshift/`, the output directory for all build processes.
+/** A shell command to remove all impermanent state and output files.
+  *
+  *     @see <a href='http://reluk.ca/project/building/Makeshift/bin/clean.brec'>The `clean` command</a>
   */
 public final class CleanCommand extends SimpleFileVisitor<Path> { // [AFN]
 

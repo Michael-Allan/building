@@ -1,0 +1,12 @@
+`clean` - Remove all impermanent state and output files
+
+        clean
+
+    - The `clean` command removes the directory in which the transient state and output files
+      of Makeshift are housed, namely `/tmp/building/Makeshift/`.
+    - The working directory must be the command directory.
+        : see `^^working directory$` @ `^^shell commands$`
+          @ http://reluk.ca/project/Java/action_plan.brec
+
+
+                                                         \ Copyright © 2020  Michael Allan.  Licence MIT.

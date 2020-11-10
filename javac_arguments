@@ -5,9 +5,9 @@
 
     -d /tmp/building/Makeshift/ # The output directory for class files.
       # Cf. `--class-path` in `./java_javac_arguments`.
-   --source-path . # The working directory `.` is the command directory, as per
-      # `./build_instructions.brec`.  Even when no ‘additional source files’ need
-      # compilation it serves to stop the source path defaulting to the class path.
+   --source-path .
+      # The working directory `.` is the command directory, as per `bin/build.brec`.  Even when no
+      # ‘additional source files’ need compilation it stops the source path defaulting to the class path.
       # https://docs.oracle.com/en/java/javase/15/docs/specs/man/javac.html#additional-source-files
       # https://docs.oracle.com/en/java/javase/15/docs/specs/man/javac.html#option-class-path
 
