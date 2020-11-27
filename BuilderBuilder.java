@@ -165,7 +165,7 @@ public interface BuilderBuilder {
               .asSubclass( Builder.class );
             final Class<? extends Enum> cTarget =
               Class.forName( typeName( targetFile() )).asSubclass( Enum.class );
-            try { // One of (a) the default implementation `BuilderDefault`, or (b) a custom one:
+            try { // Either (a) the default implementation `BuilderDefault`, or (b) a custom one:
                 return cBuilder.getConstructor( Class.class, String.class, Path.class ) // (a)
                   .newInstance( cTarget, projectPackage(), projectPath() ); }
             catch( NoSuchMethodException x ) { return cBuilder.getConstructor().newInstance(); }} // (b)
@@ -242,7 +242,7 @@ public interface BuilderBuilder {
         try {
             final Class<? extends BuilderBuilder> c = Class.forName( cName )
               .asSubclass( BuilderBuilder.class );
-            try { // One of (a) the default implementation `BuilderBuilderDefault`, or (b) a custom one:
+            try { // Either (a) the default implementation `BuilderBuilderDefault`, or (b) a custom one:
                 return c.getConstructor( String.class, Path.class ) // (a)
                   .newInstance( projectPackage, projectPath ); }
             catch( NoSuchMethodException x ) { return c.getConstructor().newInstance(); }} // (b)
