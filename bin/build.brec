@@ -41,23 +41,23 @@
     ━━━━━━━━━━
      Examples
     ──────────
-        - A simple build is the `builder` target of the present project:
+        - A simple build, requiring no other project to be installed,
+          is the `builder` target of the present project.
 
               build building/Makeshift builder
 
-        - Other builds require other projects to be installed.
-        - A more typical build is:
+        - A more typical form of build is:
 
-              build build Breccia/Web/imager cl
+              build Breccia/Web/imager Java_class_files
 
-        - Equivalent forms of the above are:
+        - Equivalents of the above command (more convenient to type) are:
 
-              build build Breccia/Web/imager class-files
+              build Breccia/Web/imager class-files
              
-              build build Breccia/Web/imager Java_class_files
+              build Breccia/Web/imager cl
 
-            : see `Abbreviation is allowed.`
-            : see `Characters ‘-’ and ‘_’ are taken as equivalent`
+            : see `^^- Characters ‘-’ and ‘_’ are taken as equivalent`
+            : see `^^- Abbreviation is allowed`
 
 
     ━━━━━━━━━━
