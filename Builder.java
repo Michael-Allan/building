@@ -51,10 +51,14 @@ public interface Builder {
 
 
 
-    /** Gives the target name that matches `targ`.  In seeking a match, any dash character ‘-’ of `targ`
-      * is treated as an underscore ‘_’.
+    /** Finds the target name that uniquely matches `targ`.  The following search conditions apply.
+      * <ul>
+      *     <li>Letter case is insignificant.</li>
+      *     <li>Any dash character ‘-’ of `targ` is treated as an underscore ‘_’.</li>
+      *     <li>Abbreviation is allowed: `targ` may be any substring of the target name
+      *         that appears in no other target name.</li></ul>
       *
-      *     @param targ The name of a build target, or a unique substring of it.
+      *     @param targ The search term.
       *     @param targetClass The class of build targets.
       *     @throws UserError If `targ` does not match exactly one build target of `targetClass`.
       */
@@ -63,11 +67,11 @@ public interface Builder {
         final Enum<?>[] targets;
         try { targets = (Enum[])targetClass.getMethod("values").invoke( null/*static*/ ); }
         catch( ReflectiveOperationException x ) { throw new RuntimeException( x ); }
-        final String nameSought = targ.replace( '-', '_' ); // For user convenience.
+        final String nameSought = targ.toLowerCase().replace( '-', '_' ); // As per `bin/build.brec`.
         String nameFound = null;
         for( final Enum<?> t: targets ) {
             final String tS = t.toString();
-            if( tS.contains( nameSought )) {
+            if( tS.toLowerCase().contains( nameSought )) { // As per `bin/build.brec`.
                 if( nameFound != null ) {
                     throw new UserError( "Ambiguous in `" + targetClass.getName() + "`: " + targ ); }
                 nameFound = tS; }}

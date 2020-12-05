@@ -13,9 +13,10 @@
         / All build targets should be documented in a source file of the project,
           conventionally named either `BuildTarget.java` or `builder/Target.java`.
             : see ../template/BuildTarget.java
-        - Characters ‘-’ and ‘_’ are taken as equivalent in `target` arguments.
-        - Abbreviation is allowed.
-            - Give any substring of the target name that matches no other target name.
+        - Letter case is insignificant here.
+        - Characters ‘-’ and ‘_’ are taken as equivalent.
+        - Abbreviation is allowed: the given `target` may be any substring of the target name
+          that appears in no other target name.
 
 
     ━━━━━━━━━━━━━━━━━━━
@@ -50,12 +51,15 @@
 
               build Breccia/Web/imager Java_class_files
 
-        - Equivalents of the above command (more convenient to type) are:
+        - Convenient equivalents of the above command are:
 
-              build Breccia/Web/imager class-files
+              build Breccia/Web/imager java_class_files
+             
+              build Breccia/Web/imager java-class-files
              
               build Breccia/Web/imager cl
 
+            : see `^^- Letter case is insignificant`
             : see `^^- Characters ‘-’ and ‘_’ are taken as equivalent`
             : see `^^- Abbreviation is allowed`
 
