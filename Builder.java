@@ -51,27 +51,29 @@ public interface Builder {
 
 
 
-    /** Gives the target name that matches `targ`.
+    /** Gives the target name that matches `targ`.  In seeking a match, any dash character ‘-’ of `targ`
+      * is treated as an underscore ‘_’.
       *
       *     @param targ The name of a build target, or a unique substring of it.
       *     @param targetClass The class of build targets.
       *     @throws UserError If `targ` does not match exactly one build target of `targetClass`.
       */
-    public static <T extends Enum<T>> String matchingTargetName( final String targ,
-          final Class<T> targetClass ) throws UserError {
+    public static <T extends Enum<T>> String matchingTargetName(
+          final String targ, final Class<T> targetClass ) throws UserError {
         final Enum<?>[] targets;
         try { targets = (Enum[])targetClass.getMethod("values").invoke( null/*static*/ ); }
         catch( ReflectiveOperationException x ) { throw new RuntimeException( x ); }
-        String name = null;
+        final String nameSought = targ.replace( '-', '_' ); // For user convenience.
+        String nameFound = null;
         for( final Enum<?> t: targets ) {
             final String tS = t.toString();
-            if( tS.contains( targ )) {
-                if( name != null ) {
+            if( tS.contains( nameSought )) {
+                if( nameFound != null ) {
                     throw new UserError( "Ambiguous in `" + targetClass.getName() + "`: " + targ ); }
-                name = tS; }}
-        if( name == null ) {
+                nameFound = tS; }}
+        if( nameFound == null ) {
             throw new UserError( "Unmatched in `" + targetClass.getName() + "`: " + targ ); }
-        return name; }
+        return nameFound; }
 
 
 
