@@ -188,12 +188,12 @@ public final class Bootstrap {
 
     /** Answers whether `sourceFile` needs to be compiled or recompiled.
       *
-      *     @param sourcePath The proper path of a Java source file.
+      *     @param sourceFile The proper path of a Java source file.
       *     @param simpleTypeName The corresponding {@linkplain #simpleTypeName(Path) simple type name}.
       */
     public static boolean toCompile( final Path sourceFile, final String simpleTypeName ) {
         final Path classFile = outDirectory.resolve(
-          sourceFile.getParent().resolve( simpleTypeName + ".class" ));
+          sourceFile.resolveSibling( simpleTypeName + ".class" ));
         if( Files.exists( classFile )) {
             try {
                 return getLastModifiedTime(sourceFile).compareTo(getLastModifiedTime(classFile)) >= 0; }
