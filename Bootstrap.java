@@ -164,10 +164,10 @@ public final class Bootstrap {
       *     @param type A short name to identify the type of progress.
       */
     public void printProgressLeader( final String projectPackage, final String type ) {
-        final String project = projectPackage == null? "building.Makeshift (bootstrap)": projectPackage;
-        if( !projectsShowingProgress.contains( project )) {
-            System.out.println( project );
-            projectsShowingProgress.add( project ); }
+        if( !Objects.equals( projectShowingProgress, projectPackage )) {
+            projectShowingProgress = projectPackage;
+            System.out.println( projectPackage == null?
+              "building.Makeshift (bootstrap)": projectPackage ); }
         System.out.print( "    " );
         System.out.print( type );
         System.out.print( ' ' );
@@ -310,8 +310,9 @@ public final class Bootstrap {
 
 
 
-    private final Set<String> projectsShowingProgress = new HashSet<>(); } /* Generally a maximum
-      of two members, unless one project has customized its build to entail the build of another. */
+    /** Proper package of the last project to show progress.
+      */
+    private String projectShowingProgress = /*none yet*/""; }
 
 
 
