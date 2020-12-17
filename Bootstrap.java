@@ -59,25 +59,29 @@ public final class Bootstrap {
 
     /** Compiles Java source code to class files.
       *
+      *     @param projectPackage The proper package of the project whose source code is being compiled,
+      *       or null if the builder builder is being compiled.
       *     @param sourceNames The proper path of each source file to compile.
       */
-    public void compile( final List<String> sourceNames ) throws UserError {
-        compile( sourceNames, List.of() ); }
+    public void compile( final String projectPackage, final List<String> sourceNames ) throws UserError {
+        compile( projectPackage, sourceNames, List.of() ); }
 
 
 
     /** Compiles Java source code to class files.
       *
+      *     @param projectPackage The proper package of the project whose source code is being compiled,
+      *       or null if the builder builder is being compiled.
       *     @param sourceNames The proper path of each source file to compile.
       *     @param additionalArguments Additional arguments for `javac`.  These will be inserted
       *       before the given source names.
       *     @see <a href='https://docs.oracle.com/en/java/javase/15/docs/specs/man/javac.html#synopsis'>
       *       Synopsis of `javac`</a>
       */
-    public void compile( final List<String> sourceNames, final List<String> additionalArguments )
-          throws UserError {
+    public void compile( final String projectPackage, final List<String> sourceNames,
+          final List<String> additionalArguments ) throws UserError {
         // Changing?  Sync → `execute` @ `bin/build`.
-        printProgressLeader( null/*bootstrapping*/, "javac" );
+        printProgressLeader( projectPackage, "javac" );
         final List<String> compilerArguments = new ArrayList<>();
         compilerArguments.add( System.getProperty("java.home") + "/bin/javac" );
           // The Java installation at `java.home` is known to include `javac` because also
@@ -156,11 +160,11 @@ public final class Bootstrap {
       * a newline character.
       *
       *     @param projectPackage The proper package of the project whose software is being built,
-      *       or null if the software builder itself is being built.
+      *       or null if the builder builder itself is being built.
       *     @param type A short name to identify the type of progress.
       */
     public void printProgressLeader( final String projectPackage, final String type ) {
-        final String project = projectPackage == null? "(bootstrap)": projectPackage;
+        final String project = projectPackage == null? "building.Makeshift (bootstrap)": projectPackage;
         if( !projectsShowingProgress.contains( project )) {
             System.out.println( project );
             projectsShowingProgress.add( project ); }

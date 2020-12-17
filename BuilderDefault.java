@@ -79,7 +79,8 @@ public class BuilderDefault<T extends Enum<T>> implements Builder {
     protected void buildTo_Java_class_files() throws UserError {
         final List<String> sourceNames = new ArrayList<>();
         JavaCode().forEach( pkg -> Bootstrap.addCompilableSource( sourceNames, pathOf(pkg) ));
-        if( sourceNames.size() > 0 ) Bootstrap.i.compile( sourceNames, javacArguments() ); }
+        if( sourceNames.size() > 0 ) {
+            Bootstrap.i.compile( projectPackage, sourceNames, javacArguments() ); }}
 
 
 

@@ -75,7 +75,7 @@ public interface BuilderBuilder {
           pathTester_true: p -> { return p.getFileName().toString().startsWith("Build"); };
         addCompilableSource( sourceNames, internalBuildingCode(projectPath()), tester );
         addedBuildingCode().forEach( pkg -> addCompilableSource( sourceNames, pathOf(pkg) ));
-        if( sourceNames.size() > 0 ) Bootstrap.i.compile( sourceNames ); }
+        if( sourceNames.size() > 0 ) Bootstrap.i.compile( owningProject, sourceNames ); }
 
 
 
@@ -234,7 +234,7 @@ public interface BuilderBuilder {
                   sourceDirectory.resolve( simpleTypeName + ".class" ));
                 if( Bootstrap.toCompile( sourceFile, simpleTypeName )) {
                     sourceNames.add( sourceFile.toString() ); }}}
-        if( sourceNames.size() > 0 ) Bootstrap.i.compile( sourceNames );
+        if( sourceNames.size() > 0 ) Bootstrap.i.compile( null/*builder builder*/, sourceNames );
 
       // Construct an instance
       // ─────────────────────

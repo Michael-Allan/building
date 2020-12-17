@@ -122,7 +122,7 @@ final class BuildCommand { // [AFN]
                 c = load( "building.Makeshift.Bootstrap" );
                 final Object bootstrap = c.getField("i").get( null/*static*/ );
                 c.getMethod( "printProgressLeader", String.class, String.class )
-                  .invoke( bootstrap, null/*bootstrapping*/, "javac" );
+                  .invoke( bootstrap, null/*builder builder*/, "javac" );
                 System.out.println( sourceCount ); }
 
           // get a builder builder for the project to be built
