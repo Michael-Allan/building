@@ -14,6 +14,7 @@ import static building.Makeshift.Bootstrap.pathOf;
 import static building.Makeshift.Bootstrap.pathTester_true;
 import static building.Makeshift.Bootstrap.typeName;
 import static building.Makeshift.Bootstrap.verify;
+import static building.Makeshift.Bootstrap.Unhandled;
 import static building.Makeshift.Builder.UserError;
 
 
@@ -169,7 +170,7 @@ public interface BuilderBuilder {
                 return cBuilder.getConstructor( Class.class, String.class, Path.class ) // (a)
                   .newInstance( cTarget, projectPackage(), projectPath() ); }
             catch( NoSuchMethodException x ) { return cBuilder.getConstructor().newInstance(); }} // (b)
-        catch( ReflectiveOperationException x ) { throw new RuntimeException( x ); }}
+        catch( ReflectiveOperationException x ) { throw new Unhandled( x ); }}
 
 
 
@@ -246,7 +247,7 @@ public interface BuilderBuilder {
                 return c.getConstructor( String.class, Path.class ) // (a)
                   .newInstance( projectPackage, projectPath ); }
             catch( NoSuchMethodException x ) { return c.getConstructor().newInstance(); }} // (b)
-        catch( ReflectiveOperationException x ) { throw new RuntimeException( x ); }}}
+        catch( ReflectiveOperationException x ) { throw new Unhandled( x ); }}}
 
 
 

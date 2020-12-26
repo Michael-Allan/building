@@ -77,7 +77,7 @@ final class BuildCommand { // [AFN]
                 if( Files.exists( classFile )) {
                     try { toCompile =
                       getLastModifiedTime(sourceFile).compareTo(getLastModifiedTime(classFile)) >= 0; }
-                    catch( IOException x ) { throw new Failure( x ); }}
+                    catch( IOException x ) { throw new Unhandled( x ); }}
                 else toCompile = true;
                 if( toCompile ) compilerArguments.add( sourceFile.toString() ); }}
         final int sourceCount = compilerArguments.size();
@@ -100,9 +100,14 @@ final class BuildCommand { // [AFN]
                 if( exitValue == 1 ) {
                     System.err.println( "build: Stopped on `javac` error" );
                     System.exit( 1 ); } // Already `javac` has told the details.
-                else if( exitValue != 0 ) throw new Failure( "Exit value of " + exitValue
+                else if( exitValue != 0 ) throw new Unhandled( "Exit value of " + exitValue
                   + " from process: " + pB.command() ); }
-            catch( InterruptedException|IOException x ) { throw new Failure( x ); }}
+            catch( InterruptedException x ) {
+                Thread.currentThread().interrupt(); // Avoid hiding the fact of interruption.
+                throw new Unhandled( x ); } /* The only known interrupt source is the user,
+                  e.g. via `Ctrl-C` and `SIGINT`, and already the runtime handles it.
+                  https://docs.oracle.com/en/java/javase/15/docs/specs/man/java.html */
+            catch( IOException x ) { throw new Unhandled( x ); }}
         if( wasClean ) {
 
           // prepare to load the code
@@ -112,7 +117,7 @@ final class BuildCommand { // [AFN]
           // not look there for class files (JDK 14.0.2).  Therefore make a new class loader.
             try {
               loader = new URLClassLoader( new URL[] { new URL( "file://" + outDirectory + "/" )}); }
-            catch( MalformedURLException x ) { throw new Failure( x ); }}
+            catch( MalformedURLException x ) { throw new Unhandled( x ); }}
         try {
             Class<?> c;
             if( sourceCount > 0 ) {
@@ -149,8 +154,8 @@ final class BuildCommand { // [AFN]
             if( x != null && "building.Makeshift.Builder$UserError".equals( x.getClass().getName() )) {
                 System.err.println( "build: " + x.getMessage() );
                 System.exit( 1 ); }
-            else throw new Failure( xIT ); }
-        catch( ReflectiveOperationException x ) { throw new Failure( x ); }}
+            else throw new Unhandled( xIT ); }
+        catch( ReflectiveOperationException x ) { throw new Unhandled( x ); }}
 
 
 
@@ -188,11 +193,13 @@ final class BuildCommand { // [AFN]
    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 
-    private static final class Failure extends RuntimeException {
+    private static final class Unhandled extends RuntimeException {
 
-        private Failure( Exception cause ) { super( cause ); }
+        // Equivalent to `Java.Unhandled`.  http://reluk.ca/project/Java/Unhandled.java
 
-        private Failure( String message ) { super( message ); }}}
+        private Unhandled( Exception cause ) { super( cause ); }
+
+        private Unhandled( String message ) { super( message ); }}}
 
 
 

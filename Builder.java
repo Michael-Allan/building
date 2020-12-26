@@ -5,6 +5,8 @@ package building.Makeshift;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static building.Makeshift.Bootstrap.Unhandled;
+
 
 /** A builder of a project’s software.  It compiles the code of the project and prepares it for use.
   * In place of the {@linkplain BuilderDefault default}, a project may define its own builder
@@ -66,7 +68,7 @@ public interface Builder {
           final String targ, final Class<T> targetClass ) throws UserError {
         final Enum<?>[] targets;
         try { targets = (Enum[])targetClass.getMethod("values").invoke( null/*static*/ ); }
-        catch( ReflectiveOperationException x ) { throw new RuntimeException( x ); }
+        catch( ReflectiveOperationException x ) { throw new Unhandled( x ); }
         final String nameSought = targ.toLowerCase().replace( '-', '_' ); // As per `bin/build.brec`.
         String nameFound = null;
         for( final Enum<?> t: targets ) {

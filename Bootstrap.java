@@ -47,7 +47,7 @@ public final class Bootstrap {
                 if( !name.endsWith( ".java" )) continue;
                 if( !tester.test( p )) continue;
                 if( toCompile( p, simpleTypeName(p) )) names.add( name ); }}
-        catch( IOException x ) { throw new RuntimeException( x ); }}
+        catch( IOException x ) { throw new Unhandled( x ); }}
 
 
 
@@ -99,9 +99,12 @@ public final class Bootstrap {
             final int exitValue =  p.waitFor();
             if( exitValue == 1 ) throw new UserError( "Stopped on `javac` error" );
               // Already `javac` has told the details.
-            else if( exitValue != 0 ) throw new RuntimeException( "Exit value of " + exitValue
+            else if( exitValue != 0 ) throw new Unhandled( "Exit value of " + exitValue
               + " from process: " + pB.command() ); }
-        catch( InterruptedException|IOException x ) { throw new RuntimeException( x ); }
+        catch( InterruptedException x ) {
+            Thread.currentThread().interrupt(); // Avoid hiding the fact of interruption.
+            throw new Unhandled( x ); } // Q.v. at `bin/build` for the reason.
+        catch( IOException x ) { throw new Unhandled( x ); }
         finally{
             System.out.println( sourceNames.size() );
             if( capture.length() > 0 ) {
@@ -201,7 +204,7 @@ public final class Bootstrap {
         if( Files.exists( classFile )) {
             try {
                 return getLastModifiedTime(sourceFile).compareTo(getLastModifiedTime(classFile)) >= 0; }
-            catch( IOException x ) { throw new RuntimeException( x ); }}
+            catch( IOException x ) { throw new Unhandled( x ); }}
         return true; }
 
 
@@ -281,6 +284,20 @@ public final class Bootstrap {
     public static void verify( final String projectPackage, final Path projectPath ) {
         if( !pathStringOf(projectPackage).equals( projectPath.toString() )) {
             throw new IllegalArgumentException( "Inequivalent `projectPackage` and `projectPath`" ); }}
+
+
+
+   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+    /** A bootstrap equivalent of library exception
+      * `<a href='http://reluk.ca/project/Java/Unhandled.java'>Java.Unhandled</a>`.
+      */
+    public static final class Unhandled extends RuntimeException {
+
+        public  Unhandled( Exception cause ) { super( cause ); }
+
+        public  Unhandled( String message ) { super( message ); }}
 
 
 
