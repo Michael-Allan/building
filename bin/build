@@ -102,7 +102,7 @@ final class BuildCommand { // [AFN]
                     System.exit( 1 ); } // Already `javac` has told the details.
                 else if( exitValue != 0 ) throw new Unhandled( "Exit value of " + exitValue
                   + " from process: " + pB.command() ); }
-            catch( InterruptedException x ) {
+            catch( final InterruptedException x ) {
                 Thread.currentThread().interrupt(); // Avoid hiding the fact of interruption.
                 throw new Unhandled( x ); } /* The only known interrupt source is the user,
                   e.g. via `Ctrl-C` and `SIGINT`, and already the runtime handles it.

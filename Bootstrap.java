@@ -101,7 +101,7 @@ public final class Bootstrap {
               // Already `javac` has told the details.
             else if( exitValue != 0 ) throw new Unhandled( "Exit value of " + exitValue
               + " from process: " + pB.command() ); }
-        catch( InterruptedException x ) {
+        catch( final InterruptedException x ) {
             Thread.currentThread().interrupt(); // Avoid hiding the fact of interruption.
             throw new Unhandled( x ); } // Q.v. at `bin/build` for the reason.
         catch( IOException x ) { throw new Unhandled( x ); }
