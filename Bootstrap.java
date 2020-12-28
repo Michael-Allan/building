@@ -240,7 +240,7 @@ public final class Bootstrap {
       */
     public static void verify( final Class<?> targetClass, final String projectPackage ) {
         final String iBC = targetClass.getPackageName(); /* Of `BuilderBuilder.internalBuildingCode`,
-          that is, according to whose API documentation one of the following tests must pass. */
+          that is, according to whose API description one of the following tests must pass. */
         if( iBC.equals( projectPackage )) return;
         if( iBC.length() == projectPackage.length() + ".builder".length()
           && iBC.startsWith( projectPackage )
