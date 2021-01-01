@@ -215,31 +215,18 @@ public interface BuilderBuilder {
       */
     private static BuilderBuilder get( final String projectPackage, final Path projectPath )
       throws UserError {
-        Path sourceDirectory = null; // Of the implementation file.
-        String simpleTypeName = null; // Of the implementation, e.g. ‘BuilderBuilderDefault’.
 
       // Compile the code
       // ────────────────
-        final List<String> sourceNames = new ArrayList<>(); {
-            final List<Path> sources = new ArrayList<>(); {
-                final Path iF = implementationFile( projectPath );
-                sources.add( iF );
-                if( !iF.equals( implementationFileDefault )) { // Then the project defines a custom one.
-                    sources.add( 0, implementationFileDefault ); }} /* Nevertheless insert the default
-                      in case the custom one inherits from it.  Insert it at 0 to ensure correct setting
-                      of `sourceDirectory` and `simpleTypeName` above. */
-            for( final Path sourceFile: sources ) {
-                sourceDirectory = sourceFile.getParent();
-                simpleTypeName = Bootstrap.simpleTypeName( sourceFile );
-                final Path classFile = Bootstrap.outDirectory.resolve(
-                  sourceDirectory.resolve( simpleTypeName + ".class" ));
-                if( Bootstrap.toCompile( sourceFile, simpleTypeName )) {
-                    sourceNames.add( sourceFile.toString() ); }}}
-        if( sourceNames.size() > 0 ) Bootstrap.i.compile( null/*builder builder*/, sourceNames );
+        final Path iFile = implementationFile( projectPath );
+        final Path iDirectory = iFile.getParent();
+        final String iSimpleTypeName = Bootstrap.simpleTypeName( iFile );
+        if( Bootstrap.toCompile( iFile, iSimpleTypeName )) {
+            Bootstrap.i.compile( null/*builder builder*/, List.of( iFile.toString() )); }
 
       // Construct an instance
       // ─────────────────────
-        final String cName = packageOf(sourceDirectory) + '.' + simpleTypeName;
+        final String cName = packageOf(iDirectory) + '.' + iSimpleTypeName;
         try {
             final Class<? extends BuilderBuilder> c = Class.forName( cName )
               .asSubclass( BuilderBuilder.class );
