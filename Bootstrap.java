@@ -12,13 +12,15 @@ import static java.io.File.separatorChar;
 import static java.nio.file.Files.getLastModifiedTime;
 
 
-/** A miscellany of resources for building software builders, residual odds and ends that properly fit
-  * nowhere else during the earliest build stages.
+/** A medley of early-use resources for the present project, residual odds and ends that properly fit
+  * nowhere else during the earliest build stage.  This class is for the use of custom builder builders
+  * and their {@linkplain BuilderBuilder allowed dependencies}; other code may access the same resources
+  * via the `{@linkplain Project Project}` class.
   */
-public final class Bootstrap {
+public class Bootstrap {
 
 
-    private Bootstrap() {}
+    Bootstrap() {}
 
 
 
@@ -50,19 +52,14 @@ public final class Bootstrap {
 
 
 
-    /** The proper path of Makeshift.
-      */
-    public static final Path buildingProjectPath = pathOf( "building.Makeshift" );
-
-
-
     /** Compiles Java source code to class files.
       *
       *     @param projectPackage The proper package of the project whose source code is being compiled,
       *       or null if the builder builder is being compiled.
       *     @param sourceNames The proper path of each source file to compile.
       */
-    public void compile( final String projectPackage, final List<String> sourceNames ) throws UserError {
+    public static void compile( final String projectPackage, final List<String> sourceNames )
+          throws UserError {
         compile( projectPackage, sourceNames, List.of() ); }
 
 
@@ -77,7 +74,7 @@ public final class Bootstrap {
       *     @see <a href='https://docs.oracle.com/en/java/javase/15/docs/specs/man/javac.html#synopsis'>
       *       Synopsis of `javac`</a>
       */
-    public void compile( final String projectPackage, final List<String> sourceNames,
+    public static void compile( final String projectPackage, final List<String> sourceNames,
           final List<String> additionalArguments ) throws UserError {
         // Changing?  Sync → `execute` @ `bin/build`.
         printProgressLeader( projectPackage, "javac" );
@@ -112,16 +109,9 @@ public final class Bootstrap {
 
 
 
-    /** The single instance of `Bootstrap`.
-      */
-    public static final Bootstrap i = new Bootstrap();
-
-
-
     /** The output directory for builds.
       */
-    public static final Path outDirectory = Path.of( System.getProperty( "java.io.tmpdir" ))
-      .resolve( buildingProjectPath );
+    public static final Path outDirectory;
 
 
 
@@ -139,7 +129,7 @@ public final class Bootstrap {
       */
     public static Path pathOf( final String JavaPackage ) {
         return Path.of( pathStringOf( JavaPackage )); }
-        // Changing?  Sync → any `pathOf` in each of `bin/*`.
+        // Changing?  Sync → any `pathOf` in each file of `bin/*`.
 
 
 
@@ -147,7 +137,7 @@ public final class Bootstrap {
       */
     public static String pathStringOf( final String JavaPackage ) {
         return JavaPackage.replace( '.', separatorChar ); }
-        // Changing?  Sync → any `pathStringOf` in each of `bin/*`.
+        // Changing?  Sync → any `pathStringOf` in each file of `bin/*`.
 
 
 
@@ -165,7 +155,7 @@ public final class Bootstrap {
       *       or null if the builder builder itself is being built.
       *     @param type A short name to identify the type of progress.
       */
-    public void printProgressLeader( final String projectPackage, final String type ) {
+    public static void printProgressLeader( final String projectPackage, final String type ) {
         if( !Objects.equals( projectShowingProgress, projectPackage )) {
             projectShowingProgress = projectPackage;
             System.out.println( projectPackage == null?
@@ -174,6 +164,12 @@ public final class Bootstrap {
         System.out.print( type );
         System.out.print( ' ' );
         System.out.flush(); }
+
+
+
+    /** The proper path of the present project.
+      */
+    public static final Path projectPath = pathOf( "building.Makeshift" );
 
 
 
@@ -218,34 +214,6 @@ public final class Bootstrap {
       */
     public static String typeName( final Path sourcePath ) {
         return packageOf(sourcePath.getParent()) + '.' + simpleTypeName(sourcePath); }
-
-
-
-    /** Tests the validity of a `targetClass` given as the class of build targets for a project.
-      *
-      *     @throws IllegalArgumentException
-      */
-    public static <T extends Enum<T>> void verify( final Class<T> targetClass ) {
-        Enum.valueOf( targetClass, "builder" ); } // Ensuring the presence of this mandatory target.
-
-
-
-    /** Tests for consistency between parameters given for a project.
-      * Where applicable, individually test each parameter before calling this method.
-      *
-      *     @param targetClass The class of the project’s build targets.
-      *     @param projectPackage The proper package of the project.
-      *     @throws IllegalArgumentException
-      */
-    public static void verify( final Class<?> targetClass, final String projectPackage ) {
-        final String iBC = targetClass.getPackageName(); /* Of `BuilderBuilder.internalBuildingCode`,
-          that is, according to whose API description one of the following tests must pass. */
-        if( iBC.equals( projectPackage )) return;
-        if( iBC.length() == projectPackage.length() + ".builder".length()
-          && iBC.startsWith( projectPackage )
-          && iBC.endsWith( ".builder" )) return;
-        throw new IllegalArgumentException(
-          "Inconsistency between `projectPackage` and `targetClass` package" ); }
 
 
 
@@ -321,7 +289,7 @@ public final class Bootstrap {
       *
       *     @see Process#getInputStream()
       */
-    private void appendAll( final Reader in, final Appendable a ) throws IOException {
+    private static void appendAll( final Reader in, final Appendable a ) throws IOException {
         for( ;; ) {
             int c = in.read();
             if( c == -1 ) break;
@@ -333,7 +301,7 @@ public final class Bootstrap {
       *
       *     @see Process#getInputStream()
       */
-    private void appendAll( final Process process, final Appendable a ) throws IOException {
+    private static void appendAll( final Process process, final Appendable a ) throws IOException {
         final BufferedReader in = new BufferedReader( new InputStreamReader( process.getInputStream() ));
         try{ appendAll( in, a ); }
         finally{ in.close(); }}
@@ -342,7 +310,16 @@ public final class Bootstrap {
 
     /** Proper package of the last project to show progress.
       */
-    private String projectShowingProgress = /*none yet*/""; }
+    private static String projectShowingProgress = /*none yet*/"";
+
+
+
+////////////////////
+
+
+    static {
+        outDirectory = Path.of( System.getProperty( "java.io.tmpdir" ))
+          .resolve( Bootstrap.projectPath ); }}
 
 
 

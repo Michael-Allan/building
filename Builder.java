@@ -50,7 +50,7 @@ public interface Builder {
     /** The proper path of the source file for the {@linkplain BuilderDefault default implementation}.
       */
     public static final Path implementationFileDefault =
-      Bootstrap.buildingProjectPath.resolve( "BuilderDefault.java" );
+      Bootstrap.projectPath.resolve( "BuilderDefault.java" );
 
 
 

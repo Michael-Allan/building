@@ -5,9 +5,9 @@ package building.Makeshift;
 import java.nio.file.Path;
 import java.util.*;
 
-import static building.Makeshift.Bootstrap.pathOf;
-import static building.Makeshift.Bootstrap.UserError;
-import static building.Makeshift.Bootstrap.verify;
+import static building.Makeshift.Project.UserError;
+import static building.Makeshift.Project.pathOf;
+import static building.Makeshift.Project.verify;
 
 
 /** Default implementation of a software builder.  It supports all the targets named in
@@ -79,9 +79,9 @@ public class BuilderDefault<T extends Enum<T>> implements Builder {
       */
     protected void buildTo_Java_class_files() throws UserError {
         final List<String> sourceNames = new ArrayList<>();
-        JavaCode().forEach( pkg -> Bootstrap.addCompilableSource( sourceNames, pathOf(pkg) ));
+        JavaCode().forEach( pkg -> Project.addCompilableSource( sourceNames, pathOf(pkg) ));
         if( sourceNames.size() > 0 ) {
-            Bootstrap.i.compile( projectPackage, sourceNames, javacArguments() ); }}
+            Project.compile( projectPackage, sourceNames, javacArguments() ); }}
 
 
 
@@ -94,7 +94,7 @@ public class BuilderDefault<T extends Enum<T>> implements Builder {
 
 
     /** Packages of Java code proper to the owning project, exclusive of building code.  The code
-      * comprises all `.java` files of the {@linkplain Bootstrap#pathOf(String) equivalent directories},
+      * comprises all `.java` files of the {@linkplain Project#pathOf(String) equivalent directories},
       * exclusive of their subdirectories.
       *
       * <p>The default implementation is a singleton set comprising the proper package

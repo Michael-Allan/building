@@ -12,7 +12,7 @@ public final class BuilderBuilder extends building.Makeshift.BuilderBuilderDefau
 
 
     public BuilderBuilder() {
-        super( "building.Makeshift", building.Makeshift.Bootstrap.buildingProjectPath ); }
+        super( "building.Makeshift", building.Makeshift.Bootstrap.projectPath ); }
 
 
     public @Override Set<String> addedBuildingCode() {

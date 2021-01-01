@@ -8,7 +8,6 @@ import java.util.*;
 import java.util.function.Predicate;
 
 import static building.Makeshift.Bootstrap.addCompilableSource;
-import static building.Makeshift.Bootstrap.buildingProjectPath;
 import static building.Makeshift.Bootstrap.packageOf;
 import static building.Makeshift.Bootstrap.pathOf;
 import static building.Makeshift.Bootstrap.pathTester_true;
@@ -76,7 +75,7 @@ public interface BuilderBuilder {
           pathTester_true: p -> { return p.getFileName().toString().startsWith("Build"); };
         addCompilableSource( sourceNames, internalBuildingCode(projectPath()), tester );
         addedBuildingCode().forEach( pkg -> addCompilableSource( sourceNames, pathOf(pkg) ));
-        if( sourceNames.size() > 0 ) Bootstrap.i.compile( owningProject, sourceNames ); }
+        if( sourceNames.size() > 0 ) Bootstrap.compile( owningProject, sourceNames ); }
 
 
 
@@ -128,7 +127,7 @@ public interface BuilderBuilder {
       * {@linkplain BuilderBuilderDefault default implementation}.
       */
     public static final Path implementationFileDefault =
-      buildingProjectPath.resolve( "BuilderBuilderDefault.java" );
+      Bootstrap.projectPath.resolve( "BuilderBuilderDefault.java" );
 
 
 
@@ -222,7 +221,7 @@ public interface BuilderBuilder {
         final Path iDirectory = iFile.getParent();
         final String iSimpleTypeName = Bootstrap.simpleTypeName( iFile );
         if( Bootstrap.toCompile( iFile, iSimpleTypeName )) {
-            Bootstrap.i.compile( null/*builder builder*/, List.of( iFile.toString() )); }
+            Bootstrap.compile( null/*builder builder*/, List.of( iFile.toString() )); }
 
       // Construct an instance
       // ─────────────────────
