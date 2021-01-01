@@ -8,7 +8,6 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static building.Makeshift.Builder.UserError;
 import static java.io.File.separatorChar;
 import static java.nio.file.Files.getLastModifiedTime;
 
@@ -290,7 +289,8 @@ public final class Bootstrap {
    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 
-    /** A bootstrap equivalent of library exception
+    /** Thrown for an event that might better be handled, given a reason to do so.
+      * Bootstrap equivalent of library exception
       * `<a href='http://reluk.ca/project/Java/Unhandled.java'>Java.Unhandled</a>`.
       */
     public static final class Unhandled extends RuntimeException {
@@ -298,6 +298,19 @@ public final class Bootstrap {
         public  Unhandled( Exception cause ) { super( cause ); }
 
         public  Unhandled( String message ) { super( message ); }}
+
+
+
+   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+    /** Thrown on encountering an anomaly the user is likely in a position to correct.
+      * Bootstrap equivalent of library exception
+      * `<a href='http://reluk.ca/project/Java/UserError.java'>Java.UserError</a>`.
+      */
+    public static final class UserError extends Exception {
+
+        public UserError( String message ) { super( message ); }}
 
 
 

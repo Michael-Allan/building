@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static building.Makeshift.Bootstrap.Unhandled;
+import static building.Makeshift.Bootstrap.UserError;
 
 
 /** A builder of a project’s software.  It compiles the code of the project and prepares it for use.
@@ -79,18 +80,7 @@ public interface Builder {
                 nameFound = tS; }}
         if( nameFound == null ) {
             throw new UserError( "Unmatched in `" + targetClass.getName() + "`: " + targ ); }
-        return nameFound; }
-
-
-
-   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-
-    /** Thrown on encountering an anomaly the user is likely in a position to correct.
-      */
-    public static final class UserError extends Exception {
-
-        public UserError( String message ) { super( message ); }}}
+        return nameFound; }}
 
 
 

@@ -15,7 +15,7 @@ import static building.Makeshift.Bootstrap.pathTester_true;
 import static building.Makeshift.Bootstrap.typeName;
 import static building.Makeshift.Bootstrap.verify;
 import static building.Makeshift.Bootstrap.Unhandled;
-import static building.Makeshift.Builder.UserError;
+import static building.Makeshift.Bootstrap.UserError;
 
 
 /** A builder of software builders.  In place of the {@linkplain BuilderBuilderDefault default},

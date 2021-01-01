@@ -152,7 +152,7 @@ final class BuildCommand { // [AFN]
             while( ++t < tN ); }
         catch( final InvocationTargetException xIT ) {
             final Throwable x = xIT.getCause();
-            if( x != null && "building.Makeshift.Builder$UserError".equals( x.getClass().getName() )) {
+            if( x != null && "building.Makeshift.Bootstrap$UserError".equals( x.getClass().getName() )) {
                 System.err.println( "build: " + x.getMessage() );
                 System.exit( 1 ); }
             else throw new Unhandled( xIT ); }
@@ -194,9 +194,12 @@ final class BuildCommand { // [AFN]
    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 
+    /** Thrown for an event that might better be handled, given a reason to do so.
+      */
     private static final class Unhandled extends RuntimeException {
 
-        // Equivalent to `Java.Unhandled`.  http://reluk.ca/project/Java/Unhandled.java
+        // Bootstrap equivalent of library exception `Java.Unhandled`.
+        // http://reluk.ca/project/Java/Unhandled.java
 
         private Unhandled( Exception cause ) { super( cause ); }
 

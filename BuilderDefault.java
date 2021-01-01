@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.util.*;
 
 import static building.Makeshift.Bootstrap.pathOf;
+import static building.Makeshift.Bootstrap.UserError;
 import static building.Makeshift.Bootstrap.verify;
 
 
