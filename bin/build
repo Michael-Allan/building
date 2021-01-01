@@ -70,9 +70,10 @@ final class BuildCommand { // [AFN]
             final Path p = pathOf( "building.Makeshift" ); // Proper path of the present project.
             outDirectory = Path.of(System.getProperty("java.io.tmpdir")).resolve( p );
             wasClean = !Files.isDirectory( outDirectory );
-            for( String s: new String[]{ "BuilderBuilder", /*dependencies*/"Bootstrap", "Builder" }) {
-                final Path sourceFile = p.resolve( s + ".java" );
-                final Path classFile = outDirectory.resolve( p.resolve( s + ".class" ));
+            for( String t: new String[]{ // ↓ Changing these?  Sync → `BuilderBuilder` API description.
+                  "Bootstrap", "Builder", "BuilderBuilder", "BuilderBuilderDefault" }) {
+                final Path sourceFile = p.resolve( t + ".java" );
+                final Path classFile = outDirectory.resolve( p.resolve( t + ".class" ));
                 final boolean toCompile;
                 if( Files.exists( classFile )) {
                     try { toCompile =

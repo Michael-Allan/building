@@ -25,11 +25,11 @@ import static building.Makeshift.Builder.UserError;
   * It must depend on no code outside of:
   *
   * <ul><li>The standard libraries</li>
-  *     <li>`{@linkplain Bootstrap       Bootstrap}`</li>
-  *     <li>`{@linkplain Builder         Builder}`</li>
-  *     <li>                            `BuilderBuilder` (the present interface)</li>
+  *     <li>`{@linkplain Bootstrap             Bootstrap}`</li>
+  *     <li>`{@linkplain Builder               Builder}`</li>
+  *     <li>                                  `BuilderBuilder` (the present interface)</li>
   *     <li>`{@linkplain BuilderBuilderDefault BuilderBuilderDefault}`</li></ul>
-  */
+  */// Changing the above?  Sync → stage 1 of `execute` in `bin/build`.
 public interface BuilderBuilder {
 
 
