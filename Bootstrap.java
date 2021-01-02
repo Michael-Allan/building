@@ -102,16 +102,20 @@ public class Bootstrap {
             throw new Unhandled( x ); } // Q.v. at `bin/build` for the reason.
         catch( IOException x ) { throw new Unhandled( x ); }
         finally{
-            System.out.println( sourceNames.size() );
+            final var o = System.out;
+            o.print( sourceNames.size() );
             if( capture.length() > 0 ) {
-                System.out.print( capture.toString() );
-                System.out.flush(); }}}
+                o.println( " …" ); // Indicating the intent of compiling so many, as opposed to the fact.
+                o.print( capture.toString() );
+                o.flush(); }
+            else o.println(); }}
 
 
 
-    /** The output directory for builds.
+    /** The output directory of the present project.
       */
-    public static final Path outDirectory;
+    public static final Path outDirectory = Path.of(
+      System.getProperty("java.io.tmpdir"), "building.Makeshift" );
 
 
 
@@ -188,7 +192,7 @@ public class Bootstrap {
 
 
 
-    /** Answers whether `sourceFile` needs to be compiled or recompiled.
+    /** Tells whether `sourceFile` needs to be compiled or recompiled.
       *
       *     @param sourceFile The proper path of a Java source file.
       *     @param simpleTypeName The corresponding {@linkplain #simpleTypeName(Path) simple type name}.
@@ -310,16 +314,7 @@ public class Bootstrap {
 
     /** Proper package of the last project to show progress.
       */
-    private static String projectShowingProgress = /*none yet*/"";
-
-
-
-////////////////////
-
-
-    static {
-        outDirectory = Path.of( System.getProperty( "java.io.tmpdir" ))
-          .resolve( Bootstrap.projectPath ); }}
+    private static String projectShowingProgress = /*none yet*/""; }
 
 
 

@@ -1,13 +1,12 @@
 #!/usr/bin/env --split-string=${JDK_HOME}/bin/java @building/Makeshift/java_arguments @building/Makeshift/java_javac_arguments \c [SS]
 package building.Makeshift; // [AFN]
 
-// This command runs directly from the present source file, which is uncompiled during builds.
+// This command runs directly from the present source file, it needs no compiling.
 
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 
-import static java.io.File.separatorChar;
 import static java.nio.file.FileVisitResult.CONTINUE;
 
 
@@ -56,8 +55,8 @@ public final class CleanCommand extends SimpleFileVisitor<Path> { // [AFN]
 
 
 
-    private FileVisitResult delete( final Path file ) throws IOException {
-        Files.delete( file );
+    private FileVisitResult delete( final Path path ) throws IOException {
+        Files.delete( path );
         ++count;
         return CONTINUE; }
 
@@ -66,19 +65,10 @@ public final class CleanCommand extends SimpleFileVisitor<Path> { // [AFN]
     /** Execute the command.
       */
     private void execute() throws IOException {
-        final Path outDirectory = Path.of( System.getProperty( "java.io.tmpdir" ),
-          pathStringOf( "building.Makeshift" ));
+        final Path outDirectory = Path.of( System.getProperty("java.io.tmpdir"), "building.Makeshift" );
         if( !Files.isDirectory( outDirectory )) return;
         Files.walkFileTree( outDirectory, CleanCommand.this );
-        if( count != 0 ) System.out.println( count ); }
-
-
-
-    /** Converts `JavaPackage` to an equivalent relative path.
-      */
-    public static String pathStringOf( final String JavaPackage ) {
-        return JavaPackage.replace( '.', separatorChar ); }}
-        // Changing?  Sync → `Bootstrap.pathStringOf`.
+        if( count != 0 ) System.out.println( count ); }}
 
 
 
