@@ -159,7 +159,7 @@ final class BuildCommand { // [AFN]
 
 
     private Class<?> load( final String className ) throws ClassNotFoundException {
-        return loader == null? Class.forName(className): loader.loadClass(className); }
+        return loader == null? Class.forName(className) : loader.loadClass(className); }
 
 
 
@@ -199,8 +199,12 @@ final class BuildCommand { // [AFN]
         // Bootstrap equivalent of library exception `Java.Unhandled`.
         // http://reluk.ca/project/Java/Unhandled.java
 
+        /** @see #getCause()
+          */
         private Unhandled( Exception cause ) { super( cause ); }
 
+        /** @see #getMessage()
+          */
         private Unhandled( String message ) { super( message ); }}}
 
 
@@ -219,4 +223,4 @@ final class BuildCommand { // [AFN]
 
 
 
-                                                        // Copyright © 2020  Michael Allan.  Licence MIT.
+                                                   // Copyright © 2020-2021  Michael Allan.  Licence MIT.

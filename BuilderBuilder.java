@@ -71,8 +71,8 @@ public interface BuilderBuilder {
       // Compile the project’s own building code
       // ───────────────────────────────────────
         final List<String> sourceNames = new ArrayList<>();
-        final Predicate<Path> tester = targetFile().getFileName().toString().equals( "Target.java" )?
-          pathTester_true: p -> { return p.getFileName().toString().startsWith("Build"); };
+        final Predicate<Path> tester = targetFile().getFileName().toString().equals( "Target.java" ) ?
+          pathTester_true : p -> { return p.getFileName().toString().startsWith("Build"); };
         addCompilableSource( sourceNames, internalBuildingCode(projectPath()), tester );
         addedBuildingCode().forEach( pkg -> addCompilableSource( sourceNames, pathOf(pkg) ));
         if( sourceNames.size() > 0 ) Bootstrap.compile( owningProject, sourceNames ); }

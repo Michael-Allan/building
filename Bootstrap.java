@@ -162,8 +162,8 @@ public class Bootstrap {
     public static void printProgressLeader( final String projectPackage, final String type ) {
         if( !Objects.equals( projectShowingProgress, projectPackage )) {
             projectShowingProgress = projectPackage;
-            System.out.println( projectPackage == null?
-              "building.Makeshift (bootstrap)": projectPackage ); }
+            System.out.println( projectPackage == null ?
+              "building.Makeshift (bootstrap)" : projectPackage ); }
         System.out.print( "    " );
         System.out.print( type );
         System.out.print( ' ' );
@@ -267,8 +267,12 @@ public class Bootstrap {
       */
     public static final class Unhandled extends RuntimeException {
 
+        /** @see #getCause()
+          */
         public  Unhandled( Exception cause ) { super( cause ); }
 
+        /** @see #getMessage()
+          */
         public  Unhandled( String message ) { super( message ); }}
 
 
@@ -282,6 +286,8 @@ public class Bootstrap {
       */
     public static final class UserError extends Exception {
 
+        /** @see #getMessage()
+          */
         public UserError( String message ) { super( message ); }}
 
 
@@ -318,4 +324,4 @@ public class Bootstrap {
 
 
 
-                                                        // Copyright © 2020  Michael Allan.  Licence MIT.
+                                                   // Copyright © 2020-2021  Michael Allan.  Licence MIT.
