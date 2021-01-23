@@ -145,9 +145,9 @@ public class Bootstrap {
 
 
 
-    /** A path tester that answers only `true`.
+    /** A path tester that always answers `true`.
       */
-    public static final Predicate<Path> pathTester_true = _p -> { return true; };
+    public static final Predicate<Path> pathTester_true = _p -> true;
 
 
 
