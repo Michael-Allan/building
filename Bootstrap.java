@@ -192,7 +192,7 @@ public class Bootstrap {
 
 
 
-    /** Tells whether `sourceFile` needs to be compiled or recompiled.
+    /** Whether `sourceFile` needs to be compiled or recompiled.
       *
       *     @param sourceFile The proper path of a Java source file.
       *     @param simpleTypeName The corresponding {@linkplain #simpleTypeName(Path) simple type name}.
