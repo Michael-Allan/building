@@ -15,7 +15,7 @@ import static java.nio.file.Files.getLastModifiedTime;
 /** A medley of early-use resources for the present project, residual odds and ends that properly fit
   * nowhere else during the earliest build stage.  This class is for the use of custom builder builders
   * and their {@linkplain BuilderBuilder allowed dependencies}; other code may access the same resources
-  * via the `{@linkplain Project Project}` class.
+  * through the `{@linkplain Project Project}` class.
   */
 public class Bootstrap {
 
