@@ -101,7 +101,7 @@ public class Bootstrap {
             Thread.currentThread().interrupt(); // Avoid hiding the fact of interruption.
             throw new Unhandled( x ); } // Q.v. at `bin/build` for the reason.
         catch( IOException x ) { throw new Unhandled( x ); }
-        finally{
+        finally {
             final var o = System.out;
             o.print( sourceNames.size() );
             if( capture.length() > 0 ) {
@@ -313,8 +313,8 @@ public class Bootstrap {
       */
     private static void appendAll( final Process process, final Appendable a ) throws IOException {
         final BufferedReader in = new BufferedReader( new InputStreamReader( process.getInputStream() ));
-        try{ appendAll( in, a ); }
-        finally{ in.close(); }}
+        try { appendAll( in, a ); }
+        finally { in.close(); }}
 
 
 
