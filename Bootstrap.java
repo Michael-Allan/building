@@ -151,9 +151,8 @@ public class Bootstrap {
 
 
 
-    /** Prints and flushes through standard output the beginning of a message of incremental
-      * build progress.  Be sure to print the remainder of the message and terminate it with
-      * a newline character.
+    /** Prints and flushes through standard output the beginning of a message of incremental build
+      * progress.  Be sure to print the remainder of the message and terminate it with a newline.
       *
       *     @param projectPackage The proper package of the project whose software is being built,
       *       or null if the builder builder itself is being built.
