@@ -10,7 +10,7 @@
           E.g. for the present project, use `building/Makeshift` or `building/Makeshift/`.
             : see `^^proper path$` @ http://reluk.ca/project/lexicon.brec
     - Each `target` specifies a build target proper to the project.
-        / All build targets should be documented in a source file of the project,
+        / All build targets should be declared in a source file of the project,
           conventionally named either `BuildTarget.java` or `builder/Target.java`.
             : see ../template/BuildTarget.java
         - Letter case is insignificant here.
@@ -71,4 +71,4 @@
             : see clean.brec
 
 
-                                                         \ Copyright © 2020  Michael Allan.  Licence MIT.
+                                                    \ Copyright © 2020-2021  Michael Allan.  Licence MIT.

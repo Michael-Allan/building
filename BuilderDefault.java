@@ -60,9 +60,9 @@ public class BuilderDefault<T extends Enum<T>> implements Builder {
             case "builder"          -> buildTo_builder();
             case "Java_class_files" -> buildTo_Java_class_files();
             default -> {
-                assert !isSupportDocumented( target );
+                assert !isSupportDeclared( target );
                 throw new IllegalArgumentException(); }}
-        assert isSupportDocumented( target ); }
+        assert isSupportDeclared( target ); }
 
 
 
@@ -139,7 +139,7 @@ public class BuilderDefault<T extends Enum<T>> implements Builder {
 ////  P r i v a t e  ////////////////////////////////////////////////////////////////////////////////////
 
 
-    private static boolean isSupportDocumented( final String target ) {
+    private static boolean isSupportDeclared( final String target ) {
         boolean is = true;
         try { building.Makeshift.template.BuildTarget.valueOf( target ); }
         catch( IllegalArgumentException _x ) { is = false; }
@@ -151,4 +151,4 @@ public class BuilderDefault<T extends Enum<T>> implements Builder {
 
 
 
-                                                        // Copyright © 2020  Michael Allan.  Licence MIT.
+                                                   // Copyright © 2020-2021  Michael Allan.  Licence MIT.

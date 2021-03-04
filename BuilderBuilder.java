@@ -28,7 +28,7 @@ import static building.Makeshift.Bootstrap.UserError;
   *     <li>`{@linkplain Builder               Builder}`</li>
   *     <li>                                  `BuilderBuilder` (the present interface)</li>
   *     <li>`{@linkplain BuilderBuilderDefault BuilderBuilderDefault}`</li></ul>
-  */// Changing the above?  Sync → stage 1 of `execute` in `bin/build`.
+  */// Changing the above?  Sync → stage 1 of `run` in `bin/build`.
 public interface BuilderBuilder {
 
 

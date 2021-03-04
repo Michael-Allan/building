@@ -76,7 +76,7 @@ public class Bootstrap {
       */
     public static void compile( final String projectPackage, final List<String> sourceNames,
           final List<String> additionalArguments ) throws UserError {
-        // Changing?  Sync → `execute` @ `bin/build`.
+        // Changing?  Sync → `run` @ `bin/build`.
         printProgressLeader( projectPackage, "javac" );
         final List<String> compilerArguments = new ArrayList<>();
         compilerArguments.add( System.getProperty("java.home") + "/bin/javac" );

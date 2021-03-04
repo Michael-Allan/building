@@ -40,7 +40,7 @@ final class BuildCommand { // [AFN]
         if( projectPath.isAbsolute() ) {
             System.err.println( "build: Not a relative path: " + a );
             System.exit( 1 ); }
-        new BuildCommand(projectPath,arguments).execute(); }
+        new BuildCommand(projectPath,arguments).run(); }
 
 
 
@@ -57,9 +57,38 @@ final class BuildCommand { // [AFN]
 
 
 
-    /** Executes the command.
+    private Class<?> load( final String className ) throws ClassNotFoundException {
+        return loader == null? Class.forName(className) : loader.loadClass(className); }
+
+
+
+    private ClassLoader loader; // Null unless a special one is required.
+
+
+
+    /** Converts `JavaPackage` to an equivalent relative path.
       */
-    private void execute() { // A bootstrapped process comprising three build stages:
+    public static Path pathOf( final String JavaPackage ) {
+        return Path.of( pathStringOf( JavaPackage )); }
+        // Changing?  Sync → `Bootstrap.pathOf`.
+
+
+
+    /** Converts `JavaPackage` to an equivalent relative path.
+      */
+    public static String pathStringOf( final String JavaPackage ) {
+        return JavaPackage.replace( '.', separatorChar ); }
+        // Changing?  Sync → `Bootstrap.pathStringOf`.
+
+
+
+    /** The proper path of the project to build.
+      */
+    private final Path projectPath;
+
+
+
+    private void run() { // A bootstrapped process comprising three build stages:
 
       // 1. Build the builder builder
       // ────────────────────────────
@@ -155,37 +184,6 @@ final class BuildCommand { // [AFN]
                 System.exit( 1 ); }
             else throw new Unhandled( xIT ); }
         catch( ReflectiveOperationException x ) { throw new Unhandled( x ); }}
-
-
-
-    private Class<?> load( final String className ) throws ClassNotFoundException {
-        return loader == null? Class.forName(className) : loader.loadClass(className); }
-
-
-
-    private ClassLoader loader; // Null unless a special one is required.
-
-
-
-    /** Converts `JavaPackage` to an equivalent relative path.
-      */
-    public static Path pathOf( final String JavaPackage ) {
-        return Path.of( pathStringOf( JavaPackage )); }
-        // Changing?  Sync → `Bootstrap.pathOf`.
-
-
-
-    /** Converts `JavaPackage` to an equivalent relative path.
-      */
-    public static String pathStringOf( final String JavaPackage ) {
-        return JavaPackage.replace( '.', separatorChar ); }
-        // Changing?  Sync → `Bootstrap.pathStringOf`.
-
-
-
-    /** The proper path of the project to build.
-      */
-    private final Path projectPath;
 
 
 
