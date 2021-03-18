@@ -50,49 +50,6 @@ public class BuilderDefault<T extends Enum<T>> implements Builder {
 
 
 
-    /** Builds the code to the level of `target`.
-      *
-      *     @param target The full name of the target.
-      *     @throws IllegalArgumentException If `target` is unsupported by this implementation.
-      */
-    protected final void buildTo( final String target ) throws UserError {
-        switch( target ) {
-            case "builder"          -> buildTo_builder();
-            case "Java_class_files" -> buildTo_Java_class_files();
-            default -> {
-                assert !isSupportDeclared( target );
-                throw new IllegalArgumentException(); }}
-        assert isSupportDeclared( target ); }
-
-
-
-    /** Does nothing, this builder is already built.
-      *
-      *     @see building.Makeshift.template.BuildTarget.builder
-      */
-    protected void buildTo_builder() {}
-
-
-
-    /** @see building.Makeshift.template.BuildTarget.Java_class_files
-      * @see #javacArguments()
-      */
-    protected void buildTo_Java_class_files() throws UserError {
-        final List<String> sourceNames = new ArrayList<>();
-        JavaCode().forEach( pkg -> Project.addCompilableSource( sourceNames, pathOf(pkg) ));
-        if( sourceNames.size() > 0 ) {
-            Project.compile( projectPackage, sourceNames, javacArguments() ); }}
-
-
-
-    /** Additional arguments for the Java compiler.  The default implementation is an empty list.
-      *
-      *     @see building.Makeshift.template.BuildTarget.Java_class_files
-      */
-    protected List<String> javacArguments() { return List.of(); }
-
-
-
     /** Packages of Java code proper to the owning project, exclusive of building code.  The code
       * comprises all `.java` files of the {@linkplain Project#pathOf(String) equivalent directories},
       * exclusive of their subdirectories.
@@ -104,7 +61,7 @@ public class BuilderDefault<T extends Enum<T>> implements Builder {
       * `{@linkplain building.Makeshift.template.BuildTarget.Java_class_files Java_class_files}`.</p>
       */
     public Set<String> JavaCode() { return Set.of( projectPackage ); } /* Packages for elements
-          because they are codeable by implementers as cross-platform literals, whereas paths are not. */
+      because they are codeable by implementers as cross-platform literals, whereas paths are not. */
 
 
 
@@ -137,6 +94,41 @@ public class BuilderDefault<T extends Enum<T>> implements Builder {
 
 
 ////  P r i v a t e  ////////////////////////////////////////////////////////////////////////////////////
+
+
+    /** Builds the code to the level of `target`.
+      *
+      *     @param target The full name of the target.
+      *     @throws IllegalArgumentException If `target` is unsupported by this implementation.
+      */
+    protected final void buildTo( final String target ) throws UserError {
+        switch( target ) {
+            case "builder"          -> {} // Nothing to do, already this builder is built.
+            case "Java_class_files" -> buildTo_Java_class_files();
+            default -> {
+                assert !isSupportDeclared( target );
+                throw new IllegalArgumentException(); }}
+        assert isSupportDeclared( target ); }
+
+
+
+    /** @see building.Makeshift.template.BuildTarget.Java_class_files
+      * @see #javacArguments()
+      */
+    private void buildTo_Java_class_files() throws UserError {
+        final List<String> sourceNames = new ArrayList<>();
+        JavaCode().forEach( pkg -> Project.addCompilableSource( sourceNames, pathOf(pkg) ));
+        if( sourceNames.size() > 0 ) {
+            Project.compile( projectPackage, sourceNames, javacArguments() ); }}
+
+
+
+    /** Additional arguments for the Java compiler.  The default implementation is an empty list.
+      *
+      *     @see building.Makeshift.template.BuildTarget.Java_class_files
+      */
+    protected List<String> javacArguments() { return List.of(); }
+
 
 
     private static boolean isSupportDeclared( final String target ) {
