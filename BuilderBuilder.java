@@ -163,8 +163,7 @@ public interface BuilderBuilder {
             final Class<? extends Builder> cBuilder =
               Class.forName( typeName( Builder.implementationFile( projectPath() )))
               .asSubclass( Builder.class );
-            final Class<? extends Enum> cTarget =
-              Class.forName( typeName( targetFile() )).asSubclass( Enum.class );
+            final Class<?> cTarget = Class.forName( typeName( targetFile() )).asSubclass( Enum.class );
             try { // Either (a) the default implementation `BuilderDefault`, or (b) a custom one:
                 return cBuilder.getConstructor( Class.class, String.class, Path.class ) // (a)
                   .newInstance( cTarget, projectPackage(), projectPath() ); }

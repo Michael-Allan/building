@@ -13,6 +13,7 @@ import java.util.List;
 
 import static java.io.File.separatorChar;
 import static java.lang.ProcessBuilder.Redirect.INHERIT;
+import static java.nio.file.Files.createDirectory;
 import static java.nio.file.Files.getLastModifiedTime;
 
 
@@ -89,25 +90,32 @@ final class BuildCommand { // [AFN]
 
 
     private void run() { // A bootstrapped process comprising three build stages:
+        final Path outDirectory = Path.of( System.getProperty("java.io.tmpdir"), "building.Makeshift" );
+        final boolean wasClean;
+        if( Files.isDirectory( outDirectory )) wasClean = false;
+        else {
+            try { createDirectory( outDirectory ); } /* So avoid a warning on the first call to `javac`:
+              `“[path] bad path element… no such file or directory”. */
+            catch( IOException x ) { throw new Unhandled( x ); }
+            wasClean = true; }
 
       // 1. Build the builder builder
       // ────────────────────────────
-        final Path outDirectory = Path.of( System.getProperty("java.io.tmpdir"), "building.Makeshift" );
-        final List<String> compilerArguments = new ArrayList<>(); // Empty if no code needs compiling.
-        final boolean wasClean; {
+        final List<String> compilerArguments = new ArrayList<>(); { // Empty if no code needs compiling.
             // Already the working directory is the command directory, as per `./build.brec`.
             final Path p = pathOf( "building.Makeshift" ); // Proper path of the present project.
-            wasClean = !Files.isDirectory( outDirectory );
             for( String t: new String[]{ // ↓ Changing these?  Sync → `BuilderBuilder` API description.
                   "Bootstrap", "Builder", "BuilderBuilder", "BuilderBuilderDefault" }) {
                 final Path sourceFile = p.resolve( t + ".java" );
-                final Path classFile = outDirectory.resolve( p.resolve( t + ".class" ));
                 final boolean toCompile;
-                if( Files.exists( classFile )) {
-                    try { toCompile =
-                      getLastModifiedTime(sourceFile).compareTo(getLastModifiedTime(classFile)) >= 0; }
-                    catch( IOException x ) { throw new Unhandled( x ); }}
-                else toCompile = true;
+                if( wasClean ) toCompile = true;
+                else {
+                    final Path classFile = outDirectory.resolve( p.resolve( t + ".class" ));
+                    if( Files.exists( classFile )) {
+                        try { toCompile = getLastModifiedTime(sourceFile)
+                               .compareTo(getLastModifiedTime(classFile)) >= 0; }
+                        catch( IOException x ) { throw new Unhandled( x ); }}
+                    else toCompile = true; }
                 if( toCompile ) compilerArguments.add( sourceFile.toString() ); }}
         final int sourceCount = compilerArguments.size();
         if( sourceCount > 0 ) {
