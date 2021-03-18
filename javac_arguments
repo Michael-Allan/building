@@ -11,6 +11,7 @@
       # alone are compiled.  One problem it avoids: `javac` by default implicitly compiles a source file
       # when its class file is missing, but not when the class file predates the source file.
       # https://docs.oracle.com/en/java/javase/15/docs/specs/man/javac.html#additional-source-files
+   -Xlint:all,-serial
 
 
-                                                           # Copyright 2020  Michael Allan.  Licence MIT.
+                                                      # Copyright 2020-2021  Michael Allan.  Licence MIT.
