@@ -102,7 +102,7 @@ final class BuildCommand { // [AFN]
       // 1. Build the builder builder
       // ────────────────────────────
         final List<String> compilerArguments = new ArrayList<>(); { // Empty if no code needs compiling.
-            // Already the working directory is the command directory, as per `./build.brec`.
+            // Already the working directory is the command directory, as stipulated in `./build.brec`.
             final Path p = pathOf( "building.Makeshift" ); // Proper path of the present project.
             for( String t: new String[]{ // ↓ Changing these?  Sync → `BuilderBuilder` API description.
                   "Bootstrap", "Builder", "BuilderBuilder", "BuilderBuilderDefault" }) {

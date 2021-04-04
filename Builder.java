@@ -74,7 +74,7 @@ public interface Builder {
         String nameFound = null;
         for( final Enum<?> t: targets ) {
             final String tS = t.toString();
-            if( tS.toLowerCase().contains( nameSought )) { // As per `bin/build.brec`.
+            if( tS.toLowerCase().contains( nameSought )) { // Concordant with `bin/build.brec`.
                 if( nameFound != null ) {
                     throw new UserError( "Ambiguous in `" + targetClass.getName() + "`: " + targ ); }
                 nameFound = tS; }}
